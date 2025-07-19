@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
-        /* 样式保持不变，请使用原始代码中的CSS */
         * {
             margin: 0;
             padding: 0;
@@ -17,11 +16,14 @@
         
         :root {
             --primary: #4361ee;
-            --secondary: #3f37c9;
+            --secondary: #3a56d4;
             --accent: #f72585;
             --dark: #0d1b2a;
+            --darker: #070f1a;
             --light: #f8f9fa;
+            --lighter: #ffffff;
             --gray: #8d99ae;
+            --light-gray: #e9ecef;
             --tech: #4361ee;
             --life: #4cc9f0;
             --travel: #f72585;
@@ -33,18 +35,714 @@
             --warning: #f39c12;
         }
         
-        /* 其余CSS保持不变，请使用原始代码中的完整CSS */
+        body {
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
         
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background: rgba(13, 27, 42, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+            border-bottom: 1px solid rgba(77, 101, 128, 0.3);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+            background: linear-gradient(45deg, var(--primary), var(--life));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--life));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: -0.5px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+        
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.05rem;
+            padding: 8px 15px;
+            border-radius: 30px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        nav a:hover, nav a.active {
+            background: rgba(67, 97, 238, 0.2);
+        }
+        
+        /* 主内容区 */
+        main {
+            padding: 40px 0;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+        }
+        
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+        
+        .sidebar {
+            background: rgba(13, 27, 42, 0.7);
+            border-radius: var(--card-radius);
+            padding: 30px;
+            height: fit-content;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(77, 101, 128, 0.3);
+        }
+        
+        /* 搜索框 */
+        .search-box {
+            background: rgba(19, 38, 57, 0.7);
+            border-radius: var(--card-radius);
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(77, 101, 128, 0.3);
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 50px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+        
+        .search-btn {
+            padding: 0 25px;
+            border-radius: 50px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+        
+        .search-btn:hover {
+            background: var(--secondary);
+        }
+        
+        /* 欢迎区域 */
+        .hero {
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.2), rgba(76, 201, 240, 0.2));
+            backdrop-filter: blur(10px);
+            border-radius: var(--card-radius);
+            padding: 50px 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(77, 101, 128, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            z-index: -1;
+        }
+        
+        .hero h2 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            color: white;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            font-family: 'Playfair Display', serif;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: #e0e1ff;
+            font-weight: 300;
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: var(--primary);
+            color: white;
+            padding: 14px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(67, 97, 238, 0.4);
+            white-space: nowrap;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.6);
+        }
+        
+        .btn i {
+            font-size: 1.1rem;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(67, 97, 238, 0.1);
+        }
+        
+        .btn-accent {
+            background: var(--accent);
+            box-shadow: 0 4px 20px rgba(247, 37, 133, 0.4);
+        }
+        
+        .btn-accent:hover {
+            box-shadow: 0 8px 25px rgba(247, 37, 133, 0.6);
+        }
+        
+        /* 文章管理 */
+        .articles-section {
+            background: rgba(13, 27, 42, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: var(--card-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(77, 101, 128, 0.3);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 1.7rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--life));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .articles-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .article-card {
+            background: rgba(19, 38, 57, 0.7);
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(77, 101, 128, 0.3);
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .article-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+        }
+        
+        .article-img {
+            height: 180px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            opacity: 0.9;
+        }
+        
+        .article-content {
+            padding: 25px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .article-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .article-category {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: rgba(67, 97, 238, 0.2);
+            color: #a3b3ff;
+        }
+        
+        .article-date {
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+        
+        .article-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: white;
+            flex: 1;
+        }
+        
+        .article-content p {
+            color: #bdc3c7;
+            margin-bottom: 20px;
+            line-height: 1.7;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 78px;
+        }
+        
+        .article-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(67, 97, 238, 0.15);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .action-btn:hover {
+            background: rgba(67, 97, 238, 0.3);
+        }
+        
+        .action-btn.delete {
+            background: rgba(247, 37, 133, 0.15);
+        }
+        
+        .action-btn.delete:hover {
+            background: rgba(247, 37, 133, 0.3);
+        }
+        
+        /* 侧边栏组件 */
+        .widget {
+            background: rgba(19, 38, 57, 0.7);
+            border-radius: var(--card-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(77, 101, 128, 0.3);
+        }
+        
+        .widget-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        
+        .widget-title i {
+            color: var(--life);
+        }
+        
+        .about-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--life));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .about-content p {
+            color: #bdc3c7;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            background: rgba(67, 97, 238, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        
+        /* 页脚 */
+        footer {
+            background: rgba(13, 27, 42, 0.95);
+            padding: 50px 0 20px;
+            margin-top: 60px;
+            border-top: 1px solid rgba(77, 101, 128, 0.3);
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .footer-section p {
+            color: #bdc3c7;
+            margin-bottom: 15px;
+            line-height: 1.7;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(67, 97, 238, 0.2);
+            color: white;
+            transition: var(--transition);
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+        
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: -1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+            
+            nav a {
+                font-size: 0.95rem;
+                padding: 6px 12px;
+            }
+            
+            .hero {
+                padding: 40px 20px;
+            }
+            
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .articles-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            
+            nav ul {
+                gap: 5px;
+            }
+            
+            nav a {
+                font-size: 0.9rem;
+                padding: 5px 10px;
+            }
+            
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+            
+            .article-img {
+                height: 160px;
+            }
+            
+            .article-content {
+                padding: 20px;
+            }
+            
+            .article-content h3 {
+                font-size: 1.3rem;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .stat-value {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* 分类标签 */
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .category {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border-radius: 50px;
+            background: rgba(67, 97, 238, 0.15);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+        
+        .category:hover {
+            background: rgba(67, 97, 238, 0.3);
+        }
+        
+        .category i {
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        
+        .category:hover i {
+            color: var(--accent);
+        }
+        
+        /* 实用类 */
+        .hidden {
+            display: none;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+        
+        .mt-30 {
+            margin-top: 30px;
+        }
     </style>
 </head>
 <body>
     <!-- 头部导航 -->
     <header>
         <div class="container header-content">
-            <div class="logo">
+            <a href="#" class="logo">
                 <i class="fas fa-blog"></i>
                 <h1>庞和合的博客</h1>
-            </div>
+            </a>
             <nav>
                 <ul>
                     <li><a href="#" class="active"><i class="fas fa-home"></i> 首页</a></li>
@@ -64,8 +762,8 @@
                 <!-- 搜索框 -->
                 <div class="search-box">
                     <div class="search-container">
-                        <input type="text" class="search-input" id="searchInput" placeholder="搜索文章...">
-                        <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i> 搜索</button>
+                        <input type="text" class="search-input" placeholder="搜索文章...">
+                        <button class="search-btn"><i class="fas fa-search"></i> 搜索</button>
                     </div>
                 </div>
                 
@@ -73,11 +771,11 @@
                 <section class="hero">
                     <h2>探索知识与创意的无限可能</h2>
                     <p>记录技术探索、生活感悟与创意灵感，打造属于我的知识宇宙</p>
-                    <div class="mt-30">
-                        <button id="newArticleBtn" class="btn">
+                    <div class="btn-container mt-30">
+                        <button class="btn">
                             <i class="fas fa-plus-circle"></i> 新建文章
                         </button>
-                        <button id="manageCategoriesBtn" class="btn btn-accent">
+                        <button class="btn btn-accent">
                             <i class="fas fa-tags"></i> 管理分类
                         </button>
                     </div>
@@ -86,16 +784,106 @@
                 <!-- 文章管理 -->
                 <section class="articles-section">
                     <div class="section-header">
-                        <h2 class="section-title" id="articlesTitle">最新文章</h2>
+                        <h2 class="section-title">最新文章</h2>
                         <div>
-                            <button class="action-btn" id="sortBtn">
+                            <button class="action-btn">
                                 <i class="fas fa-sort-amount-down"></i> 最新优先
                             </button>
                         </div>
                     </div>
                     
-                    <div class="articles-container" id="articlesContainer">
-                        <!-- 文章卡片将通过JS动态生成 -->
+                    <div class="articles-container">
+                        <!-- 文章卡片1 -->
+                        <div class="article-card">
+                            <div class="article-img" style="background: linear-gradient(45deg, #4361ee, #3a56d4);">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div class="article-content">
+                                <div class="article-header">
+                                    <span class="article-category">前端开发</span>
+                                    <span class="article-date">2025-07-19</span>
+                                </div>
+                                <h3>深入理解JavaScript闭包</h3>
+                                <p>闭包是JavaScript中一个非常重要的概念，它允许函数访问并记住其词法作用域，即使函数在其词法作用域之外执行。闭包在许多高级JavaScript模式中都有应用，包括模块模式、柯里化和函数工厂等。</p>
+                                <div class="article-actions">
+                                    <button class="action-btn">
+                                        <i class="fas fa-edit"></i> 编辑
+                                    </button>
+                                    <button class="action-btn delete">
+                                        <i class="fas fa-trash"></i> 删除
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 文章卡片2 -->
+                        <div class="article-card">
+                            <div class="article-img" style="background: linear-gradient(45deg, #4cc9f0, #3a9cbd);">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="article-content">
+                                <div class="article-header">
+                                    <span class="article-category">人工智能</span>
+                                    <span class="article-date">2025-07-19</span>
+                                </div>
+                                <h3>探索深度学习在图像识别中的应用</h3>
+                                <p>深度学习技术在图像识别领域取得了巨大突破。本文将探讨卷积神经网络(CNN)的基本原理，以及如何使用TensorFlow实现一个简单的图像分类器。我们将通过实际案例展示如何训练模型识别手写数字。</p>
+                                <div class="article-actions">
+                                    <button class="action-btn">
+                                        <i class="fas fa-edit"></i> 编辑
+                                    </button>
+                                    <button class="action-btn delete">
+                                        <i class="fas fa-trash"></i> 删除
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 文章卡片3 -->
+                        <div class="article-card">
+                            <div class="article-img" style="background: linear-gradient(45deg, #f72585, #d41e6f);">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <div class="article-content">
+                                <div class="article-header">
+                                    <span class="article-category">旅行摄影</span>
+                                    <span class="article-date">2025-07-18</span>
+                                </div>
+                                <h3>日本京都旅行摄影指南</h3>
+                                <p>京都作为日本的古都，拥有丰富的历史文化遗产。漫步在祇园的石板路上，参观金阁寺和清水寺，品尝正宗的怀石料理，这些体验让我深深感受到日本传统文化的魅力。本文将分享我在京都的摄影技巧和最佳拍摄地点。</p>
+                                <div class="article-actions">
+                                    <button class="action-btn">
+                                        <i class="fas fa-edit"></i> 编辑
+                                    </button>
+                                    <button class="action-btn delete">
+                                        <i class="fas fa-trash"></i> 删除
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 文章卡片4 -->
+                        <div class="article-card">
+                            <div class="article-img" style="background: linear-gradient(45deg, #7209b7, #5e0797);">
+                                <i class="fas fa-paint-brush"></i>
+                            </div>
+                            <div class="article-content">
+                                <div class="article-header">
+                                    <span class="article-category">艺术设计</span>
+                                    <span class="article-date">2025-07-17</span>
+                                </div>
+                                <h3>现代UI设计趋势分析</h3>
+                                <p>随着技术的不断发展，用户界面设计也在不断演变。本文将探讨2025年最受欢迎的UI设计趋势，包括玻璃拟态、3D元素、微交互和暗黑模式等，帮助设计师创建更具吸引力和用户体验的界面。</p>
+                                <div class="article-actions">
+                                    <button class="action-btn">
+                                        <i class="fas fa-edit"></i> 编辑
+                                    </button>
+                                    <button class="action-btn delete">
+                                        <i class="fas fa-trash"></i> 删除
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
             </div>
@@ -119,11 +907,11 @@
                     <h3 class="widget-title"><i class="fas fa-chart-bar"></i> 博客统计</h3>
                     <div class="stats">
                         <div class="stat-item">
-                            <div class="stat-value" id="articlesCount">0</div>
+                            <div class="stat-value">28</div>
                             <div class="stat-label">文章</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value" id="categoriesCount">0</div>
+                            <div class="stat-value">8</div>
                             <div class="stat-label">分类</div>
                         </div>
                         <div class="stat-item">
@@ -135,8 +923,25 @@
                 
                 <div class="widget">
                     <h3 class="widget-title"><i class="fas fa-tags"></i> 热门分类</h3>
-                    <div class="categories" id="popularCategories">
-                        <!-- 动态生成热门分类 -->
+                    <div class="categories">
+                        <div class="category">
+                            <span>前端开发</span>
+                        </div>
+                        <div class="category">
+                            <span>人工智能</span>
+                        </div>
+                        <div class="category">
+                            <span>旅行摄影</span>
+                        </div>
+                        <div class="category">
+                            <span>后端技术</span>
+                        </div>
+                        <div class="category">
+                            <span>生活随笔</span>
+                        </div>
+                        <div class="category">
+                            <span>艺术设计</span>
+                        </div>
                     </div>
                 </div>
             </aside>
@@ -159,8 +964,12 @@
                 </div>
                 <div class="footer-section">
                     <h3>博客分类</h3>
-                    <ul id="footerCategories">
-                        <!-- 动态生成分类 -->
+                    <ul>
+                        <li><a href="#">前端开发</a></li>
+                        <li><a href="#">后端技术</a></li>
+                        <li><a href="#">人工智能</a></li>
+                        <li><a href="#">旅行摄影</a></li>
+                        <li><a href="#">生活随笔</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -171,597 +980,46 @@
                 </div>
             </div>
             <div class="copyright">
-                <p>&copy; 2023 庞和合的博客. 保留所有权利.</p>
+                <p>&copy; 2023-2025 庞和合的博客. 保留所有权利.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Markdown编辑模态框 -->
-    <div class="modal" id="editorModal">
-        <div class="modal-content">
-            <span class="close-modal" id="closeEditor">&times;</span>
-            <h2 class="modal-title">Markdown 编辑器</h2>
-            
-            <div class="mb-20">
-                <input type="text" class="search-input" id="articleTitle" placeholder="输入文章标题" style="width: 100%; margin-bottom: 15px;">
-                <select class="search-input" id="articleCategory" style="width: 100%;">
-                    <option value="">选择文章分类</option>
-                </select>
-            </div>
-            
-            <div class="editor-container">
-                <div class="editor-column">
-                    <div class="editor-header">
-                        <div class="editor-label">编辑区</div>
-                        <div class="editor-tools">
-                            <button class="editor-tool" title="上传图片" id="uploadImageBtn"><i class="fas fa-image"></i></button>
-                            <button class="editor-tool" title="添加链接"><i class="fas fa-link"></i></button>
-                            <button class="editor-tool" title="添加代码"><i class="fas fa-code"></i></button>
-                        </div>
-                    </div>
-                    <textarea class="editor" id="markdownEditor"># 欢迎使用Markdown编辑器
-
-## 这是一个副标题
-
-你可以在这里编写你的博客内容，支持Markdown语法：
-
-- 列表项1
-- 列表项2
-- 列表项3
-
-**粗体文本** 和 *斜体文本*
-
-> 引用内容
-
-`代码片段`
-
-![图片描述](https://via.placeholder.com/400x200/4361ee/ffffff?text=示例图片)</textarea>
-                </div>
-                
-                <div class="editor-column">
-                    <div class="editor-header">
-                        <div class="editor-label">预览区</div>
-                    </div>
-                    <div class="preview" id="markdownPreview">
-                        <!-- Markdown预览将在这里显示 -->
-                    </div>
-                </div>
-            </div>
-            
-            <div class="modal-actions">
-                <button class="btn btn-secondary" id="cancelEdit">取消</button>
-                <button class="btn" id="saveArticle">保存文章</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 分类管理模态框 -->
-    <div class="modal" id="categoriesModal">
-        <div class="modal-content">
-            <span class="close-modal" id="closeCategories">&times;</span>
-            <h2 class="modal-title">管理分类</h2>
-            
-            <div class="categories-section">
-                <div class="section-header">
-                    <h2 class="section-title">现有分类</h2>
-                </div>
-                
-                <div class="categories" id="categoriesList">
-                    <!-- 分类将通过JS动态生成 -->
-                </div>
-                
-                <div class="category-form">
-                    <input type="text" class="category-input" id="newCategory" placeholder="输入新分类名称">
-                    <button class="btn" id="addCategory">添加分类</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 通知消息 -->
-    <div class="notification" id="notification">
-        <i class="fas fa-check-circle"></i>
-        <span id="notificationText">操作成功</span>
-    </div>
-
     <script>
-        // 博客数据存储 - 修复了持久化问题
-        let blogData = JSON.parse(localStorage.getItem('panghehe-blog')) || {
-            articles: [],
-            categories: ['前端开发', '后端技术', '人工智能', '旅行摄影', '生活随笔'],
-            settings: {
-                initialized: false
-            }
-        };
-        
-        // 当前状态
-        let currentState = {
-            editingArticleId: null,
-            sortOrder: 'newest',
-            searchQuery: '',
-            currentCategory: 'all'
-        };
-        
-        // DOM元素
-        const articlesContainer = document.getElementById('articlesContainer');
-        const articlesTitle = document.getElementById('articlesTitle');
-        const articlesCount = document.getElementById('articlesCount');
-        const categoriesCount = document.getElementById('categoriesCount');
-        const popularCategories = document.getElementById('popularCategories');
-        const footerCategories = document.getElementById('footerCategories');
-        const editorModal = document.getElementById('editorModal');
-        const categoriesModal = document.getElementById('categoriesModal');
-        const closeEditor = document.getElementById('closeEditor');
-        const closeCategories = document.getElementById('closeCategories');
-        const cancelEdit = document.getElementById('cancelEdit');
-        const markdownEditor = document.getElementById('markdownEditor');
-        const markdownPreview = document.getElementById('markdownPreview');
-        const newCategoryInput = document.getElementById('newCategory');
-        const addCategoryBtn = document.getElementById('addCategory');
-        const categoriesList = document.getElementById('categoriesList');
-        const articleCategory = document.getElementById('articleCategory');
-        const notification = document.getElementById('notification');
-        const notificationText = document.getElementById('notificationText');
-        const searchInput = document.getElementById('searchInput');
-        const searchBtn = document.getElementById('searchBtn');
-        const sortBtn = document.getElementById('sortBtn');
-        
-        // 初始化
-        function init() {
-            // 仅在第一次初始化时添加示例数据
-            if (!blogData.settings.initialized) {
-                addSampleArticles();
-                blogData.settings.initialized = true;
-                saveData();
-            }
-            
-            renderArticles();
-            renderCategories();
-            updateStats();
-            
-            // 事件监听
-            setupEventListeners();
-        }
-        
-        // 添加示例文章 - 仅在第一次初始化时调用
-        function addSampleArticles() {
-            blogData.articles = [
-                {
-                    id: Date.now(),
-                    title: '深入理解JavaScript闭包',
-                    content: '闭包是JavaScript中一个非常重要的概念，它允许函数访问并记住其词法作用域，即使函数在其词法作用域之外执行。闭包在许多高级JavaScript模式中都有应用，包括模块模式、柯里化和函数工厂等。',
-                    markdown: '# 深入理解JavaScript闭包\n\n闭包是JavaScript中一个非常重要的概念，它允许函数访问并记住其词法作用域，即使函数在其词法作用域之外执行。\n\n## 闭包的应用场景\n\n- 模块模式\n- 函数柯里化\n- 事件处理',
-                    category: '前端开发',
-                    date: new Date().toISOString().split('T')[0],
-                    image: 'code'
-                },
-                {
-                    id: Date.now() + 1,
-                    title: '探索深度学习在图像识别中的应用',
-                    content: '深度学习技术在图像识别领域取得了巨大突破。本文将探讨卷积神经网络(CNN)的基本原理，以及如何使用TensorFlow实现一个简单的图像分类器。我们将通过实际案例展示如何训练模型识别手写数字。',
-                    markdown: '# 探索深度学习在图像识别中的应用\n\n深度学习技术在图像识别领域取得了巨大突破。本文将探讨卷积神经网络(CNN)的基本原理。\n\n## CNN的核心概念\n\n- 卷积层\n- 池化层\n- 全连接层',
-                    category: '人工智能',
-                    date: new Date().toISOString().split('T')[0],
-                    image: 'ai'
-                },
-                {
-                    id: Date.now() + 2,
-                    title: '日本京都旅行摄影指南',
-                    content: '京都作为日本的古都，拥有丰富的历史文化遗产。漫步在祇园的石板路上，参观金阁寺和清水寺，品尝正宗的怀石料理，这些体验让我深深感受到日本传统文化的魅力。本文将分享我在京都的摄影技巧和最佳拍摄地点。',
-                    markdown: '# 日本京都旅行摄影指南\n\n京都作为日本的古都，拥有丰富的历史文化遗产。本文将分享我在京都的摄影技巧和最佳拍摄地点。\n\n## 最佳拍摄地点\n\n- 伏见稻荷大社\n- 清水寺\n- 岚山竹林',
-                    category: '旅行摄影',
-                    date: new Date().toISOString().split('T')[0],
-                    image: 'travel'
-                }
-            ];
-        }
-        
-        // 设置事件监听
-        function setupEventListeners() {
-            // 文章相关
-            document.getElementById('newArticleBtn').addEventListener('click', () => openEditor());
-            document.getElementById('manageCategoriesBtn').addEventListener('click', openCategoriesManager);
-            closeEditor.addEventListener('click', closeModals);
-            closeCategories.addEventListener('click', closeModals);
-            cancelEdit.addEventListener('click', closeModals);
-            markdownEditor.addEventListener('input', updatePreview);
-            addCategoryBtn.addEventListener('click', addCategory);
-            document.getElementById('saveArticle').addEventListener('click', saveArticle);
-            document.getElementById('uploadImageBtn').addEventListener('click', uploadImage);
-            searchInput.addEventListener('input', handleSearch);
-            searchBtn.addEventListener('click', handleSearch);
-            sortBtn.addEventListener('click', toggleSortOrder);
-            
-            // 按ESC关闭模态框
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') closeModals();
-            });
-        }
-        
-        // 渲染文章列表
-        function renderArticles() {
-            let articles = [...blogData.articles];
-            
-            // 应用搜索
-            if (currentState.searchQuery) {
-                const query = currentState.searchQuery.toLowerCase();
-                articles = articles.filter(article => 
-                    article.title.toLowerCase().includes(query) || 
-                    article.content.toLowerCase().includes(query) ||
-                    article.category.toLowerCase().includes(query)
-                );
-            }
-            
-            // 应用分类筛选
-            if (currentState.currentCategory !== 'all') {
-                articles = articles.filter(article => article.category === currentState.currentCategory);
-            }
-            
-            // 应用排序
-            if (currentState.sortOrder === 'newest') {
-                articles.sort((a, b) => new Date(b.date) - new Date(a.date));
-            } else {
-                articles.sort((a, b) => new Date(a.date) - new Date(b.date));
-            }
-            
-            // 更新标题
-            if (currentState.searchQuery) {
-                articlesTitle.innerHTML = `搜索 "<span style="color: var(--primary)">${currentState.searchQuery}</span>" 的结果`;
-            } else if (currentState.currentCategory !== 'all') {
-                articlesTitle.innerHTML = `分类 "<span style="color: var(--primary)">${currentState.currentCategory}</span>" 的文章`;
-            } else {
-                articlesTitle.textContent = currentState.sortOrder === 'newest' ? '最新文章' : '最早文章';
-            }
-            
-            // 渲染文章
-            if (articles.length === 0) {
-                articlesContainer.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-file-alt"></i>
-                        <h3>没有找到文章</h3>
-                        <p>${currentState.searchQuery ? '没有找到匹配搜索条件的文章' : '当前分类下没有文章，请尝试其他分类或创建新文章'}</p>
-                        <button class="btn mt-30" id="createArticleBtn">创建新文章</button>
-                    </div>
-                `;
-                document.getElementById('createArticleBtn')?.addEventListener('click', () => openEditor());
-            } else {
-                articlesContainer.innerHTML = articles.map(article => `
-                    <div class="article-card">
-                        <div class="article-img" style="background: linear-gradient(45deg, ${getColorByCategory(article.category)}, #2c3e50);">
-                            <i class="fas fa-${getIconByImage(article.image)}"></i>
-                        </div>
-                        <div class="article-content">
-                            <div class="article-header">
-                                <span class="article-category">${article.category}</span>
-                                <span class="article-date">${article.date}</span>
-                            </div>
-                            <h3>${article.title}</h3>
-                            <p>${article.content}</p>
-                            <div class="article-actions">
-                                <button class="action-btn edit-btn" data-id="${article.id}">
-                                    <i class="fas fa-edit"></i> 编辑
-                                </button>
-                                <button class="action-btn delete delete-btn" data-id="${article.id}">
-                                    <i class="fas fa-trash"></i> 删除
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-                
-                // 添加事件监听
-                document.querySelectorAll('.edit-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const id = e.currentTarget.getAttribute('data-id');
-                        openEditor(id);
-                    });
+        // 简单的交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 卡片悬停效果
+            const cards = document.querySelectorAll('.article-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-8px)';
                 });
                 
-                document.querySelectorAll('.delete-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const id = e.currentTarget.getAttribute('data-id');
-                        deleteArticle(id);
-                    });
-                });
-            }
-        }
-        
-        // 渲染分类
-        function renderCategories() {
-            // 分类管理模态框
-            categoriesList.innerHTML = blogData.categories.map(category => `
-                <div class="category">
-                    <span>${category}</span>
-                    <i class="fas fa-times delete-category" data-category="${category}"></i>
-                </div>
-            `).join('');
-            
-            // 添加删除分类事件
-            document.querySelectorAll('.delete-category').forEach(icon => {
-                icon.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const category = icon.getAttribute('data-category');
-                    deleteCategory(category);
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
                 });
             });
             
-            // 热门分类（侧边栏）
-            popularCategories.innerHTML = blogData.categories.slice(0, 5).map(category => `
-                <div class="category" data-category="${category}">
-                    <span>${category}</span>
-                    <span class="count">${blogData.articles.filter(a => a.category === category).length}</span>
-                </div>
-            `).join('');
-            
-            // 添加分类筛选事件
-            document.querySelectorAll('.category[data-category]').forEach(cat => {
-                cat.addEventListener('click', () => {
-                    const category = cat.getAttribute('data-category');
-                    currentState.currentCategory = category;
-                    renderArticles();
+            // 按钮点击效果
+            const buttons = document.querySelectorAll('.btn, .action-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
                 });
             });
             
-            // 页脚分类
-            footerCategories.innerHTML = blogData.categories.map(category => `
-                <li><a href="#" data-category="${category}">${category}</a></li>
-            `).join('');
-            
-            // 添加页脚分类事件
-            document.querySelectorAll('#footerCategories a').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    currentState.currentCategory = link.getAttribute('data-category');
-                    renderArticles();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+            // 导航菜单激活效果
+            const navLinks = document.querySelectorAll('nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
                 });
             });
-            
-            // 编辑器分类选择
-            articleCategory.innerHTML = '<option value="">选择文章分类</option>' + 
-                blogData.categories.map(category => `
-                    <option value="${category}">${category}</option>
-                `).join('');
-        }
-        
-        // 更新统计信息
-        function updateStats() {
-            articlesCount.textContent = blogData.articles.length;
-            categoriesCount.textContent = blogData.categories.length;
-        }
-        
-        // 根据分类获取颜色
-        function getColorByCategory(category) {
-            const colors = {
-                '前端开发': '#4361ee',
-                '后端技术': '#7209b7',
-                '人工智能': '#4cc9f0',
-                '旅行摄影': '#f72585',
-                '生活随笔': '#2ecc71'
-            };
-            return colors[category] || '#4361ee';
-        }
-        
-        // 根据图片类型获取图标
-        function getIconByImage(image) {
-            const icons = {
-                'code': 'code',
-                'ai': 'robot',
-                'travel': 'camera',
-                'life': 'heart'
-            };
-            return icons[image] || 'file-alt';
-        }
-        
-        // 打开编辑器
-        function openEditor(articleId = null) {
-            currentState.editingArticleId = articleId;
-            
-            if (articleId) {
-                const article = blogData.articles.find(a => a.id == articleId);
-                if (article) {
-                    document.getElementById('articleTitle').value = article.title;
-                    markdownEditor.value = article.markdown;
-                    articleCategory.value = article.category;
-                }
-            } else {
-                document.getElementById('articleTitle').value = '';
-                markdownEditor.value = '# 新文章标题\n\n开始撰写你的内容...';
-                articleCategory.value = '';
-            }
-            
-            editorModal.style.display = 'flex';
-            updatePreview();
-        }
-        
-        // 打开分类管理
-        function openCategoriesManager() {
-            renderCategories();
-            categoriesModal.style.display = 'flex';
-        }
-        
-        // 关闭模态框
-        function closeModals() {
-            editorModal.style.display = 'none';
-            categoriesModal.style.display = 'none';
-        }
-        
-        // 更新Markdown预览
-        function updatePreview() {
-            const markdown = markdownEditor.value;
-            // 简单的Markdown解析
-            let html = markdown
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // 粗体
-                .replace(/\*(.*?)\*/g, '<em>$1</em>') // 斜体
-                .replace(/^# (.*$)/gm, '<h1>$1</h1>') // H1
-                .replace(/^## (.*$)/gm, '<h2>$1</h2>') // H2
-                .replace(/^### (.*$)/gm, '<h3>$1</h3>') // H3
-                .replace(/^- (.*$)/gm, '<li>$1</li>') // 列表项
-                .replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>') // 列表
-                .replace(/`(.*?)`/g, '<code>$1</code>') // 行内代码
-                .replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1">') // 图片
-                .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>') // 链接
-                .replace(/^> (.*$)/gm, '<blockquote>$1</blockquote>') // 引用
-                .replace(/\n/g, '<br>'); // 换行
-            
-            markdownPreview.innerHTML = html;
-        }
-        
-        // 添加新分类
-        function addCategory() {
-            const newCategory = newCategoryInput.value.trim();
-            if (newCategory) {
-                if (!blogData.categories.includes(newCategory)) {
-                    blogData.categories.push(newCategory);
-                    saveData();
-                    renderCategories();
-                    updateStats();
-                    newCategoryInput.value = '';
-                    showNotification('分类添加成功');
-                } else {
-                    showNotification('该分类已存在', true);
-                }
-            } else {
-                showNotification('请输入分类名称', true);
-            }
-        }
-        
-        // 删除分类
-        function deleteCategory(category) {
-            // 检查是否有文章使用该分类
-            const articlesWithCategory = blogData.articles.filter(a => a.category === category);
-            
-            if (articlesWithCategory.length > 0) {
-                showNotification('无法删除：有文章使用此分类', true);
-                return;
-            }
-            
-            blogData.categories = blogData.categories.filter(c => c !== category);
-            saveData();
-            renderCategories();
-            updateStats();
-            showNotification('分类已删除');
-        }
-        
-        // 删除文章
-        function deleteArticle(id) {
-            if (confirm('确定要删除这篇文章吗？此操作不可撤销。')) {
-                blogData.articles = blogData.articles.filter(a => a.id != id);
-                saveData();
-                renderArticles();
-                updateStats();
-                showNotification('文章已删除');
-            }
-        }
-        
-        // 保存文章
-        function saveArticle() {
-            const title = document.getElementById('articleTitle').value.trim();
-            const category = articleCategory.value;
-            const markdown = markdownEditor.value;
-            const content = markdown.substring(0, 200) + '...'; // 生成摘要
-            
-            if (!title) {
-                showNotification('请填写文章标题', true);
-                return;
-            }
-            
-            if (!category) {
-                showNotification('请选择文章分类', true);
-                return;
-            }
-            
-            if (!markdown) {
-                showNotification('请填写文章内容', true);
-                return;
-            }
-            
-            const articleData = {
-                id: currentState.editingArticleId || Date.now(),
-                title,
-                content,
-                markdown,
-                category,
-                date: new Date().toISOString().split('T')[0],
-                image: getImageByCategory(category)
-            };
-            
-            if (currentState.editingArticleId) {
-                // 更新现有文章
-                const index = blogData.articles.findIndex(a => a.id == currentState.editingArticleId);
-                if (index !== -1) {
-                    blogData.articles[index] = articleData;
-                }
-            } else {
-                // 添加新文章
-                blogData.articles.unshift(articleData);
-            }
-            
-            saveData();
-            renderArticles();
-            updateStats();
-            closeModals();
-            showNotification(`文章"${title}"已保存`);
-        }
-        
-        // 根据分类获取图片类型
-        function getImageByCategory(category) {
-            const mapping = {
-                '前端开发': 'code',
-                '后端技术': 'server',
-                '人工智能': 'ai',
-                '旅行摄影': 'travel',
-                '生活随笔': 'life'
-            };
-            return mapping[category] || 'file-alt';
-        }
-        
-        // 处理搜索
-        function handleSearch() {
-            currentState.searchQuery = searchInput.value.trim().toLowerCase();
-            renderArticles();
-        }
-        
-        // 切换排序顺序
-        function toggleSortOrder() {
-            currentState.sortOrder = currentState.sortOrder === 'newest' ? 'oldest' : 'newest';
-            sortBtn.innerHTML = currentState.sortOrder === 'newest' 
-                ? '<i class="fas fa-sort-amount-down"></i> 最新优先' 
-                : '<i class="fas fa-sort-amount-up"></i> 最早优先';
-            renderArticles();
-        }
-        
-        // 上传图片（模拟）
-        function uploadImage() {
-            const url = prompt('请输入图片URL（模拟上传）:');
-            if (url) {
-                const markdown = `![](${url})`;
-                const cursorPos = markdownEditor.selectionStart;
-                const textBefore = markdownEditor.value.substring(0, cursorPos);
-                const textAfter = markdownEditor.value.substring(cursorPos);
-                
-                markdownEditor.value = textBefore + markdown + textAfter;
-                updatePreview();
-            }
-        }
-        
-        // 显示通知
-        function showNotification(message, isError = false) {
-            notificationText.textContent = message;
-            notification.className = isError ? 'notification error show' : 'notification show';
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-        
-        // 保存数据到localStorage - 使用唯一键名
-        function saveData() {
-            localStorage.setItem('panghehe-blog', JSON.stringify(blogData));
-        }
-        
-        // 初始化应用
-        init();
+        });
     </script>
 </body>
 </html>
