@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>庞和合的博客 - Gist同步版</title>
+    <title>庞和合的博客 - GitHub部署版</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
     <style>
@@ -588,6 +588,63 @@
             color: #721c24;
         }
         
+        /* GitHub部署指南 */
+        .deployment-guide {
+            background: #f0f8ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            border: 1px dashed #4361ee;
+        }
+        
+        .deployment-guide h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .deployment-steps {
+            counter-reset: step;
+            margin-left: 20px;
+        }
+        
+        .deployment-steps li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .deployment-steps li:before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 22px;
+            height: 22px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 12px;
+            border-radius: 5px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        
         /* 响应式设计 */
         @media (max-width: 1024px) {
             .editor-container {
@@ -676,6 +733,9 @@
     <div class="main-content">
         <div class="header">
             <h1><i class="fas fa-feather-alt"></i> 博客文章</h1>
+            <button class="btn btn-primary" id="githubGuideBtn">
+                <i class="fab fa-github"></i> GitHub部署指南
+            </button>
         </div>
         
         <div class="posts-container" id="postsContainer">
@@ -684,6 +744,30 @@
                 <i class="fas fa-file-alt"></i>
                 <h3>暂无博客文章</h3>
                 <p>点击"新建博客文章"按钮开始撰写</p>
+            </div>
+        </div>
+        
+        <div class="deployment-guide" id="deploymentGuide" style="display:none;">
+            <h3><i class="fab fa-github"></i> GitHub Pages 部署指南</h3>
+            <ol class="deployment-steps">
+                <li>在GitHub上创建一个新仓库，命名为 <strong>yourusername.github.io</strong></li>
+                <li>将本页HTML文件保存为 <strong>index.html</strong> 并上传到仓库</li>
+                <li>进入仓库设置 > Pages > 选择部署分支（通常为main/master）</li>
+                <li>保存设置，等待部署完成（通常需要1-2分钟）</li>
+                <li>访问 <strong>https://yourusername.github.io</strong> 查看您的博客</li>
+            </ol>
+            <p>GitHub Pages 部署注意事项：</p>
+            <div class="code-block">
+                // 确保文件名为index.html<br>
+                // 避免使用绝对路径引用本地资源<br>
+                // GitHub Pages不支持服务端脚本<br>
+                // 使用localStorage存储数据<br>
+                // API调用需要处理CORS问题
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" id="downloadFullHtml" style="width:100%;">
+                    <i class="fas fa-download"></i> 下载完整HTML文件
+                </button>
             </div>
         </div>
     </div>
@@ -826,6 +910,7 @@
             createPostBtn: document.getElementById('createPostBtn'),
             createCategoryBtn: document.getElementById('createCategoryBtn'),
             dataManagementBtn: document.getElementById('dataManagementBtn'),
+            githubGuideBtn: document.getElementById('githubGuideBtn'),
             postModal: document.getElementById('postModal'),
             categoryModal: document.getElementById('categoryModal'),
             dataPanel: document.getElementById('dataPanel'),
@@ -851,6 +936,7 @@
             exportDataBtn: document.getElementById('exportDataBtn'),
             importDataBtn: document.getElementById('importDataBtn'),
             downloadHtmlBtn: document.getElementById('downloadHtmlBtn'),
+            downloadFullHtml: document.getElementById('downloadFullHtml'),
             clearDataBtn: document.getElementById('clearDataBtn'),
             closeDataPanelBtn: document.getElementById('closeDataPanelBtn'),
             patInput: document.getElementById('patInput'),
@@ -859,7 +945,8 @@
             loadFromGistBtn: document.getElementById('loadFromGistBtn'),
             gistIdValue: document.getElementById('gistIdValue'),
             gistIdDisplay: document.getElementById('gistIdDisplay'),
-            gistStatusMessage: document.getElementById('gistStatusMessage')
+            gistStatusMessage: document.getElementById('gistStatusMessage'),
+            deploymentGuide: document.getElementById('deploymentGuide')
         };
         
         // 初始化博客
@@ -916,8 +1003,15 @@
                 { 
                     id: generateId(), 
                     title: 'Markdown使用指南', 
-                    content: '## Markdown 是什么？\n\nMarkdown是一种轻量级标记语言，允许人们使用易读易写的纯文本格式编写文档。\n\n### 常用语法\n\n1. 标题：`# 一级标题` `## 二级标题`\n2. 列表：`- 无序列表` `1. 有序列表`\n3. 链接：``\n4. 代码块：\\`\\`\\`javascript\n   console.log("代码");\n   \\`\\`\\`\n\n> 掌握Markdown，让写作更高效！',
+                    content: '## Markdown 是什么？\n\nMarkdown是一种轻量级标记语言，允许人们使用易读易写的纯文本格式编写文档。\n\n### 常用语法\n\n1. 标题：`# 一级标题` `## 二级标题`\n2. 列表：`- 无序列表` `1. 有序列表`\n3. 链接：`[链接文本](https://example.com)`\n4. 代码块：\n```javascript\nconsole.log("代码示例");\n```\n\n> 掌握Markdown，让写作更高效！',
                     category: blogData.categories[2].id,
+                    createdAt: new Date().toISOString()
+                },
+                { 
+                    id: generateId(), 
+                    title: 'GitHub Pages部署指南', 
+                    content: '## 部署静态博客到GitHub Pages\n\n1. 在GitHub上创建一个新仓库\n2. 将HTML文件命名为index.html\n3. 上传到仓库的根目录\n4. 在仓库设置中启用GitHub Pages\n\n### 注意事项\n\n- 确保所有资源使用相对路径\n- 避免使用服务端脚本\n- 使用localStorage存储数据\n- 处理API调用的CORS问题',
+                    category: blogData.categories[0].id,
                     createdAt: new Date().toISOString()
                 }
             ];
@@ -1090,6 +1184,11 @@
                 DOM.dataPanel.classList.add('active');
             });
             
+            // GitHub部署指南
+            DOM.githubGuideBtn.addEventListener('click', () => {
+                DOM.deploymentGuide.style.display = DOM.deploymentGuide.style.display === 'none' ? 'block' : 'none';
+            });
+            
             // 关闭数据面板
             DOM.closeDataPanelBtn.addEventListener('click', () => {
                 DOM.dataPanel.classList.remove('active');
@@ -1193,6 +1292,9 @@
             
             // 下载HTML文件
             DOM.downloadHtmlBtn.addEventListener('click', downloadHtml);
+            
+            // 下载完整HTML文件
+            DOM.downloadFullHtml.addEventListener('click', downloadFullHtml);
             
             // 清除所有数据
             DOM.clearDataBtn.addEventListener('click', () => {
@@ -1354,6 +1456,52 @@
             URL.revokeObjectURL(url);
             
             showStatusMessage('HTML文件已下载，可用于部署到GitHub Pages', true);
+        }
+        
+        // 下载完整HTML文件（包括所有数据）
+        function downloadFullHtml() {
+            // 保存当前数据到localStorage
+            saveLocalData();
+            
+            // 生成包含所有数据的HTML
+            const htmlContent = `<!DOCTYPE html>
+            <html lang="zh-CN">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>庞和合的博客</title>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+                <style>
+                    /* 样式代码保持不变 */
+                    ${document.querySelector('style').innerHTML}
+                </style>
+            </head>
+            <body>
+                <!-- HTML结构保持不变 -->
+                ${document.body.innerHTML}
+                <script>
+                    // 初始化博客数据
+                    localStorage.setItem('blogData', ${JSON.stringify(JSON.stringify(blogData))});
+                    
+                    // JavaScript代码保持不变
+                    ${document.querySelector('script').innerHTML}
+                </script>
+            </body>
+            </html>`;
+            
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'panghehe-blog-full.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showStatusMessage('完整HTML文件已下载，包含所有博客数据', true);
         }
         
         // 编辑文章
