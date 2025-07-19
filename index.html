@@ -3,774 +3,367 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>庞和合的博客 | 现代知识分享平台</title>
+    <title>庞和合的博客</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
     <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4CAF50;
+            --danger: #f44336;
+            --gray: #6c757d;
+            --sidebar-width: 280px;
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Noto Sans SC', sans-serif;
-        }
-        
-        :root {
-            --primary: #4361ee;
-            --secondary: #3a56d4;
-            --accent: #f72585;
-            --dark: #0d1b2a;
-            --darker: #070f1a;
-            --light: #f8f9fa;
-            --lighter: #ffffff;
-            --gray: #8d99ae;
-            --light-gray: #e9ecef;
-            --tech: #4361ee;
-            --life: #4cc9f0;
-            --travel: #f72585;
-            --art: #7209b7;
-            --transition: all 0.3s ease;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            --card-radius: 16px;
-            --success: #2ecc71;
-            --warning: #f39c12;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, var(--darker), var(--dark));
-            color: var(--light);
+            background: #f5f7fa;
+            color: var(--dark);
+            display: flex;
             min-height: 100vh;
             line-height: 1.6;
-            padding-bottom: 40px;
         }
         
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        /* 头部样式 */
-        header {
-            background: rgba(13, 27, 42, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 15px 0;
+        /* 侧边栏样式 */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(135deg, #3a7bd5, #3a6073);
+            color: white;
+            padding: 25px;
+            height: 100vh;
             position: sticky;
             top: 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 3px 0 10px rgba(0,0,0,0.1);
+            overflow: hidden;
             z-index: 100;
-            box-shadow: var(--shadow);
-            border-bottom: 1px solid rgba(77, 101, 128, 0.3);
         }
         
-        .header-content {
+        .sidebar-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 0 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 25px;
         }
         
         .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #2196F3, #21CBF3);
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 12px;
-            text-decoration: none;
+            justify-content: center;
+            margin-right: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
         }
         
         .logo i {
-            font-size: 2rem;
-            background: linear-gradient(45deg, var(--primary), var(--life));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            font-size: 24px;
         }
         
-        .logo h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(to right, var(--primary), var(--life));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            font-family: 'Playfair Display', serif;
-            letter-spacing: -0.5px;
-        }
-        
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 20px;
-        }
-        
-        nav a {
-            color: var(--light);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 1.05rem;
-            padding: 8px 15px;
-            border-radius: 30px;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        nav a:hover, nav a.active {
-            background: rgba(67, 97, 238, 0.2);
-        }
-        
-        /* 主内容区 */
-        main {
-            padding: 40px 0;
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 30px;
-        }
-        
-        .content-area {
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-        }
-        
-        .sidebar {
-            background: rgba(13, 27, 42, 0.7);
-            border-radius: var(--card-radius);
-            padding: 30px;
-            height: fit-content;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(77, 101, 128, 0.3);
-        }
-        
-        /* 搜索框 */
-        .search-box {
-            background: rgba(19, 38, 57, 0.7);
-            border-radius: var(--card-radius);
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(77, 101, 128, 0.3);
-        }
-        
-        .search-container {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .search-input {
-            flex: 1;
-            padding: 14px 20px;
-            border-radius: 50px;
-            border: none;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 1rem;
-        }
-        
-        .search-input:focus {
-            outline: none;
-            box-shadow: 0 0 0 2px var(--primary);
-        }
-        
-        .search-btn {
-            padding: 0 25px;
-            border-radius: 50px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-        }
-        
-        .search-btn:hover {
-            background: var(--secondary);
-        }
-        
-        /* 欢迎区域 */
-        .hero {
-            background: linear-gradient(135deg, rgba(67, 97, 238, 0.2), rgba(76, 201, 240, 0.2));
-            backdrop-filter: blur(10px);
-            border-radius: var(--card-radius);
-            padding: 50px 40px;
-            text-align: center;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(77, 101, 128, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            z-index: -1;
-        }
-        
-        .hero h2 {
-            font-size: 2.8rem;
-            margin-bottom: 20px;
-            color: white;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            font-family: 'Playfair Display', serif;
-            line-height: 1.2;
-        }
-        
-        .hero p {
-            font-size: 1.3rem;
-            max-width: 800px;
-            margin: 0 auto 30px;
-            color: #e0e1ff;
-            font-weight: 300;
-        }
-        
-        .btn-container {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: var(--primary);
-            color: white;
-            padding: 14px 30px;
-            border-radius: 50px;
-            text-decoration: none;
+        .blog-title {
+            font-size: 1.4rem;
             font-weight: 600;
-            font-size: 1.05rem;
-            transition: var(--transition);
+        }
+        
+        .create-btn {
+            background: var(--success);
+            color: white;
             border: none;
+            border-radius: 30px;
+            padding: 12px 20px;
+            font-size: 1rem;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(67, 97, 238, 0.4);
-            white-space: nowrap;
-        }
-        
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.6);
-        }
-        
-        .btn i {
-            font-size: 1.1rem;
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            border: 2px solid var(--primary);
-        }
-        
-        .btn-secondary:hover {
-            background: rgba(67, 97, 238, 0.1);
-        }
-        
-        .btn-accent {
-            background: var(--accent);
-            box-shadow: 0 4px 20px rgba(247, 37, 133, 0.4);
-        }
-        
-        .btn-accent:hover {
-            box-shadow: 0 8px 25px rgba(247, 37, 133, 0.6);
-        }
-        
-        /* 文章管理 */
-        .articles-section {
-            background: rgba(13, 27, 42, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: var(--card-radius);
-            padding: 30px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(77, 101, 128, 0.3);
-        }
-        
-        .section-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            width: 100%;
+            margin: 15px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .create-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .sidebar-section {
             margin-bottom: 25px;
         }
         
         .section-title {
-            font-size: 1.7rem;
-            font-weight: 700;
-            background: linear-gradient(to right, var(--primary), var(--life));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .articles-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 30px;
-            margin-top: 20px;
-        }
-        
-        .article-card {
-            background: rgba(19, 38, 57, 0.7);
-            border-radius: var(--card-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            border: 1px solid rgba(77, 101, 128, 0.3);
-            display: flex;
-            flex-direction: column;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .article-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
-        }
-        
-        .article-img {
-            height: 180px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            font-size: 1.1rem;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: white;
-            opacity: 0.9;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         
-        .article-content {
-            padding: 25px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+        .section-title i {
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.3s;
         }
         
-        .article-header {
+        .section-title i:hover {
+            opacity: 1;
+        }
+        
+        .items-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .category-item, .post-item {
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 8px 0;
+            cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
         }
         
-        .article-category {
-            padding: 5px 15px;
+        .category-item {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .post-item {
+            background: rgba(255, 255, 255, 0.07);
+        }
+        
+        .category-item:hover, .post-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .category-item.active, .post-item.active {
+            background: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+            box-shadow: inset 3px 0 0 white;
+        }
+        
+        .item-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .item-actions i {
+            font-size: 0.9rem;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .item-actions i:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .counter {
+            background: var(--accent);
+            color: white;
+            font-size: 0.75rem;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            max-width: calc(100% - var(--sidebar-width));
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .header h1 i {
+            color: var(--accent);
+        }
+        
+        .posts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+        
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px;
+            color: var(--gray);
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #e0e0e0;
+        }
+        
+        .post-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.07);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            height: 150px;
+            background: linear-gradient(120deg, var(--accent), var(--primary));
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .category-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--primary);
+            padding: 5px 12px;
             border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 600;
-            background: rgba(67, 97, 238, 0.2);
-            color: #a3b3ff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        .article-date {
+        .card-content {
+            padding: 20px;
+            flex-grow: 1;
+        }
+        
+        .card-content h3 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            color: var(--dark);
+            line-height: 1.4;
+        }
+        
+        .card-content p {
             color: var(--gray);
-            font-size: 0.85rem;
-        }
-        
-        .article-content h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: white;
-            flex: 1;
-        }
-        
-        .article-content p {
-            color: #bdc3c7;
+            font-size: 0.95rem;
             margin-bottom: 20px;
-            line-height: 1.7;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            min-height: 78px;
         }
         
-        .article-actions {
+        .card-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #f0f0f0;
             display: flex;
-            gap: 10px;
-            margin-top: auto;
-        }
-        
-        .action-btn {
-            flex: 1;
-            padding: 10px;
-            border-radius: 8px;
-            background: rgba(67, 97, 238, 0.15);
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 0.9rem;
-        }
-        
-        .action-btn:hover {
-            background: rgba(67, 97, 238, 0.3);
-        }
-        
-        .action-btn.delete {
-            background: rgba(247, 37, 133, 0.15);
-        }
-        
-        .action-btn.delete:hover {
-            background: rgba(247, 37, 133, 0.3);
-        }
-        
-        /* 侧边栏组件 */
-        .widget {
-            background: rgba(19, 38, 57, 0.7);
-            border-radius: var(--card-radius);
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(77, 101, 128, 0.3);
-        }
-        
-        .widget-title {
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-        }
-        
-        .widget-title i {
-            color: var(--life);
-        }
-        
-        .about-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-        
-        .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, var(--primary), var(--life));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            color: white;
-            margin-bottom: 20px;
-        }
-        
-        .about-content p {
-            color: #bdc3c7;
-            margin-bottom: 20px;
-            line-height: 1.7;
-        }
-        
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .stat-item {
-            background: rgba(67, 97, 238, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 1.7rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 5px;
-        }
-        
-        .stat-label {
-            font-size: 0.85rem;
-            color: var(--gray);
-        }
-        
-        /* 页脚 */
-        footer {
-            background: rgba(13, 27, 42, 0.95);
-            padding: 50px 0 20px;
-            margin-top: 60px;
-            border-top: 1px solid rgba(77, 101, 128, 0.3);
-        }
-        
-        .footer-content {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 40px;
             justify-content: space-between;
-            margin-bottom: 40px;
-        }
-        
-        .footer-section {
-            flex: 1;
-            min-width: 250px;
-        }
-        
-        .footer-section h3 {
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            color: var(--primary);
-            font-weight: 600;
-        }
-        
-        .footer-section p {
-            color: #bdc3c7;
-            margin-bottom: 15px;
-            line-height: 1.7;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .social-links a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: rgba(67, 97, 238, 0.2);
-            color: white;
-            transition: var(--transition);
-            text-decoration: none;
-            font-size: 1.1rem;
-        }
-        
-        .social-links a:hover {
-            background: var(--primary);
-            transform: translateY(-5px);
-        }
-        
-        .copyright {
-            text-align: center;
-            padding-top: 30px;
-            margin-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
             color: var(--gray);
             font-size: 0.9rem;
         }
         
-        /* 响应式设计 */
-        @media (max-width: 1024px) {
-            main {
-                grid-template-columns: 1fr;
-            }
-            
-            .sidebar {
-                order: -1;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 10px;
-            }
-            
-            nav a {
-                font-size: 0.95rem;
-                padding: 6px 12px;
-            }
-            
-            .hero {
-                padding: 40px 20px;
-            }
-            
-            .hero h2 {
-                font-size: 2.2rem;
-            }
-            
-            .hero p {
-                font-size: 1.1rem;
-            }
-            
-            .articles-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .btn-container {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
-                width: 100%;
-                max-width: 300px;
-            }
-            
-            .section-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            
-            .footer-content {
-                flex-direction: column;
-                gap: 30px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .logo h1 {
-                font-size: 1.6rem;
-            }
-            
-            nav ul {
-                gap: 5px;
-            }
-            
-            nav a {
-                font-size: 0.9rem;
-                padding: 5px 10px;
-            }
-            
-            .hero h2 {
-                font-size: 1.8rem;
-            }
-            
-            .article-img {
-                height: 160px;
-            }
-            
-            .article-content {
-                padding: 20px;
-            }
-            
-            .article-content h3 {
-                font-size: 1.3rem;
-            }
-            
-            .stats {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .stat-value {
-                font-size: 1.5rem;
-            }
-        }
-        
-        /* 分类标签 */
-        .categories {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-        
-        .category {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 18px;
-            border-radius: 50px;
-            background: rgba(67, 97, 238, 0.15);
-            color: white;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 0.95rem;
-        }
-        
-        .category:hover {
-            background: rgba(67, 97, 238, 0.3);
-        }
-        
-        .category i {
-            font-size: 0.9rem;
-            transition: var(--transition);
-        }
-        
-        .category:hover i {
-            color: var(--accent);
-        }
-        
-        /* 模态框 */
+        /* 模态框样式 */
         .modal {
-            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(5px);
-        }
-        
-        .modal-content {
-            background: var(--dark);
-            width: 90%;
-            max-width: 600px;
-            border-radius: var(--card-radius);
-            padding: 40px;
-            box-shadow: var(--shadow);
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 1px solid rgba(77, 101, 128, 0.5);
-        }
-        
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 1.8rem;
-            color: var(--gray);
-            cursor: pointer;
-            transition: var(--transition);
-            width: 40px;
-            height: 40px;
+            background: rgba(0, 0, 0, 0.7);
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+            z-index: 1000;
         }
         
-        .close-modal:hover {
-            color: var(--accent);
-            background: rgba(255, 255, 255, 0.1);
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
         }
         
-        .modal-title {
-            font-size: 2rem;
-            margin-bottom: 25px;
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 750px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            transform: translateY(-30px);
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            padding: 18px 25px;
+            background: var(--primary);
             color: white;
-            text-align: center;
+        }
+        
+        .modal-header h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .modal-body {
+            padding: 25px;
+            overflow-y: auto;
+            flex-grow: 1;
         }
         
         .form-group {
@@ -780,740 +373,712 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: var(--light);
             font-weight: 500;
+            color: var(--dark);
+            font-size: 0.95rem;
         }
         
         .form-control {
             width: 100%;
-            padding: 14px 20px;
-            border-radius: 10px;
-            border: none;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
             font-size: 1rem;
+            transition: all 0.3s;
         }
         
         .form-control:focus {
             outline: none;
-            box-shadow: 0 0 0 2px var(--primary);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
         }
         
-        textarea.form-control {
-            min-height: 150px;
-            resize: vertical;
-        }
-        
-        .modal-actions {
-            display: flex;
-            justify-content: center;
+        .editor-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 20px;
-            margin-top: 30px;
+            min-height: 400px;
+            margin-top: 15px;
         }
         
-        /* 通知消息 */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 10px;
-            background: var(--success);
-            color: white;
-            box-shadow: var(--shadow);
-            z-index: 2000;
+        .markdown-editor, .markdown-preview {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 18px;
+            background: white;
+            overflow-y: auto;
+        }
+        
+        .markdown-preview {
+            background: #f8f9ff;
+        }
+        
+        textarea {
+            min-height: 360px;
+            resize: none;
+            font-family: 'Consolas', monospace;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        
+        .modal-footer {
+            padding: 18px 25px;
+            background: #f9f9f9;
             display: flex;
-            align-items: center;
-            gap: 10px;
-            transform: translateX(150%);
-            transition: transform 0.3s ease;
+            justify-content: flex-end;
+            gap: 15px;
+            border-top: 1px solid #eee;
         }
         
-        .notification.show {
-            transform: translateX(0);
+        .btn {
+            padding: 12px 26px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
         }
         
-        .notification.error {
-            background: var(--accent);
+        .btn-primary {
+            background: var(--primary);
+            color: white;
         }
         
-        /* 实用类 */
-        .hidden {
-            display: none;
+        .btn-primary:hover {
+            background: var(--secondary);
         }
         
-        .text-center {
-            text-align: center;
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--gray);
+            color: var(--gray);
         }
         
-        .mb-20 {
-            margin-bottom: 20px;
+        .btn-outline:hover {
+            background: #f5f5f5;
         }
         
-        .mt-30 {
-            margin-top: 30px;
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .editor-container {
+                grid-template-columns: 1fr;
+                min-height: 700px;
+            }
+            
+            .posts-container {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            
+            .main-content {
+                max-width: 100%;
+                padding: 25px;
+            }
+            
+            .posts-container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 头部导航 -->
-    <header>
-        <div class="container header-content">
-            <a href="#" class="logo">
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
                 <i class="fas fa-blog"></i>
-                <h1>庞和合的博客</h1>
-            </a>
-            <nav>
-                <ul>
-                    <li><a href="#" class="active"><i class="fas fa-home"></i> 首页</a></li>
-                    <li><a href="#"><i class="fas fa-folder"></i> 分类</a></li>
-                    <li><a href="#"><i class="fas fa-archive"></i> 归档</a></li>
-                    <li><a href="#"><i class="fas fa-user"></i> 关于</a></li>
-                    <li><a href="#"><i class="fas fa-envelope"></i> 联系</a></li>
-                </ul>
-            </nav>
+            </div>
+            <div class="blog-title">庞和合的博客</div>
         </div>
-    </header>
-
+        
+        <button class="create-btn" id="createPostBtn">
+            <i class="fas fa-plus-circle"></i> 新建博客文章
+        </button>
+        
+        <div class="sidebar-section">
+            <div class="section-title">
+                <span>所有文章</span>
+                <span class="counter" id="postCounter">0</span>
+            </div>
+            <ul class="items-list" id="postList">
+                <!-- 文章列表动态生成 -->
+            </ul>
+        </div>
+        
+        <div class="sidebar-section">
+            <div class="section-title">
+                <span>分类管理</span>
+                <i class="fas fa-plus-circle" id="createCategoryBtn"></i>
+            </div>
+            <ul class="items-list" id="categoryList">
+                <!-- 分类列表动态生成 -->
+            </ul>
+        </div>
+        
+        <div class="sidebar-section">
+            <div class="section-title">
+                <span>存储状态</span>
+                <i class="fas fa-hdd"></i>
+            </div>
+            <div class="items-list">
+                <div style="padding: 10px 15px; color: rgba(255,255,255,0.9); font-size: 0.95rem;">
+                    <p id="storageInfo">正在读取数据...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- 主内容区 -->
-    <div class="container">
-        <main>
-            <div class="content-area">
-                <!-- 搜索框 -->
-                <div class="search-box">
-                    <div class="search-container">
-                        <input type="text" class="search-input" id="searchInput" placeholder="搜索文章...">
-                        <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i> 搜索</button>
-                    </div>
-                </div>
-                
-                <!-- 欢迎区域 -->
-                <section class="hero">
-                    <h2>探索知识与创意的无限可能</h2>
-                    <p>记录技术探索、生活感悟与创意灵感，打造属于我的知识宇宙</p>
-                    <div class="btn-container mt-30">
-                        <button class="btn" id="newArticleBtn">
-                            <i class="fas fa-plus-circle"></i> 新建文章
-                        </button>
-                        <button class="btn btn-accent" id="manageCategoriesBtn">
-                            <i class="fas fa-tags"></i> 管理分类
-                        </button>
-                    </div>
-                </section>
-
-                <!-- 文章管理 -->
-                <section class="articles-section">
-                    <div class="section-header">
-                        <h2 class="section-title">最新文章</h2>
-                        <div>
-                            <button class="action-btn" id="sortBtn">
-                                <i class="fas fa-sort-amount-down"></i> 最新优先
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="articles-container" id="articlesContainer">
-                        <!-- 文章卡片将通过JS动态生成 -->
-                    </div>
-                </section>
-            </div>
-            
-            <!-- 侧边栏 -->
-            <aside class="sidebar">
-                <div class="widget">
-                    <h3 class="widget-title"><i class="fas fa-user"></i> 关于我</h3>
-                    <div class="about-content">
-                        <div class="avatar">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <p>技术爱好者 & 内容创作者，热爱分享知识与经验，探索科技与生活的无限可能。</p>
-                        <button class="btn btn-secondary" id="contactBtn" style="width: 100%;">
-                            <i class="fas fa-envelope"></i> 联系我
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="widget">
-                    <h3 class="widget-title"><i class="fas fa-chart-bar"></i> 博客统计</h3>
-                    <div class="stats">
-                        <div class="stat-item">
-                            <div class="stat-value" id="articlesCount">0</div>
-                            <div class="stat-label">文章</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value" id="categoriesCount">0</div>
-                            <div class="stat-label">分类</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">2.8K</div>
-                            <div class="stat-label">访问</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="widget">
-                    <h3 class="widget-title"><i class="fas fa-tags"></i> 热门分类</h3>
-                    <div class="categories" id="popularCategories">
-                        <!-- 动态生成热门分类 -->
-                    </div>
-                </div>
-            </aside>
-        </main>
-    </div>
-
-    <!-- 页脚 -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>庞和合的博客</h3>
-                    <p>记录技术探索、生活感悟与创意灵感，打造属于我的知识宇宙。分享思想，启迪智慧。</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-github"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-                <div class="footer-section">
-                    <h3>博客分类</h3>
-                    <ul id="footerCategories">
-                        <!-- 动态生成分类 -->
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>联系我</h3>
-                    <p><i class="fas fa-envelope"></i> contact@panghehe.com</p>
-                    <p><i class="fas fa-map-marker-alt"></i> 北京市海淀区中关村科技园</p>
-                    <p><i class="fas fa-link"></i> www.panghehe.com</p>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>&copy; 2023-2025 庞和合的博客. 保留所有权利.</p>
-            </div>
+    <div class="main-content">
+        <div class="header">
+            <h1><i class="fas fa-feather-alt"></i> 博客文章</h1>
         </div>
-    </footer>
-
-    <!-- 新建文章模态框 -->
-    <div class="modal" id="articleModal">
-        <div class="modal-content">
-            <span class="close-modal" id="closeArticleModal">&times;</span>
-            <h2 class="modal-title">新建文章</h2>
-            
-            <div class="form-group">
-                <label for="articleTitle">文章标题</label>
-                <input type="text" class="form-control" id="articleTitle" placeholder="输入文章标题">
-            </div>
-            
-            <div class="form-group">
-                <label for="articleCategory">文章分类</label>
-                <select class="form-control" id="articleCategory">
-                    <option value="">选择文章分类</option>
-                    <!-- 分类将通过JS动态生成 -->
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="articleContent">文章内容</label>
-                <textarea class="form-control" id="articleContent" placeholder="撰写文章内容..."></textarea>
-            </div>
-            
-            <div class="modal-actions">
-                <button class="btn btn-secondary" id="cancelArticle">取消</button>
-                <button class="btn" id="saveArticle">保存文章</button>
+        
+        <div class="posts-container" id="postsContainer">
+            <!-- 博客文章动态生成 -->
+            <div class="empty-state" id="emptyState">
+                <i class="fas fa-file-alt"></i>
+                <h3>暂无博客文章</h3>
+                <p>点击"新建博客文章"按钮开始撰写</p>
             </div>
         </div>
     </div>
     
-    <!-- 管理分类模态框 -->
-    <div class="modal" id="categoriesModal">
+    <!-- 文章编辑模态框 -->
+    <div class="modal" id="postModal">
         <div class="modal-content">
-            <span class="close-modal" id="closeCategoriesModal">&times;</span>
-            <h2 class="modal-title">管理分类</h2>
-            
-            <div class="form-group">
-                <label for="newCategory">添加新分类</label>
-                <div class="search-container">
-                    <input type="text" class="search-input" id="newCategory" placeholder="输入新分类名称">
-                    <button class="search-btn" id="addCategory">添加</button>
+            <div class="modal-header">
+                <h2><i class="fas fa-edit"></i> 编辑博客文章</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="postTitle">文章标题</label>
+                    <input type="text" id="postTitle" class="form-control" placeholder="输入文章标题">
+                </div>
+                
+                <div class="form-group">
+                    <label for="postCategory">选择分类</label>
+                    <select id="postCategory" class="form-control">
+                        <!-- 分类选项动态生成 -->
+                    </select>
+                </div>
+                
+                <div class="editor-container">
+                    <div class="markdown-editor">
+                        <label for="postContent">Markdown内容</label>
+                        <textarea id="postContent" class="form-control" placeholder="使用Markdown语法编写内容..."></textarea>
+                    </div>
+                    <div class="markdown-preview">
+                        <label>实时预览</label>
+                        <div id="previewArea">
+                            <p style="color:#888;">预览内容将在这里显示...</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            
-            <div class="categories" id="categoriesList">
-                <!-- 分类将通过JS动态生成 -->
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelPostBtn">取消</button>
+                <button class="btn btn-danger" id="deletePostBtn">删除</button>
+                <button class="btn btn-primary" id="savePostBtn">保存文章</button>
             </div>
         </div>
     </div>
     
-    <!-- 通知消息 -->
-    <div class="notification" id="notification">
-        <i class="fas fa-check-circle"></i>
-        <span id="notificationText">操作成功</span>
+    <!-- 分类管理模态框 -->
+    <div class="modal" id="categoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-tag"></i> 管理分类</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="categoryName">分类名称</label>
+                    <input type="text" id="categoryName" class="form-control" placeholder="输入分类名称">
+                </div>
+                
+                <div class="form-group">
+                    <label>已有分类</label>
+                    <div style="background: #f9f9f9; border-radius: 8px; padding: 15px; margin-top: 5px; max-height: 200px; overflow-y: auto;">
+                        <ul id="existingCategories" style="list-style: none;">
+                            <!-- 已有分类动态生成 -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelCategoryBtn">取消</button>
+                <button class="btn btn-danger" id="deleteCategoryBtn">删除</button>
+                <button class="btn btn-primary" id="saveCategoryBtn">保存分类</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // 博客数据存储
-        let blogData = JSON.parse(localStorage.getItem('panghehe_blog')) || {
-            articles: [],
-            categories: ['前端开发', '人工智能', '旅行摄影', '生活随笔', '艺术设计']
+        // 博客数据结构
+        let blogData = {
+            categories: [],
+            posts: [],
+            currentPost: null,
+            currentCategory: null
         };
         
-        // 初始化函数
-        function init() {
-            // 如果没有文章，添加示例数据
-            if (blogData.articles.length === 0) {
-                addSampleArticles();
-            }
-            
-            renderArticles();
+        // DOM元素
+        const DOM = {
+            createPostBtn: document.getElementById('createPostBtn'),
+            createCategoryBtn: document.getElementById('createCategoryBtn'),
+            postModal: document.getElementById('postModal'),
+            categoryModal: document.getElementById('categoryModal'),
+            postsContainer: document.getElementById('postsContainer'),
+            postList: document.getElementById('postList'),
+            categoryList: document.getElementById('categoryList'),
+            existingCategories: document.getElementById('existingCategories'),
+            postTitle: document.getElementById('postTitle'),
+            postCategory: document.getElementById('postCategory'),
+            postContent: document.getElementById('postContent'),
+            categoryName: document.getElementById('categoryName'),
+            previewArea: document.getElementById('previewArea'),
+            postCounter: document.getElementById('postCounter'),
+            storageInfo: document.getElementById('storageInfo'),
+            emptyState: document.getElementById('emptyState'),
+            savePostBtn: document.getElementById('savePostBtn'),
+            saveCategoryBtn: document.getElementById('saveCategoryBtn'),
+            deletePostBtn: document.getElementById('deletePostBtn'),
+            deleteCategoryBtn: document.getElementById('deleteCategoryBtn'),
+            cancelPostBtn: document.getElementById('cancelPostBtn'),
+            cancelCategoryBtn: document.getElementById('cancelCategoryBtn')
+        };
+        
+        // 初始化博客
+        function initializeBlog() {
+            loadData();
             renderCategories();
-            updateStats();
-            
-            // 事件监听
+            renderPosts();
             setupEventListeners();
+            setupMarkdownPreview();
         }
         
-        // 添加示例文章
-        function addSampleArticles() {
-            blogData.articles = [
-                {
-                    id: Date.now(),
-                    title: '深入理解JavaScript闭包',
-                    content: '闭包是JavaScript中一个非常重要的概念，它允许函数访问并记住其词法作用域，即使函数在其词法作用域之外执行。闭包在许多高级JavaScript模式中都有应用，包括模块模式、柯里化和函数工厂等。',
-                    category: '前端开发',
-                    date: new Date().toISOString().split('T')[0],
-                    color: '#4361ee'
+        // 加载本地存储的数据
+        function loadData() {
+            const savedData = localStorage.getItem('blogData');
+            if (savedData) {
+                try {
+                    blogData = JSON.parse(savedData);
+                    DOM.storageInfo.textContent = `已加载 ${blogData.posts.length} 篇文章，${blogData.categories.length} 个分类`;
+                } catch (e) {
+                    console.error("数据解析失败", e);
+                    initializeSampleData();
+                }
+            } else {
+                initializeSampleData();
+            }
+            
+            // 更新计数器
+            DOM.postCounter.textContent = blogData.posts.length;
+        }
+        
+        // 初始化示例数据
+        function initializeSampleData() {
+            blogData.categories = [
+                { id: generateId(), name: '技术分享' },
+                { id: generateId(), name: '生活随笔' },
+                { id: generateId(), name: '学习笔记' }
+            ];
+            
+            blogData.posts = [
+                { 
+                    id: generateId(), 
+                    title: '欢迎来到庞和合的博客', 
+                    content: '# 欢迎\n这是我的第一篇博客文章，欢迎光临！\n\n## Markdown 示例\n\n- 列表项\n- **粗体文本**\n- *斜体文本*\n\n`console.log("Hello World!");`\n\n> 使用Markdown编辑内容真方便！',
+                    category: blogData.categories[0].id,
+                    createdAt: new Date().toISOString()
                 },
-                {
-                    id: Date.now() + 1,
-                    title: '探索深度学习在图像识别中的应用',
-                    content: '深度学习技术在图像识别领域取得了巨大突破。本文将探讨卷积神经网络(CNN)的基本原理，以及如何使用TensorFlow实现一个简单的图像分类器。我们将通过实际案例展示如何训练模型识别手写数字。',
-                    category: '人工智能',
-                    date: new Date().toISOString().split('T')[0],
-                    color: '#4cc9f0'
-                },
-                {
-                    id: Date.now() + 2,
-                    title: '日本京都旅行摄影指南',
-                    content: '京都作为日本的古都，拥有丰富的历史文化遗产。漫步在祇园的石板路上，参观金阁寺和清水寺，品尝正宗的怀石料理，这些体验让我深深感受到日本传统文化的魅力。本文将分享我在京都的摄影技巧和最佳拍摄地点。',
-                    category: '旅行摄影',
-                    date: new Date().toISOString().split('T')[0],
-                    color: '#f72585'
-                },
-                {
-                    id: Date.now() + 3,
-                    title: '现代UI设计趋势分析',
-                    content: '随着技术的不断发展，用户界面设计也在不断演变。本文将探讨2025年最受欢迎的UI设计趋势，包括玻璃拟态、3D元素、微交互和暗黑模式等，帮助设计师创建更具吸引力和用户体验的界面。',
-                    category: '艺术设计',
-                    date: new Date().toISOString().split('T')[0],
-                    color: '#7209b7'
+                { 
+                    id: generateId(), 
+                    title: 'Markdown使用指南', 
+                    content: '## Markdown 是什么？\n\nMarkdown是一种轻量级标记语言，允许人们使用易读易写的纯文本格式编写文档。\n\n### 常用语法\n\n1. 标题：`# 一级标题` `## 二级标题`\n2. 列表：`- 无序列表` `1. 有序列表`\n3. 链接：`[链接文本](URL)`\n4. 代码块：\\`\\`\\`javascript\n   console.log("代码");\n   \\`\\`\\`\n\n> 掌握Markdown，让写作更高效！',
+                    category: blogData.categories[2].id,
+                    createdAt: new Date().toISOString()
                 }
             ];
+            
             saveData();
+            DOM.storageInfo.textContent = `已创建初始数据：${blogData.posts.length} 篇文章`;
         }
         
-        // 保存数据到localStorage
+        // 保存数据到本地存储
         function saveData() {
-            localStorage.setItem('panghehe_blog', JSON.stringify(blogData));
+            localStorage.setItem('blogData', JSON.stringify(blogData));
+            DOM.storageInfo.textContent = `已保存 ${blogData.posts.length} 篇文章，${blogData.categories.length} 个分类`;
         }
         
-        // 渲染文章列表
-        function renderArticles() {
-            const articlesContainer = document.getElementById('articlesContainer');
-            articlesContainer.innerHTML = '';
-            
-            if (blogData.articles.length === 0) {
-                articlesContainer.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
-                        <i class="fas fa-file-alt" style="font-size: 5rem; color: var(--primary); opacity: 0.7; margin-bottom: 20px;"></i>
-                        <h3>没有找到文章</h3>
-                        <p>当前没有文章，请点击"新建文章"按钮创建您的第一篇文章</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            blogData.articles.forEach(article => {
-                const articleCard = document.createElement('div');
-                articleCard.className = 'article-card';
-                articleCard.innerHTML = `
-                    <div class="article-img" style="background: linear-gradient(45deg, ${article.color}, ${darkenColor(article.color)});">
-                        <i class="fas fa-${getIconByCategory(article.category)}"></i>
-                    </div>
-                    <div class="article-content">
-                        <div class="article-header">
-                            <span class="article-category">${article.category}</span>
-                            <span class="article-date">${article.date}</span>
-                        </div>
-                        <h3>${article.title}</h3>
-                        <p>${article.content}</p>
-                        <div class="article-actions">
-                            <button class="action-btn edit-btn" data-id="${article.id}">
-                                <i class="fas fa-edit"></i> 编辑
-                            </button>
-                            <button class="action-btn delete delete-btn" data-id="${article.id}">
-                                <i class="fas fa-trash"></i> 删除
-                            </button>
-                        </div>
-                    </div>
-                `;
-                articlesContainer.appendChild(articleCard);
-            });
-            
-            // 添加事件监听
-            document.querySelectorAll('.edit-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = e.currentTarget.getAttribute('data-id');
-                    editArticle(id);
-                });
-            });
-            
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = e.currentTarget.getAttribute('data-id');
-                    deleteArticle(id);
-                });
-            });
+        // 生成唯一ID
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
         }
         
-        // 渲染分类
+        // 渲染分类列表
         function renderCategories() {
-            // 热门分类
-            const popularCategories = document.getElementById('popularCategories');
-            popularCategories.innerHTML = '';
+            DOM.categoryList.innerHTML = '';
+            DOM.postCategory.innerHTML = '';
             
             blogData.categories.forEach(category => {
-                const categoryEl = document.createElement('div');
-                categoryEl.className = 'category';
-                categoryEl.textContent = category;
-                popularCategories.appendChild(categoryEl);
+                // 添加到分类列表
+                const categoryElement = document.createElement('li');
+                categoryElement.className = 'category-item';
+                categoryElement.dataset.id = category.id;
+                categoryElement.innerHTML = `
+                    <span>${category.name}</span>
+                    <div class="item-actions">
+                        <i class="fas fa-edit edit-category"></i>
+                    </div>
+                `;
+                DOM.categoryList.appendChild(categoryElement);
+                
+                // 添加到文章分类选项
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = category.name;
+                DOM.postCategory.appendChild(option);
             });
             
-            // 页脚分类
-            const footerCategories = document.getElementById('footerCategories');
-            footerCategories.innerHTML = '';
+            // 渲染已有分类列表
+            renderExistingCategories();
+        }
+        
+        // 渲染已有分类列表
+        function renderExistingCategories() {
+            DOM.existingCategories.innerHTML = '';
+            
+            if (blogData.categories.length === 0) {
+                DOM.existingCategories.innerHTML = '<p style="color:#777; text-align:center;">暂无分类</p>';
+                return;
+            }
             
             blogData.categories.forEach(category => {
                 const li = document.createElement('li');
-                const a = document.createElement('a');
-                a.href = '#';
-                a.textContent = category;
-                li.appendChild(a);
-                footerCategories.appendChild(li);
-            });
-            
-            // 文章分类选择
-            const articleCategory = document.getElementById('articleCategory');
-            articleCategory.innerHTML = '<option value="">选择文章分类</option>';
-            
-            blogData.categories.forEach(category => {
-                const option = document.createElement('option');
-                option.value = category;
-                option.textContent = category;
-                articleCategory.appendChild(option);
-            });
-            
-            // 分类管理列表
-            const categoriesList = document.getElementById('categoriesList');
-            categoriesList.innerHTML = '';
-            
-            blogData.categories.forEach(category => {
-                const categoryEl = document.createElement('div');
-                categoryEl.className = 'category';
-                categoryEl.innerHTML = `
-                    <span>${category}</span>
-                    <i class="fas fa-times delete-category" data-category="${category}"></i>
+                li.className = 'category-item';
+                li.style.marginBottom = '8px';
+                li.innerHTML = `
+                    <span>${category.name}</span>
+                    <div class="item-actions">
+                        <i class="fas fa-edit edit-existing-category" data-id="${category.id}"></i>
+                        <i class="fas fa-trash-alt delete-existing-category" data-id="${category.id}"></i>
+                    </div>
                 `;
-                categoriesList.appendChild(categoryEl);
+                DOM.existingCategories.appendChild(li);
+            });
+        }
+        
+        // 渲染文章列表
+        function renderPosts() {
+            DOM.postList.innerHTML = '';
+            
+            blogData.posts.forEach(post => {
+                const category = blogData.categories.find(c => c.id === post.category);
+                
+                const postElement = document.createElement('li');
+                postElement.className = 'post-item';
+                postElement.dataset.id = post.id;
+                postElement.innerHTML = `
+                    <span>${post.title}</span>
+                    <div class="item-actions">
+                        <i class="fas fa-edit edit-post"></i>
+                        <i class="fas fa-trash-alt delete-post"></i>
+                    </div>
+                `;
+                DOM.postList.appendChild(postElement);
             });
             
-            // 添加删除分类事件
-            document.querySelectorAll('.delete-category').forEach(icon => {
-                icon.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const category = icon.getAttribute('data-category');
-                    deleteCategory(category);
-                });
+            // 渲染博客文章卡片
+            renderPostCards();
+        }
+        
+        // 渲染文章卡片
+        function renderPostCards() {
+            DOM.postsContainer.innerHTML = '';
+            
+            if (blogData.posts.length === 0) {
+                DOM.emptyState.style.display = 'flex';
+                return;
+            }
+            
+            DOM.emptyState.style.display = 'none';
+            
+            blogData.posts.forEach(post => {
+                const category = blogData.categories.find(c => c.id === post.category);
+                const date = new Date(post.createdAt).toLocaleDateString();
+                const excerpt = marked.parse(post.content).replace(/<[^>]*>/g, '').substring(0, 150) + '...';
+                
+                const postCard = document.createElement('div');
+                postCard.className = 'post-card';
+                postCard.dataset.id = post.id;
+                postCard.innerHTML = `
+                    <div class="card-header">
+                        <div class="category-badge">${category?.name || '未分类'}</div>
+                    </div>
+                    <div class="card-content">
+                        <h3>${post.title}</h3>
+                        <p>${excerpt}</p>
+                    </div>
+                    <div class="card-footer">
+                        <span><i class="fas fa-calendar-alt"></i> ${date}</span>
+                    </div>
+                `;
+                DOM.postsContainer.appendChild(postCard);
             });
         }
         
-        // 更新统计信息
-        function updateStats() {
-            document.getElementById('articlesCount').textContent = blogData.articles.length;
-            document.getElementById('categoriesCount').textContent = blogData.categories.length;
+        // 设置Markdown预览
+        function setupMarkdownPreview() {
+            DOM.postContent.addEventListener('input', function() {
+                DOM.previewArea.innerHTML = marked.parse(this.value);
+            });
         }
         
-        // 根据分类获取图标
-        function getIconByCategory(category) {
-            const icons = {
-                '前端开发': 'code',
-                '后端技术': 'server',
-                '人工智能': 'robot',
-                '旅行摄影': 'camera',
-                '生活随笔': 'heart',
-                '艺术设计': 'paint-brush'
-            };
-            return icons[category] || 'file-alt';
-        }
-        
-        // 颜色加深函数
-        function darkenColor(hex) {
-            // 简单实现颜色加深
-            let r = parseInt(hex.slice(1, 3), g = parseInt(hex.slice(3, 5)), b = parseInt(hex.slice(5, 7));
-            r = Math.max(0, r - 40);
-            g = Math.max(0, g - 40);
-            b = Math.max(0, b - 40);
-            return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-        }
-        
-        // 设置事件监听
+        // 初始化事件监听
         function setupEventListeners() {
             // 新建文章按钮
-            document.getElementById('newArticleBtn').addEventListener('click', () => {
-                document.getElementById('articleTitle').value = '';
-                document.getElementById('articleCategory').value = '';
-                document.getElementById('articleContent').value = '';
-                document.getElementById('articleModal').style.display = 'flex';
+            DOM.createPostBtn.addEventListener('click', () => {
+                blogData.currentPost = null;
+                DOM.postTitle.value = '';
+                DOM.postContent.value = '';
+                DOM.previewArea.innerHTML = '<p style="color:#888;">预览内容将在这里显示...</p>';
+                DOM.postModal.classList.add('active');
             });
             
-            // 管理分类按钮
-            document.getElementById('manageCategoriesBtn').addEventListener('click', () => {
-                document.getElementById('categoriesModal').style.display = 'flex';
+            // 新建分类按钮
+            DOM.createCategoryBtn.addEventListener('click', () => {
+                blogData.currentCategory = null;
+                DOM.categoryName.value = '';
+                DOM.categoryModal.classList.add('active');
             });
             
-            // 联系按钮
-            document.getElementById('contactBtn').addEventListener('click', () => {
-                showNotification('已发送联系请求，我们将尽快回复您！');
+            // 保存文章
+            DOM.savePostBtn.addEventListener('click', savePost);
+            
+            // 保存分类
+            DOM.saveCategoryBtn.addEventListener('click', saveCategory);
+            
+            // 删除文章
+            DOM.deletePostBtn.addEventListener('click', deletePost);
+            
+            // 删除分类
+            DOM.deleteCategoryBtn.addEventListener('click', deleteCategory);
+            
+            // 取消操作
+            DOM.cancelPostBtn.addEventListener('click', () => DOM.postModal.classList.remove('active'));
+            DOM.cancelCategoryBtn.addEventListener('click', () => DOM.categoryModal.classList.remove('active'));
+            
+            // 分类列表事件委托
+            DOM.categoryList.addEventListener('click', event => {
+                if (event.target.classList.contains('edit-category')) {
+                    const categoryId = event.target.closest('.category-item').dataset.id;
+                    editCategory(categoryId);
+                }
             });
             
-            // 关闭模态框按钮
-            document.getElementById('closeArticleModal').addEventListener('click', closeModals);
-            document.getElementById('closeCategoriesModal').addEventListener('click', closeModals);
-            document.getElementById('cancelArticle').addEventListener('click', closeModals);
+            // 文章列表事件委托
+            DOM.postList.addEventListener('click', event => {
+                const postItem = event.target.closest('.post-item');
+                if (!postItem) return;
+                
+                const postId = postItem.dataset.id;
+                
+                if (event.target.classList.contains('edit-post')) {
+                    editPost(postId);
+                } else if (event.target.classList.contains('delete-post')) {
+                    deletePost(postId);
+                } else {
+                    // 点击文章项
+                    viewPost(postId);
+                }
+            });
             
-            // 保存文章按钮
-            document.getElementById('saveArticle').addEventListener('click', saveNewArticle);
+            // 分类管理中的编辑/删除按钮
+            DOM.existingCategories.addEventListener('click', event => {
+                if (event.target.classList.contains('edit-existing-category')) {
+                    const categoryId = event.target.dataset.id;
+                    editCategory(categoryId);
+                } else if (event.target.classList.contains('delete-existing-category')) {
+                    const categoryId = event.target.dataset.id;
+                    deleteCategory(categoryId);
+                }
+            });
             
-            // 添加分类按钮
-            document.getElementById('addCategory').addEventListener('click', addNewCategory);
-            
-            // 排序按钮
-            document.getElementById('sortBtn').addEventListener('click', toggleSortOrder);
-            
-            // 搜索按钮
-            document.getElementById('searchBtn').addEventListener('click', searchArticles);
-        }
-        
-        // 关闭所有模态框
-        function closeModals() {
-            document.getElementById('articleModal').style.display = 'none';
-            document.getElementById('categoriesModal').style.display = 'none';
-        }
-        
-        // 保存新文章
-        function saveNewArticle() {
-            const title = document.getElementById('articleTitle').value.trim();
-            const category = document.getElementById('articleCategory').value;
-            const content = document.getElementById('articleContent').value.trim();
-            
-            if (!title) {
-                showNotification('请输入文章标题', true);
-                return;
-            }
-            
-            if (!category) {
-                showNotification('请选择文章分类', true);
-                return;
-            }
-            
-            if (!content) {
-                showNotification('请输入文章内容', true);
-                return;
-            }
-            
-            // 生成随机颜色
-            const colors = ['#4361ee', '#4cc9f0', '#f72585', '#7209b7', '#2ecc71', '#f39c12'];
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-            
-            const newArticle = {
-                id: Date.now(),
-                title,
-                content,
-                category,
-                date: new Date().toISOString().split('T')[0],
-                color: randomColor
-            };
-            
-            blogData.articles.unshift(newArticle);
-            saveData();
-            renderArticles();
-            updateStats();
-            closeModals();
-            showNotification('文章创建成功！');
-        }
-        
-        // 添加新分类
-        function addNewCategory() {
-            const newCategoryInput = document.getElementById('newCategory');
-            const newCategory = newCategoryInput.value.trim();
-            
-            if (!newCategory) {
-                showNotification('请输入分类名称', true);
-                return;
-            }
-            
-            if (blogData.categories.includes(newCategory)) {
-                showNotification('该分类已存在', true);
-                return;
-            }
-            
-            blogData.categories.push(newCategory);
-            saveData();
-            renderCategories();
-            updateStats();
-            newCategoryInput.value = '';
-            showNotification('分类添加成功！');
-        }
-        
-        // 删除分类
-        function deleteCategory(category) {
-            if (blogData.articles.some(article => article.category === category)) {
-                showNotification('无法删除：有文章使用此分类', true);
-                return;
-            }
-            
-            blogData.categories = blogData.categories.filter(c => c !== category);
-            saveData();
-            renderCategories();
-            updateStats();
-            showNotification('分类删除成功！');
+            // 点击关闭模态框（点击模态框外部）
+            document.addEventListener('click', event => {
+                if (event.target.classList.contains('modal')) {
+                    DOM.postModal.classList.remove('active');
+                    DOM.categoryModal.classList.remove('active');
+                }
+            });
         }
         
         // 编辑文章
-        function editArticle(id) {
-            const article = blogData.articles.find(a => a.id == id);
-            if (article) {
-                document.getElementById('articleTitle').value = article.title;
-                document.getElementById('articleCategory').value = article.category;
-                document.getElementById('articleContent').value = article.content;
-                document.getElementById('articleModal').style.display = 'flex';
-                
-                // 临时存储编辑的文章ID
-                document.getElementById('saveArticle').dataset.id = id;
+        function editPost(postId) {
+            const post = blogData.posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            blogData.currentPost = postId;
+            DOM.postTitle.value = post.title;
+            DOM.postContent.value = post.content;
+            
+            // 设置当前分类
+            DOM.postCategory.value = post.category;
+            
+            // 更新预览
+            DOM.previewArea.innerHTML = marked.parse(post.content);
+            
+            DOM.postModal.classList.add('active');
+        }
+        
+        // 查看文章
+        function viewPost(postId) {
+            // 这里可以扩展为单篇文章详细视图
+            editPost(postId);
+        }
+        
+        // 保存文章
+        function savePost() {
+            const title = DOM.postTitle.value.trim();
+            const content = DOM.postContent.value.trim();
+            const category = DOM.postCategory.value;
+            
+            if (!title || !content || !category) {
+                alert('请填写标题、内容和选择分类');
+                return;
             }
+            
+            if (blogData.currentPost) {
+                // 更新现有文章
+                const postIndex = blogData.posts.findIndex(p => p.id === blogData.currentPost);
+                if (postIndex !== -1) {
+                    blogData.posts[postIndex].title = title;
+                    blogData.posts[postIndex].content = content;
+                    blogData.posts[postIndex].category = category;
+                }
+            } else {
+                // 创建新文章
+                const newPost = {
+                    id: generateId(),
+                    title,
+                    content,
+                    category,
+                    createdAt: new Date().toISOString()
+                };
+                blogData.posts.push(newPost);
+            }
+            
+            saveData();
+            renderPosts();
+            DOM.postModal.classList.remove('active');
         }
         
         // 删除文章
-        function deleteArticle(id) {
-            if (confirm('确定要删除这篇文章吗？此操作不可撤销。')) {
-                blogData.articles = blogData.articles.filter(a => a.id != id);
-                saveData();
-                renderArticles();
-                updateStats();
-                showNotification('文章删除成功！');
+        function deletePost(postId) {
+            if (!postId) {
+                postId = blogData.currentPost;
             }
-        }
-        
-        // 切换排序顺序
-        function toggleSortOrder() {
-            blogData.articles.reverse();
+            
+            if (!postId) return;
+            
+            if (!confirm('确定要删除这篇文章吗？')) return;
+            
+            blogData.posts = blogData.posts.filter(post => post.id !== postId);
+            
+            // 更新计数器
+            DOM.postCounter.textContent = blogData.posts.length;
+            
             saveData();
-            renderArticles();
-            const sortBtn = document.getElementById('sortBtn');
-            if (sortBtn.innerHTML.includes('最新优先')) {
-                sortBtn.innerHTML = '<i class="fas fa-sort-amount-up"></i> 最早优先';
+            renderPosts();
+            DOM.postModal.classList.remove('active');
+        }
+        
+        // 编辑分类
+        function editCategory(categoryId) {
+            const category = blogData.categories.find(c => c.id === categoryId);
+            if (!category) return;
+            
+            blogData.currentCategory = categoryId;
+            DOM.categoryName.value = category.name;
+            DOM.categoryModal.classList.add('active');
+        }
+        
+        // 保存分类
+        function saveCategory() {
+            const name = DOM.categoryName.value.trim();
+            if (!name) {
+                alert('请填写分类名称');
+                return;
+            }
+            
+            if (blogData.currentCategory) {
+                // 更新现有分类
+                const categoryIndex = blogData.categories.findIndex(c => c.id === blogData.currentCategory);
+                if (categoryIndex !== -1) {
+                    blogData.categories[categoryIndex].name = name;
+                }
             } else {
-                sortBtn.innerHTML = '<i class="fas fa-sort-amount-down"></i> 最新优先';
+                // 创建新分类
+                const newCategory = {
+                    id: generateId(),
+                    name
+                };
+                blogData.categories.push(newCategory);
             }
-            showNotification('排序顺序已更改');
+            
+            saveData();
+            renderCategories();
+            DOM.categoryModal.classList.remove('active');
         }
         
-        // 搜索文章
-        function searchArticles() {
-            const searchInput = document.getElementById('searchInput').value.toLowerCase();
-            if (!searchInput) {
-                renderArticles();
+        // 删除分类
+        function deleteCategory(categoryId) {
+            if (!categoryId) {
+                categoryId = blogData.currentCategory;
+            }
+            
+            if (!categoryId) return;
+            
+            // 检查分类是否被使用
+            const postsUsingCategory = blogData.posts.filter(post => post.category === categoryId);
+            if (postsUsingCategory.length > 0) {
+                alert('该分类已被使用，无法删除');
                 return;
             }
             
-            const filteredArticles = blogData.articles.filter(article => 
-                article.title.toLowerCase().includes(searchInput) || 
-                article.content.toLowerCase().includes(searchInput) ||
-                article.category.toLowerCase().includes(searchInput)
-            );
+            if (!confirm('确定要删除这个分类吗？')) return;
             
-            const articlesContainer = document.getElementById('articlesContainer');
-            articlesContainer.innerHTML = '';
+            blogData.categories = blogData.categories.filter(cat => cat.id !== categoryId);
             
-            if (filteredArticles.length === 0) {
-                articlesContainer.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
-                        <i class="fas fa-search" style="font-size: 5rem; color: var(--primary); opacity: 0.7; margin-bottom: 20px;"></i>
-                        <h3>没有找到匹配的文章</h3>
-                        <p>没有找到与"${searchInput}"相关的文章</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            filteredArticles.forEach(article => {
-                const articleCard = document.createElement('div');
-                articleCard.className = 'article-card';
-                articleCard.innerHTML = `
-                    <div class="article-img" style="background: linear-gradient(45deg, ${article.color}, ${darkenColor(article.color)});">
-                        <i class="fas fa-${getIconByCategory(article.category)}"></i>
-                    </div>
-                    <div class="article-content">
-                        <div class="article-header">
-                            <span class="article-category">${article.category}</span>
-                            <span class="article-date">${article.date}</span>
-                        </div>
-                        <h3>${article.title}</h3>
-                        <p>${article.content}</p>
-                        <div class="article-actions">
-                            <button class="action-btn edit-btn" data-id="${article.id}">
-                                <i class="fas fa-edit"></i> 编辑
-                            </button>
-                            <button class="action-btn delete delete-btn" data-id="${article.id}">
-                                <i class="fas fa-trash"></i> 删除
-                            </button>
-                        </div>
-                    </div>
-                `;
-                articlesContainer.appendChild(articleCard);
-            });
-            
-            // 重新绑定事件
-            document.querySelectorAll('.edit-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = e.currentTarget.getAttribute('data-id');
-                    editArticle(id);
-                });
-            });
-            
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = e.currentTarget.getAttribute('data-id');
-                    deleteArticle(id);
-                });
-            });
+            saveData();
+            renderCategories();
+            DOM.categoryModal.classList.remove('active');
         }
         
-        // 显示通知
-        function showNotification(message, isError = false) {
-            const notification = document.getElementById('notification');
-            const notificationText = document.getElementById('notificationText');
-            
-            notificationText.textContent = message;
-            notification.className = isError ? 'notification error show' : 'notification show';
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-        
-        // 初始化应用
-        init();
+        // 页面加载后初始化
+        window.addEventListener('DOMContentLoaded', initializeBlog);
     </script>
 </body>
 </html>
