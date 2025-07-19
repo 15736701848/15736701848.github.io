@@ -3,60 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>庞和合的博客</title>
+    <title>跨平台博客系统</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: system-ui, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; line-height: 1.6; background-color: #f8f9fa; }
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eaeaea; }
-        .logo { font-size: 1.8rem; font-weight: bold; color: #1a73e8; }
-        .btn { padding: 8px 16px; background: #1a73e8; color: white; border: none; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
-        .btn:hover { background: #1765cc; }
-        .btn-outline { background: none; border: 1px solid #1a73e8; color: #1a73e8; }
-        .btn-outline:hover { background: #e8f0fe; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; line-height: 1.6; background-color: #f8f9fa; color: #333; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #eaeaea; }
+        .logo { font-size: 2rem; font-weight: 800; color: #1a73e8; display: flex; align-items: center; }
+        .logo svg { margin-right: 10px; width: 32px; height: 32px; fill: #1a73e8; }
+        .btn { padding: 10px 20px; background: #1a73e8; color: white; border: none; border-radius: 6px; cursor: pointer; transition: all 0.3s; font-weight: 600; font-size: 1rem; }
+        .btn:hover { background: #1765cc; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(26, 115, 232, 0.2); }
+        .btn-outline { background: none; border: 2px solid #1a73e8; color: #1a73e8; }
+        .btn-outline:hover { background: #e8f0fe; transform: none; box-shadow: none; }
         .btn-danger { background: #d93025; }
         .btn-danger:hover { background: #c5221f; }
-        .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); padding: 20px; margin-bottom: 20px; }
-        .card h3 { margin-bottom: 10px; color: #202124; }
-        .card p { color: #5f6368; margin-bottom: 15px; }
-        .category { display: inline-block; padding: 4px 12px; background: #e8f0fe; color: #1a73e8; border-radius: 16px; font-size: 0.9rem; margin-bottom: 10px; }
-        .actions { display: flex; gap: 10px; margin-top: 15px; }
+        .card { background: white; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 25px; margin-bottom: 25px; transition: transform 0.3s; }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
+        .card h3 { margin-bottom: 15px; color: #202124; font-size: 1.4rem; }
+        .card p { color: #5f6368; margin-bottom: 15px; line-height: 1.7; }
+        .category { display: inline-block; padding: 5px 15px; background: #e8f0fe; color: #1a73e8; border-radius: 20px; font-size: 0.9rem; margin-bottom: 12px; font-weight: 500; }
+        .actions { display: flex; gap: 15px; margin-top: 20px; }
         .editor { display: none; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; color: #202124; }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 1rem; }
-        .form-group textarea { min-height: 300px; font-family: monospace; }
-        .preview { background: #f8f9fa; padding: 15px; border-radius: 4px; margin-top: 10px; }
-        .gist-config { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 30px; }
-        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #202124; color: white; padding: 12px 24px; border-radius: 4px; opacity: 0; transition: opacity 0.3s; }
-        .loader { text-align: center; padding: 30px; }
-        .loader::after { content: ""; display: inline-block; width: 24px; height: 24px; border: 3px solid rgba(26,115,232,0.2); border-radius: 50%; border-top: 3px solid #1a73e8; animation: spin 1s linear infinite; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #202124; font-size: 1rem; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 14px; border: 1px solid #dadce0; border-radius: 6px; font-size: 1rem; background: #fff; transition: border 0.3s; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #1a73e8; box-shadow: 0 0 0 2px rgba(26,115,232,0.2); }
+        .form-group textarea { min-height: 300px; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; }
+        .preview { background: #f8f9fa; padding: 20px; border-radius: 6px; margin-top: 15px; min-height: 320px; border: 1px solid #eee; }
+        .toast { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); background: #202124; color: white; padding: 16px 30px; border-radius: 8px; opacity: 0; transition: opacity 0.4s, transform 0.4s; z-index: 1000; font-weight: 500; box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
+        .loader { text-align: center; padding: 40px; }
+        .loader::after { content: ""; display: inline-block; width: 32px; height: 32px; border: 4px solid rgba(26,115,232,0.2); border-radius: 50%; border-top: 4px solid #1a73e8; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .search-container { display: flex; gap: 10px; margin-bottom: 20px; }
-        .search-container input { flex: 1; }
-        .editor-container { display: flex; gap: 20px; }
+        .search-container { display: flex; gap: 15px; margin-bottom: 25px; }
+        .search-container input { flex: 1; padding: 12px 16px; }
+        .editor-container { display: flex; gap: 25px; margin-top: 20px; }
         .editor-column { flex: 1; }
-        .article-content { padding: 20px; }
-        .article-content h1, .article-content h2, .article-content h3 { margin: 1.2em 0 0.6em; }
-        .article-content p { margin-bottom: 1.2em; line-height: 1.8; }
-        .article-content pre { background: #f6f8fa; padding: 16px; border-radius: 6px; overflow: auto; }
-        .article-content code { font-family: monospace; }
-        .article-content blockquote { border-left: 4px solid #dfe2e5; padding-left: 16px; color: #5f6368; }
-        .article-content img { max-width: 100%; border-radius: 4px; }
-        .config-success { background: #e6f4ea; color: #137333; padding: 10px; border-radius: 4px; margin-top: 10px; }
+        .article-content { padding: 25px; }
+        .config-container { background: linear-gradient(135deg, #f8f9fa 0%, #eef2f6 100%); padding: 30px; border-radius: 12px; margin-top: 40px; border: 1px solid #e0e6ed; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+        .config-header { display: flex; align-items: center; margin-bottom: 20px; }
+        .config-header h3 { color: #1a73e8; font-size: 1.6rem; }
+        .config-header svg { width: 28px; height: 28px; fill: #1a73e8; margin-right: 12px; }
+        .config-status { padding: 16px; border-radius: 8px; margin-top: 20px; display: flex; align-items: center; }
+        .config-status svg { margin-right: 12px; min-width: 24px; }
+        .success-status { background: #e6f4ea; color: #137333; border: 1px solid #b7e1cd; }
+        .warning-status { background: #fef7e0; color: #e37400; border: 1px solid #fae3af; }
+        .error-status { background: #fce8e6; color: #c5221f; border: 1px solid #f3bfbd; }
+        .config-steps { margin: 25px 0; }
+        .config-step { display: flex; margin-bottom: 20px; }
+        .step-number { width: 32px; height: 32px; min-width: 32px; background: #1a73e8; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: 600; }
+        .step-content { flex: 1; }
+        .step-title { font-weight: 600; margin-bottom: 8px; font-size: 1.1rem; }
+        .btn-container { display: flex; gap: 15px; margin-top: 20px; }
+        .github-btn { background: #24292e; display: flex; align-items: center; justify-content: center; }
+        .github-btn svg { margin-right: 10px; fill: white; }
+        .sync-indicator { display: inline-flex; align-items: center; margin-left: 10px; font-size: 0.9rem; }
+        .sync-indicator .dot { width: 10px; height: 10px; border-radius: 50%; background: #34a853; display: inline-block; margin-right: 6px; animation: pulse 1.5s infinite; }
+        .sync-indicator .dot.offline { background: #ea4335; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
     <header>
-        <div class="logo">庞和合的博客</div>
+        <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h10v2H7zm0 3h10v2H7z"/>
+            </svg>
+            跨平台博客系统
+            <span class="sync-indicator">
+                <span class="dot offline"></span>
+                <span>离线</span>
+            </span>
+        </div>
         <div>
-            <button class="btn" id="new-article">写文章</button>
+            <button class="btn" id="new-article">+ 写文章</button>
         </div>
     </header>
 
-    <!-- 文章列表区 -->
-    <div id="articles">
+    <div id="articles" style="display: none;">
         <div class="search-container">
-            <input type="text" id="search-input" placeholder="搜索文章..." class="form-group">
+            <input type="text" id="search-input" placeholder="搜索文章标题或内容..." class="form-group">
             <button class="btn" id="search-btn">搜索</button>
         </div>
         <div id="articles-list">
@@ -64,8 +88,8 @@
         </div>
     </div>
 
-    <!-- 编辑器区 -->
     <div id="editor" class="editor">
+        <h2 id="editor-title">创建新文章</h2>
         <div class="form-group">
             <label for="title">标题</label>
             <input type="text" id="title">
@@ -78,7 +102,7 @@
             <div class="editor-column">
                 <div class="form-group">
                     <label for="content">内容 (Markdown)</label>
-                    <textarea id="content"></textarea>
+                    <textarea id="content" placeholder="在这里输入文章内容..."></textarea>
                 </div>
             </div>
             <div class="editor-column">
@@ -88,39 +112,90 @@
                 </div>
             </div>
         </div>
-        <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <div class="btn-container">
             <button class="btn" id="save">保存文章</button>
             <button class="btn btn-outline" id="cancel">取消</button>
         </div>
     </div>
 
-    <!-- 文章阅读区 -->
     <div id="article-view" class="editor" style="display: none;">
         <h2 id="article-title"></h2>
         <div class="category" id="article-category"></div>
         <div id="article-content" class="article-content"></div>
-        <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <div class="btn-container">
             <button class="btn" id="edit-article">编辑</button>
             <button class="btn btn-outline" id="back-to-list">返回列表</button>
         </div>
     </div>
 
     <!-- Gist配置区 -->
-    <div class="gist-config">
-        <h3>GitHub Gist配置</h3>
-        <div class="config-success">
-            已配置您的Token和Gist ID，数据加载中...
+    <div class="config-container" id="gist-configuration">
+        <div class="config-header">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+            </svg>
+            <h3>GitHub Gist 数据同步配置</h3>
         </div>
+        
+        <div class="config-status success-status" style="display: none;" id="config-success">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <div>已配置您的Token和Gist ID，数据加载中...</div>
+        </div>
+        
         <div class="form-group">
             <label for="gist-id">Gist ID</label>
-            <input type="text" id="gist-id" value="9383de0cb6b28c34c86f4b51eea13dad" readonly>
+            <input type="text" id="gist-id" placeholder="请输入您的 Gist ID">
+            <p class="help-text" style="margin-top: 8px; color: #5f6368; font-size: 0.9rem;">创建包含 blog.json 文件的 Gist 后获取的 ID</p>
         </div>
         <div class="form-group">
             <label for="token">Personal Access Token</label>
-            <input type="password" id="token" value="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" readonly>
+            <input type="password" id="token" placeholder="请输入您的 GitHub Token">
+            <p class="help-text" style="margin-top: 8px; color: #5f6368; font-size: 0.9rem;">创建具有 gist 权限的 GitHub Token</p>
         </div>
-        <div style="display: flex; gap: 10px; margin-top: 10px;">
-            <button class="btn" id="load">加载数据</button>
+        
+        <div class="config-status error-status" style="display: none;" id="config-error">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg>
+            <div id="error-message">请先配置GitHub Gist信息</div>
+        </div>
+        
+        <div class="config-steps">
+            <h4 style="margin-bottom: 16px; color: #1a73e8;">首次使用指南</h4>
+            <div class="config-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-title">创建GitHub Token</div>
+                    <p>登录GitHub → Settings → Developer settings → Personal access tokens → Generate new token (权限勾选 gist)</p>
+                </div>
+            </div>
+            <div class="config-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-title">创建Gist</div>
+                    <p>访问 <a href="https://gist.github.com/" target="_blank">gist.github.com</a>，创建新Gist，添加一个名为 blog.json 的文件，内容为：{"articles":[],"categories":[]}</p>
+                </div>
+            </div>
+            <div class="config-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-title">获取Gist ID</div>
+                    <p>创建Gist后，URL中类似 https://gist.github.com/username/<strong>9383de0cb6b28c34c86f4b51eea13dad</strong> 的字符串即为Gist ID</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="btn-container">
+            <button class="btn" id="save-config">保存配置</button>
+            <button class="btn github-btn" id="github-link">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                    <path d="M12 2.247a10 10 0 00-3.162 19.487c.5.088.687-.212.687-.475 0-.237-.012-1.025-.012-1.862-2.513.462-3.163-.613-3.363-1.175a3.636 3.636 0 00-1.025-1.413c-.35-.187-.85-.65-.013-.663a2.001 2.001 0 011.538 1.025 2.137 2.137 0 002.912.825 2.104 2.104 0 01.638-1.338c-2.225-.25-4.55-1.112-4.55-4.937a3.892 3.892 0 011.025-2.688 3.594 3.594 0 01.1-2.65s.837-.262 2.75 1.025a9.427 9.427 0 015 0c1.912-1.3 2.75-1.025 2.75-1.025a3.593 3.593 0 01.1 2.65 3.869 3.869 0 011.025 2.688c0 3.837-2.338 4.687-4.563 4.937a2.368 2.368 0 01.675 1.85c0 1.338-.012 2.413-.012 2.75 0 .263.187.575.687.475A10.005 10.005 0 0012 2.247z"/>
+                </svg>
+                访问 GitHub
+            </button>
+            <button class="btn btn-outline" id="load-data">加载数据</button>
         </div>
     </div>
 
@@ -133,10 +208,9 @@
             categories: ['技术', '生活', '随笔']
         };
 
-        // 当前编辑/阅读的文章
         let currentArticle = null;
-        const gistId = "9383de0cb6b28c34c86f4b51eea13dad";
-        const token = "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";
+        let gistId = '';
+        let token = '';
 
         // DOM元素
         const elements = {
@@ -155,7 +229,13 @@
             token: document.getElementById('token'),
             toast: document.getElementById('toast'),
             searchInput: document.getElementById('search-input'),
-            searchBtn: document.getElementById('search-btn')
+            searchBtn: document.getElementById('search-btn'),
+            saveConfigBtn: document.getElementById('save-config'),
+            loadDataBtn: document.getElementById('load-data'),
+            configSuccess: document.getElementById('config-success'),
+            configError: document.getElementById('config-error'),
+            errorMessage: document.getElementById('error-message'),
+            githubLink: document.getElementById('github-link')
         };
 
         // 初始化
@@ -164,25 +244,105 @@
             document.getElementById('new-article').addEventListener('click', newArticle);
             document.getElementById('save').addEventListener('click', saveArticle);
             document.getElementById('cancel').addEventListener('click', cancelEdit);
-            document.getElementById('load').addEventListener('click', loadFromGist);
+            elements.saveConfigBtn.addEventListener('click', saveConfiguration);
+            elements.loadDataBtn.addEventListener('click', loadFromGist);
             document.getElementById('edit-article').addEventListener('click', editCurrentArticle);
             document.getElementById('back-to-list').addEventListener('click', showArticleList);
             elements.searchBtn.addEventListener('click', searchArticles);
-            elements.searchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') searchArticles();
-            });
-            
-            // 内容输入监听
+            elements.searchInput.addEventListener('keypress', (e) => e.key === 'Enter' && searchArticles());
             elements.content.addEventListener('input', updatePreview);
+            elements.githubLink.addEventListener('click', () => window.open('https://github.com'));
+            
+            // 检查本地是否有存储的配置
+            loadConfiguration();
+            
+            // 更新同步状态指示器
+            updateSyncIndicator();
+        }
+
+        // 加载配置
+        function loadConfiguration() {
+            const savedGistId = localStorage.getItem('gistId');
+            const savedToken = localStorage.getItem('token');
+            
+            if (savedGistId && savedToken) {
+                gistId = savedGistId;
+                token = savedToken;
+                elements.gistId.value = gistId;
+                elements.token.value = token;
+                
+                // 隐藏配置错误，显示成功信息
+                elements.configError.style.display = 'none';
+                elements.configSuccess.style.display = 'flex';
+                
+                // 自动加载数据
+                loadFromGist();
+            } else {
+                // 显示配置引导
+                elements.configError.style.display = 'flex';
+                elements.errorMessage.textContent = '请配置GitHub Gist信息以启用跨平台同步';
+            }
+        }
+
+        // 保存配置
+        function saveConfiguration() {
+            const gistIdValue = elements.gistId.value.trim();
+            const tokenValue = elements.token.value.trim();
+            
+            if (!gistIdValue || !tokenValue) {
+                showConfigError('请填写Gist ID和Token');
+                return;
+            }
+            
+            // 保存到本地存储
+            localStorage.setItem('gistId', gistIdValue);
+            localStorage.setItem('token', tokenValue);
+            
+            gistId = gistIdValue;
+            token = tokenValue;
+            
+            // 更新状态显示
+            elements.configError.style.display = 'none';
+            elements.configSuccess.style.display = 'flex';
+            
+            // 更新同步状态指示器
+            updateSyncIndicator();
             
             // 自动加载数据
             loadFromGist();
+            
+            showToast('配置已保存成功');
+        }
+
+        // 显示配置错误
+        function showConfigError(message) {
+            elements.configError.style.display = 'flex';
+            elements.errorMessage.textContent = message;
+        }
+
+        // 更新同步状态指示器
+        function updateSyncIndicator() {
+            const indicator = document.querySelector('.sync-indicator');
+            const dot = indicator.querySelector('.dot');
+            const text = indicator.querySelector('span:not(.dot)');
+            
+            if (gistId && token) {
+                dot.classList.remove('offline');
+                dot.classList.add('online');
+                text.textContent = '在线';
+                indicator.style.color = '#34a853';
+            } else {
+                dot.classList.remove('online');
+                dot.classList.add('offline');
+                text.textContent = '离线';
+                indicator.style.color = '#ea4335';
+            }
         }
 
         // 渲染文章列表
         function renderArticles(articles = blogData.articles) {
             if (articles.length === 0) {
-                elements.articlesList.innerHTML = '<div class="card">暂无文章</div>';
+                elements.articlesList.innerHTML = '<div class="card">暂无文章，点击"写文章"创建第一篇</div>';
                 return;
             }
             
@@ -192,7 +352,7 @@
                     <div class="card" data-id="${article.id}">
                         <h3>${article.title}</h3>
                         <span class="category">${article.category}</span>
-                        <p>${article.content.substring(0, 100)}...</p>
+                        <p>${truncate(article.content, 120)}</p>
                         <div class="actions">
                             <button class="btn read-btn">阅读</button>
                             <button class="btn edit-btn">编辑</button>
@@ -227,29 +387,28 @@
             });
         }
 
-        // 渲染分类下拉框
-        function renderCategories() {
-            elements.category.innerHTML = '';
-            blogData.categories.forEach(cat => {
-                const option = document.createElement('option');
-                option.value = cat;
-                option.textContent = cat;
-                elements.category.appendChild(option);
-            });
+        // 截断文本
+        function truncate(text, maxLength) {
+            return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
         }
 
         // 创建新文章
         function newArticle() {
+            if (!validateConfiguration()) return;
+            
             currentArticle = null;
             elements.title.value = '';
             elements.content.value = '';
             renderCategories();
             showEditor();
+            document.getElementById('editor-title').textContent = '创建新文章';
             elements.title.focus();
         }
 
         // 编辑文章
         function editArticle(id) {
+            if (!validateConfiguration()) return;
+            
             currentArticle = blogData.articles.find(a => a.id === id);
             if (currentArticle) {
                 elements.title.value = currentArticle.title;
@@ -257,112 +416,17 @@
                 renderCategories();
                 elements.category.value = currentArticle.category;
                 showEditor();
+                document.getElementById('editor-title').textContent = '编辑文章';
                 updatePreview();
             }
         }
 
-        // 阅读文章
-        function readArticle(id) {
-            currentArticle = blogData.articles.find(a => a.id === id);
-            if (currentArticle) {
-                elements.articleTitle.textContent = currentArticle.title;
-                elements.articleCategory.textContent = currentArticle.category;
-                
-                // 使用Marked渲染Markdown内容
-                if (typeof marked !== 'undefined') {
-                    elements.articleContent.innerHTML = marked.parse(currentArticle.content);
-                } else {
-                    // 如果Marked未加载，显示原始内容
-                    elements.articleContent.textContent = currentArticle.content;
-                }
-                
-                showArticleView();
-            }
-        }
-
-        // 编辑当前阅读的文章
-        function editCurrentArticle() {
-            if (currentArticle) {
-                editArticle(currentArticle.id);
-            }
-        }
-
-        // 保存文章
-        function saveArticle() {
-            const title = elements.title.value.trim();
-            const content = elements.content.value.trim();
-            const category = elements.category.value;
-            
-            if (!title || !content) {
-                showToast('标题和内容不能为空');
-                return;
-            }
-            
-            const now = new Date().toISOString();
-            
-            if (currentArticle) {
-                // 更新现有文章
-                currentArticle.title = title;
-                currentArticle.content = content;
-                currentArticle.category = category;
-                currentArticle.updatedAt = now;
-                showToast('文章已更新');
-            } else {
-                // 创建新文章
-                blogData.articles.push({
-                    id: 'article_' + Date.now(),
-                    title,
-                    content,
-                    category,
-                    createdAt: now,
-                    updatedAt: now
-                });
-                showToast('文章已创建');
-            }
-            
-            // 保存到Gist
-            saveToGist();
-            
-            // 返回列表视图
-            showArticleList();
-        }
-
-        // 删除文章
-        function deleteArticle(id) {
-            if (confirm('确定要删除这篇文章吗？')) {
-                blogData.articles = blogData.articles.filter(a => a.id !== id);
-                saveToGist();
-                renderArticles();
-                showToast('文章已删除');
-            }
-        }
-
-        // 取消编辑
-        function cancelEdit() {
-            showArticleList();
-        }
-
-        // 更新Markdown预览
-        function updatePreview() {
-            // 按需加载Marked.js
-            if (typeof marked === 'undefined') {
-                loadMarked();
-                return;
-            }
-            elements.preview.innerHTML = marked.parse(elements.content.value || '输入内容将在这里预览');
-        }
-
-        // 加载Marked.js
-        function loadMarked() {
-            const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
-            script.onload = updatePreview;
-            document.head.appendChild(script);
-        }
-
         // 从Gist加载数据
         function loadFromGist() {
+            if (!validateConfiguration(true)) return;
+            
             elements.articlesList.innerHTML = '<div class="loader"></div>';
+            elements.articles.style.display = 'block';
             
             fetch(`https://api.github.com/gists/${gistId}`, {
                 headers: {
@@ -370,7 +434,12 @@
                     'Accept': 'application/vnd.github.v3+json'
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`请求失败: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 const content = data.files['blog.json']?.content;
                 if (content) {
@@ -378,25 +447,31 @@
                     renderArticles();
                     showToast('博客数据加载成功');
                 } else {
-                    showToast('未找到博客数据');
-                    renderArticles();
+                    throw new Error('Gist中未找到blog.json文件');
                 }
             })
             .catch(error => {
                 console.error('加载失败:', error);
                 showToast('加载失败: ' + error.message);
-                renderArticles();
+                renderArticles([]);
             });
+        }
+
+        // 验证配置
+        function validateConfiguration(showError = false) {
+            if (!gistId || !token) {
+                if (showError) {
+                    showToast('请先配置Gist ID和Token');
+                    showConfigError('请先保存配置信息');
+                }
+                return false;
+            }
+            return true;
         }
 
         // 保存数据到Gist
         function saveToGist() {
             const content = JSON.stringify(blogData, null, 2);
-            const files = {
-                'blog.json': {
-                    content: content
-                }
-            };
             
             fetch(`https://api.github.com/gists/${gistId}`, {
                 method: 'PATCH',
@@ -406,13 +481,18 @@
                     'Accept': 'application/vnd.github.v3+json'
                 },
                 body: JSON.stringify({
-                    files: files,
-                    description: '庞和合的博客数据'
+                    files: {
+                        'blog.json': {
+                            content: content
+                        }
+                    },
+                    description: '博客数据存储'
                 })
             })
             .then(response => {
                 if (response.ok) {
-                    showToast('数据已同步到Gist');
+                    showToast('数据已同步到GitHub Gist');
+                    updateSyncIndicator();
                 } else {
                     throw new Error('同步失败');
                 }
@@ -439,28 +519,6 @@
             renderArticles(results);
         }
 
-        // 显示文章列表
-        function showArticleList() {
-            elements.articles.style.display = 'block';
-            elements.editor.style.display = 'none';
-            elements.articleView.style.display = 'none';
-            renderArticles();
-        }
-
-        // 显示编辑器
-        function showEditor() {
-            elements.articles.style.display = 'none';
-            elements.editor.style.display = 'block';
-            elements.articleView.style.display = 'none';
-        }
-
-        // 显示文章阅读视图
-        function showArticleView() {
-            elements.articles.style.display = 'none';
-            elements.editor.style.display = 'none';
-            elements.articleView.style.display = 'block';
-        }
-
         // 显示消息提示
         function showToast(message) {
             elements.toast.textContent = message;
@@ -470,7 +528,35 @@
             }, 3000);
         }
 
-        // 页面加载完成后初始化
+        // 初始化Marked.js
+        function initMarked() {
+            if (typeof marked === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
+                document.head.appendChild(script);
+                
+                script.onload = () => {
+                    marked.setOptions({
+                        breaks: true,
+                        gfm: true
+                    });
+                    updatePreview();
+                };
+            } else {
+                updatePreview();
+            }
+        }
+
+        // 更新预览
+        function updatePreview() {
+            if (typeof marked !== 'undefined') {
+                elements.preview.innerHTML = marked.parse(elements.content.value || '*输入内容将在这里预览*');
+            } else {
+                initMarked();
+            }
+        }
+
+        // 初始化
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
