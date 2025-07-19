@@ -28,6 +28,8 @@
             --transition: all 0.3s ease;
             --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             --card-radius: 16px;
+            --success: #2ecc71;
+            --warning: #f39c12;
         }
         
         body {
@@ -174,6 +176,9 @@
             border: none;
             cursor: pointer;
             transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .search-btn:hover {
@@ -374,6 +379,12 @@
             border: 1px solid rgba(77, 101, 128, 0.3);
             display: flex;
             flex-direction: column;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .article-card:hover {
@@ -811,6 +822,32 @@
             margin-top: 30px;
         }
         
+        /* 通知消息 */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            background: var(--success);
+            color: white;
+            box-shadow: var(--shadow);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background: var(--accent);
+        }
+        
         /* 实用类 */
         .hidden {
             display: none;
@@ -826,6 +863,33 @@
         
         .mt-30 {
             margin-top: 30px;
+        }
+        
+        /* 空状态 */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .empty-state i {
+            font-size: 5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+        
+        .empty-state p {
+            color: var(--gray);
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
         }
     </style>
 </head>
@@ -856,8 +920,8 @@
                 <!-- 搜索框 -->
                 <div class="search-box">
                     <div class="search-container">
-                        <input type="text" class="search-input" placeholder="搜索文章...">
-                        <button class="search-btn"><i class="fas fa-search"></i> 搜索</button>
+                        <input type="text" class="search-input" id="searchInput" placeholder="搜索文章...">
+                        <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i> 搜索</button>
                     </div>
                 </div>
                 
@@ -878,9 +942,9 @@
                 <!-- 文章管理 -->
                 <section class="articles-section">
                     <div class="section-header">
-                        <h2 class="section-title">最新文章</h2>
+                        <h2 class="section-title" id="articlesTitle">最新文章</h2>
                         <div>
-                            <button class="action-btn">
+                            <button class="action-btn" id="sortBtn">
                                 <i class="fas fa-sort-amount-down"></i> 排序
                             </button>
                         </div>
@@ -911,11 +975,11 @@
                     <h3 class="widget-title"><i class="fas fa-chart-bar"></i> 博客统计</h3>
                     <div class="stats">
                         <div class="stat-item">
-                            <div class="stat-value">28</div>
+                            <div class="stat-value" id="articlesCount">0</div>
                             <div class="stat-label">文章</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value">6</div>
+                            <div class="stat-value" id="categoriesCount">0</div>
                             <div class="stat-label">分类</div>
                         </div>
                         <div class="stat-item">
@@ -927,27 +991,8 @@
                 
                 <div class="widget">
                     <h3 class="widget-title"><i class="fas fa-tags"></i> 热门分类</h3>
-                    <div class="categories">
-                        <div class="category">
-                            <span>前端开发</span>
-                            <span class="count">12</span>
-                        </div>
-                        <div class="category">
-                            <span>人工智能</span>
-                            <span class="count">8</span>
-                        </div>
-                        <div class="category">
-                            <span>旅行摄影</span>
-                            <span class="count">6</span>
-                        </div>
-                        <div class="category">
-                            <span>生活随笔</span>
-                            <span class="count">10</span>
-                        </div>
-                        <div class="category">
-                            <span>后端技术</span>
-                            <span class="count">9</span>
-                        </div>
+                    <div class="categories" id="popularCategories">
+                        <!-- 动态生成热门分类 -->
                     </div>
                 </div>
             </aside>
@@ -970,12 +1015,8 @@
                 </div>
                 <div class="footer-section">
                     <h3>博客分类</h3>
-                    <ul>
-                        <li><a href="#">前端开发</a></li>
-                        <li><a href="#">后端技术</a></li>
-                        <li><a href="#">人工智能</a></li>
-                        <li><a href="#">旅行摄影</a></li>
-                        <li><a href="#">生活随笔</a></li>
+                    <ul id="footerCategories">
+                        <!-- 动态生成分类 -->
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -997,12 +1038,19 @@
             <span class="close-modal" id="closeEditor">&times;</span>
             <h2 class="modal-title">Markdown 编辑器</h2>
             
+            <div class="mb-20">
+                <input type="text" class="search-input" id="articleTitle" placeholder="输入文章标题" style="width: 100%; margin-bottom: 15px;">
+                <select class="search-input" id="articleCategory" style="width: 100%;">
+                    <option value="">选择文章分类</option>
+                </select>
+            </div>
+            
             <div class="editor-container">
                 <div class="editor-column">
                     <div class="editor-header">
                         <div class="editor-label">编辑区</div>
                         <div class="editor-tools">
-                            <button class="editor-tool" title="上传图片"><i class="fas fa-image"></i></button>
+                            <button class="editor-tool" title="上传图片" id="uploadImageBtn"><i class="fas fa-image"></i></button>
                             <button class="editor-tool" title="添加链接"><i class="fas fa-link"></i></button>
                             <button class="editor-tool" title="添加代码"><i class="fas fa-code"></i></button>
                         </div>
@@ -1066,48 +1114,34 @@
         </div>
     </div>
 
+    <!-- 通知消息 -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">操作成功</span>
+    </div>
+
     <script>
-        // 文章数据
-        const articles = [
-            {
-                id: 1,
-                title: '深入理解JavaScript闭包',
-                content: '闭包是JavaScript中一个非常重要的概念，它允许函数访问并记住其词法作用域，即使函数在其词法作用域之外执行。闭包在许多高级JavaScript模式中都有应用，包括模块模式、柯里化和函数工厂等。',
-                category: '前端开发',
-                date: '2023-06-15',
-                image: 'code'
-            },
-            {
-                id: 2,
-                title: '探索深度学习在图像识别中的应用',
-                content: '深度学习技术在图像识别领域取得了巨大突破。本文将探讨卷积神经网络(CNN)的基本原理，以及如何使用TensorFlow实现一个简单的图像分类器。我们将通过实际案例展示如何训练模型识别手写数字。',
-                category: '人工智能',
-                date: '2023-07-20',
-                image: 'ai'
-            },
-            {
-                id: 3,
-                title: '日本京都旅行摄影指南',
-                content: '京都作为日本的古都，拥有丰富的历史文化遗产。漫步在祇园的石板路上，参观金阁寺和清水寺，品尝正宗的怀石料理，这些体验让我深深感受到日本传统文化的魅力。本文将分享我在京都的摄影技巧和最佳拍摄地点。',
-                category: '旅行摄影',
-                date: '2023-07-10',
-                image: 'travel'
-            },
-            {
-                id: 4,
-                title: '如何保持高效的工作与生活平衡',
-                content: '在现代快节奏的生活中，保持工作与生活的平衡变得越来越重要。本文将分享五种有效的方法：时间管理技巧、设定边界、定期休息、培养爱好和学会说不。这些策略帮助我在繁忙的工作中保持身心健康和创造力。',
-                category: '生活随笔',
-                date: '2023-06-28',
-                image: 'life'
-            }
-        ];
+        // 博客数据存储
+        let blogData = JSON.parse(localStorage.getItem('blogData')) || {
+            articles: [],
+            categories: ['前端开发', '后端技术', '人工智能', '旅行摄影', '生活随笔']
+        };
         
-        // 分类数据
-        let categories = ['前端开发', '后端技术', '人工智能', '旅行摄影', '生活随笔'];
+        // 当前状态
+        let currentState = {
+            editingArticleId: null,
+            sortOrder: 'newest',
+            searchQuery: '',
+            currentCategory: 'all'
+        };
         
         // DOM元素
         const articlesContainer = document.getElementById('articlesContainer');
+        const articlesTitle = document.getElementById('articlesTitle');
+        const articlesCount = document.getElementById('articlesCount');
+        const categoriesCount = document.getElementById('categoriesCount');
+        const popularCategories = document.getElementById('popularCategories');
+        const footerCategories = document.getElementById('footerCategories');
         const editorModal = document.getElementById('editorModal');
         const categoriesModal = document.getElementById('categoriesModal');
         const closeEditor = document.getElementById('closeEditor');
@@ -1118,51 +1152,176 @@
         const newCategoryInput = document.getElementById('newCategory');
         const addCategoryBtn = document.getElementById('addCategory');
         const categoriesList = document.getElementById('categoriesList');
+        const articleCategory = document.getElementById('articleCategory');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const sortBtn = document.getElementById('sortBtn');
         
-        // 渲染文章列表
-        function renderArticles() {
-            articlesContainer.innerHTML = articles.map(article => `
-                <div class="article-card">
-                    <div class="article-img" style="background: linear-gradient(45deg, ${getColorByCategory(article.category)}, #2c3e50);">
-                        <i class="fas fa-${getIconByImage(article.image)}"></i>
-                    </div>
-                    <div class="article-content">
-                        <div class="article-header">
-                            <span class="article-category">${article.category}</span>
-                            <span class="article-date">${article.date}</span>
-                        </div>
-                        <h3>${article.title}</h3>
-                        <p>${article.content}</p>
-                        <div class="article-actions">
-                            <button class="action-btn edit-btn" data-id="${article.id}">
-                                <i class="fas fa-edit"></i> 编辑
-                            </button>
-                            <button class="action-btn delete delete-btn" data-id="${article.id}">
-                                <i class="fas fa-trash"></i> 删除
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+        // 初始化
+        function init() {
+            // 如果没有文章，添加示例数据
+            if (blogData.articles.length === 0) {
+                addSampleArticles();
+            }
             
-            // 添加事件监听
-            document.querySelectorAll('.edit-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    openEditor();
-                });
-            });
+            renderArticles();
+            renderCategories();
+            updateStats();
             
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.getAttribute('data-id');
-                    deleteArticle(id);
-                });
+            // 事件监听
+            setupEventListeners();
+        }
+        
+        // 添加示例文章
+        function addSampleArticles() {
+            blogData.articles = [
+                {
+                    id: Date.now(),
+                    title: '深入理解JavaScript闭包',
+                    content: '闭包是JavaScript中一个非常重要的概念，它允许函数访问并记住其词法作用域，即使函数在其词法作用域之外执行。闭包在许多高级JavaScript模式中都有应用，包括模块模式、柯里化和函数工厂等。',
+                    markdown: '# 深入理解JavaScript闭包\n\n闭包是JavaScript中一个非常重要的概念，它允许函数访问并记住其词法作用域，即使函数在其词法作用域之外执行。\n\n## 闭包的应用场景\n\n- 模块模式\n- 函数柯里化\n- 事件处理',
+                    category: '前端开发',
+                    date: new Date().toISOString().split('T')[0],
+                    image: 'code'
+                },
+                {
+                    id: Date.now() + 1,
+                    title: '探索深度学习在图像识别中的应用',
+                    content: '深度学习技术在图像识别领域取得了巨大突破。本文将探讨卷积神经网络(CNN)的基本原理，以及如何使用TensorFlow实现一个简单的图像分类器。我们将通过实际案例展示如何训练模型识别手写数字。',
+                    markdown: '# 探索深度学习在图像识别中的应用\n\n深度学习技术在图像识别领域取得了巨大突破。本文将探讨卷积神经网络(CNN)的基本原理。\n\n## CNN的核心概念\n\n- 卷积层\n- 池化层\n- 全连接层',
+                    category: '人工智能',
+                    date: new Date().toISOString().split('T')[0],
+                    image: 'ai'
+                },
+                {
+                    id: Date.now() + 2,
+                    title: '日本京都旅行摄影指南',
+                    content: '京都作为日本的古都，拥有丰富的历史文化遗产。漫步在祇园的石板路上，参观金阁寺和清水寺，品尝正宗的怀石料理，这些体验让我深深感受到日本传统文化的魅力。本文将分享我在京都的摄影技巧和最佳拍摄地点。',
+                    markdown: '# 日本京都旅行摄影指南\n\n京都作为日本的古都，拥有丰富的历史文化遗产。本文将分享我在京都的摄影技巧和最佳拍摄地点。\n\n## 最佳拍摄地点\n\n- 伏见稻荷大社\n- 清水寺\n- 岚山竹林',
+                    category: '旅行摄影',
+                    date: new Date().toISOString().split('T')[0],
+                    image: 'travel'
+                }
+            ];
+            saveData();
+        }
+        
+        // 设置事件监听
+        function setupEventListeners() {
+            // 文章相关
+            document.getElementById('newArticleBtn').addEventListener('click', () => openEditor());
+            document.getElementById('manageCategoriesBtn').addEventListener('click', openCategoriesManager);
+            closeEditor.addEventListener('click', closeModals);
+            closeCategories.addEventListener('click', closeModals);
+            cancelEdit.addEventListener('click', closeModals);
+            markdownEditor.addEventListener('input', updatePreview);
+            addCategoryBtn.addEventListener('click', addCategory);
+            document.getElementById('saveArticle').addEventListener('click', saveArticle);
+            document.getElementById('uploadImageBtn').addEventListener('click', uploadImage);
+            searchInput.addEventListener('input', handleSearch);
+            searchBtn.addEventListener('click', handleSearch);
+            sortBtn.addEventListener('click', toggleSortOrder);
+            
+            // 按ESC关闭模态框
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeModals();
             });
         }
         
-        // 渲染分类列表
+        // 渲染文章列表
+        function renderArticles() {
+            let articles = [...blogData.articles];
+            
+            // 应用搜索
+            if (currentState.searchQuery) {
+                const query = currentState.searchQuery.toLowerCase();
+                articles = articles.filter(article => 
+                    article.title.toLowerCase().includes(query) || 
+                    article.content.toLowerCase().includes(query) ||
+                    article.category.toLowerCase().includes(query)
+                );
+            }
+            
+            // 应用分类筛选
+            if (currentState.currentCategory !== 'all') {
+                articles = articles.filter(article => article.category === currentState.currentCategory);
+            }
+            
+            // 应用排序
+            if (currentState.sortOrder === 'newest') {
+                articles.sort((a, b) => new Date(b.date) - new Date(a.date));
+            } else {
+                articles.sort((a, b) => new Date(a.date) - new Date(b.date));
+            }
+            
+            // 更新标题
+            if (currentState.searchQuery) {
+                articlesTitle.innerHTML = `搜索 "<span style="color: var(--primary)">${currentState.searchQuery}</span>" 的结果`;
+            } else if (currentState.currentCategory !== 'all') {
+                articlesTitle.innerHTML = `分类 "<span style="color: var(--primary)">${currentState.currentCategory}</span>" 的文章`;
+            } else {
+                articlesTitle.textContent = currentState.sortOrder === 'newest' ? '最新文章' : '最早文章';
+            }
+            
+            // 渲染文章
+            if (articles.length === 0) {
+                articlesContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-file-alt"></i>
+                        <h3>没有找到文章</h3>
+                        <p>${currentState.searchQuery ? '没有找到匹配搜索条件的文章' : '当前分类下没有文章，请尝试其他分类或创建新文章'}</p>
+                        <button class="btn mt-30" id="createArticleBtn">创建新文章</button>
+                    </div>
+                `;
+                document.getElementById('createArticleBtn')?.addEventListener('click', () => openEditor());
+            } else {
+                articlesContainer.innerHTML = articles.map(article => `
+                    <div class="article-card">
+                        <div class="article-img" style="background: linear-gradient(45deg, ${getColorByCategory(article.category)}, #2c3e50);">
+                            <i class="fas fa-${getIconByImage(article.image)}"></i>
+                        </div>
+                        <div class="article-content">
+                            <div class="article-header">
+                                <span class="article-category">${article.category}</span>
+                                <span class="article-date">${article.date}</span>
+                            </div>
+                            <h3>${article.title}</h3>
+                            <p>${article.content}</p>
+                            <div class="article-actions">
+                                <button class="action-btn edit-btn" data-id="${article.id}">
+                                    <i class="fas fa-edit"></i> 编辑
+                                </button>
+                                <button class="action-btn delete delete-btn" data-id="${article.id}">
+                                    <i class="fas fa-trash"></i> 删除
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // 添加事件监听
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = e.currentTarget.getAttribute('data-id');
+                        openEditor(id);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = e.currentTarget.getAttribute('data-id');
+                        deleteArticle(id);
+                    });
+                });
+            }
+        }
+        
+        // 渲染分类
         function renderCategories() {
-            categoriesList.innerHTML = categories.map(category => `
+            // 分类管理模态框
+            categoriesList.innerHTML = blogData.categories.map(category => `
                 <div class="category">
                     <span>${category}</span>
                     <i class="fas fa-times delete-category" data-category="${category}"></i>
@@ -1177,6 +1336,50 @@
                     deleteCategory(category);
                 });
             });
+            
+            // 热门分类（侧边栏）
+            popularCategories.innerHTML = blogData.categories.slice(0, 5).map(category => `
+                <div class="category" data-category="${category}">
+                    <span>${category}</span>
+                    <span class="count">${blogData.articles.filter(a => a.category === category).length}</span>
+                </div>
+            `).join('');
+            
+            // 添加分类筛选事件
+            document.querySelectorAll('.category[data-category]').forEach(cat => {
+                cat.addEventListener('click', () => {
+                    const category = cat.getAttribute('data-category');
+                    currentState.currentCategory = category;
+                    renderArticles();
+                });
+            });
+            
+            // 页脚分类
+            footerCategories.innerHTML = blogData.categories.map(category => `
+                <li><a href="#" data-category="${category}">${category}</a></li>
+            `).join('');
+            
+            // 添加页脚分类事件
+            document.querySelectorAll('#footerCategories a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentState.currentCategory = link.getAttribute('data-category');
+                    renderArticles();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+            
+            // 编辑器分类选择
+            articleCategory.innerHTML = '<option value="">选择文章分类</option>' + 
+                blogData.categories.map(category => `
+                    <option value="${category}">${category}</option>
+                `).join('');
+        }
+        
+        // 更新统计信息
+        function updateStats() {
+            articlesCount.textContent = blogData.articles.length;
+            categoriesCount.textContent = blogData.categories.length;
         }
         
         // 根据分类获取颜色
@@ -1203,7 +1406,22 @@
         }
         
         // 打开编辑器
-        function openEditor() {
+        function openEditor(articleId = null) {
+            currentState.editingArticleId = articleId;
+            
+            if (articleId) {
+                const article = blogData.articles.find(a => a.id == articleId);
+                if (article) {
+                    document.getElementById('articleTitle').value = article.title;
+                    markdownEditor.value = article.markdown;
+                    articleCategory.value = article.category;
+                }
+            } else {
+                document.getElementById('articleTitle').value = '';
+                markdownEditor.value = '# 新文章标题\n\n开始撰写你的内容...';
+                articleCategory.value = '';
+            }
+            
             editorModal.style.display = 'flex';
             updatePreview();
         }
@@ -1244,57 +1462,142 @@
         // 添加新分类
         function addCategory() {
             const newCategory = newCategoryInput.value.trim();
-            if (newCategory && !categories.includes(newCategory)) {
-                categories.push(newCategory);
+            if (newCategory && !blogData.categories.includes(newCategory)) {
+                blogData.categories.push(newCategory);
+                saveData();
                 renderCategories();
                 newCategoryInput.value = '';
+                showNotification('分类添加成功');
+            } else if (blogData.categories.includes(newCategory)) {
+                showNotification('该分类已存在', true);
             }
         }
         
         // 删除分类
         function deleteCategory(category) {
-            categories = categories.filter(c => c !== category);
+            // 检查是否有文章使用该分类
+            const articlesWithCategory = blogData.articles.filter(a => a.category === category);
+            
+            if (articlesWithCategory.length > 0) {
+                showNotification('无法删除：有文章使用此分类', true);
+                return;
+            }
+            
+            blogData.categories = blogData.categories.filter(c => c !== category);
+            saveData();
             renderCategories();
+            showNotification('分类已删除');
         }
         
         // 删除文章
         function deleteArticle(id) {
             if (confirm('确定要删除这篇文章吗？此操作不可撤销。')) {
-                alert(`文章ID ${id} 已删除`);
-                // 实际应用中这里会从数组中删除文章并重新渲染
+                blogData.articles = blogData.articles.filter(a => a.id != id);
+                saveData();
+                renderArticles();
+                updateStats();
+                showNotification('文章已删除');
             }
         }
         
         // 保存文章
         function saveArticle() {
-            alert('文章已保存！');
+            const title = document.getElementById('articleTitle').value.trim();
+            const category = articleCategory.value;
+            const markdown = markdownEditor.value;
+            const content = markdown.substring(0, 200) + '...'; // 生成摘要
+            
+            if (!title || !category || !markdown) {
+                showNotification('请填写标题、分类和内容', true);
+                return;
+            }
+            
+            const articleData = {
+                id: currentState.editingArticleId || Date.now(),
+                title,
+                content,
+                markdown,
+                category,
+                date: new Date().toISOString().split('T')[0],
+                image: getImageByCategory(category)
+            };
+            
+            if (currentState.editingArticleId) {
+                // 更新现有文章
+                const index = blogData.articles.findIndex(a => a.id == currentState.editingArticleId);
+                if (index !== -1) {
+                    blogData.articles[index] = articleData;
+                }
+            } else {
+                // 添加新文章
+                blogData.articles.unshift(articleData);
+            }
+            
+            saveData();
+            renderArticles();
+            updateStats();
             closeModals();
+            showNotification(`文章"${title}"已保存`);
         }
         
-        // 初始化
-        document.addEventListener('DOMContentLoaded', () => {
+        // 根据分类获取图片类型
+        function getImageByCategory(category) {
+            const mapping = {
+                '前端开发': 'code',
+                '后端技术': 'server',
+                '人工智能': 'ai',
+                '旅行摄影': 'travel',
+                '生活随笔': 'life'
+            };
+            return mapping[category] || 'file-alt';
+        }
+        
+        // 处理搜索
+        function handleSearch() {
+            currentState.searchQuery = searchInput.value.trim().toLowerCase();
             renderArticles();
+        }
+        
+        // 切换排序顺序
+        function toggleSortOrder() {
+            currentState.sortOrder = currentState.sortOrder === 'newest' ? 'oldest' : 'newest';
+            sortBtn.innerHTML = currentState.sortOrder === 'newest' 
+                ? '<i class="fas fa-sort-amount-down"></i> 最新优先' 
+                : '<i class="fas fa-sort-amount-up"></i> 最早优先';
+            renderArticles();
+        }
+        
+        // 上传图片（模拟）
+        function uploadImage() {
+            const url = prompt('请输入图片URL（模拟上传）:');
+            if (url) {
+                const markdown = `![](${url})`;
+                const cursorPos = markdownEditor.selectionStart;
+                const textBefore = markdownEditor.value.substring(0, cursorPos);
+                const textAfter = markdownEditor.value.substring(cursorPos);
+                
+                markdownEditor.value = textBefore + markdown + textAfter;
+                updatePreview();
+            }
+        }
+        
+        // 显示通知
+        function showNotification(message, isError = false) {
+            notificationText.textContent = message;
+            notification.className = isError ? 'notification error show' : 'notification show';
             
-            // 事件监听
-            document.getElementById('newArticleBtn').addEventListener('click', openEditor);
-            document.getElementById('manageCategoriesBtn').addEventListener('click', openCategoriesManager);
-            closeEditor.addEventListener('click', closeModals);
-            closeCategories.addEventListener('click', closeModals);
-            cancelEdit.addEventListener('click', closeModals);
-            markdownEditor.addEventListener('input', updatePreview);
-            addCategoryBtn.addEventListener('click', addCategory);
-            document.getElementById('saveArticle').addEventListener('click', saveArticle);
-            
-            // 初始预览
-            updatePreview();
-            
-            // 按ESC关闭模态框
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeModals();
-                }
-            });
-        });
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 保存数据到localStorage
+        function saveData() {
+            localStorage.setItem('blogData', JSON.stringify(blogData));
+        }
+        
+        // 初始化应用
+        init();
     </script>
 </body>
 </html>
