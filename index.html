@@ -1,6 +1,680 @@
-<!DOCTYPE html><html>
-<head><title>简易页面</title></head>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星辰博客 | 简约知识分享平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --gray: #95a5a6;
+            --tech: #3498db;
+            --life: #2ecc71;
+            --travel: #f39c12;
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background: rgba(44, 62, 80, 0.9);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+        
+        .logo h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+        
+        nav a:hover {
+            background: rgba(52, 152, 219, 0.2);
+        }
+        
+        /* 主内容区 */
+        main {
+            padding: 40px 0;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 50px;
+            border-radius: 15px;
+            background: rgba(44, 62, 80, 0.7);
+        }
+        
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .hero p {
+            font-size: 1.4rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: #ecf0f1;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            background: #2980b9;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--primary);
+            margin-left: 15px;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+        
+        .btn-danger {
+            background: var(--accent);
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        /* 分类导航 */
+        .categories {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .category-btn {
+            padding: 10px 25px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+        
+        .category-btn:hover, .category-btn.active {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .category-btn.tech { background: var(--tech); }
+        .category-btn.life { background: var(--life); }
+        .category-btn.travel { background: var(--travel); }
+        .category-btn.all { background: var(--secondary); }
+        
+        /* 文章管理 */
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+        }
+        
+        .articles-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .article-card {
+            background: rgba(44, 62, 80, 0.85);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+        
+        .article-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .article-header {
+            padding: 15px 25px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .article-category {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .category-tech { background: rgba(52, 152, 219, 0.2); color: var(--tech); }
+        .category-life { background: rgba(46, 204, 113, 0.2); color: var(--life); }
+        .category-travel { background: rgba(243, 156, 18, 0.2); color: var(--travel); }
+        
+        .article-date {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .article-content {
+            padding: 25px;
+        }
+        
+        .article-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+        
+        .article-content p {
+            color: #bdc3c7;
+            margin-bottom: 20px;
+            height: 80px;
+            overflow: hidden;
+        }
+        
+        .article-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* 表单样式 */
+        .form-container {
+            background: rgba(44, 62, 80, 0.9);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            border-radius: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(236, 240, 241, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        /* 页脚 */
+        footer {
+            background: rgba(44, 62, 80, 0.9);
+            padding: 40px 0 20px;
+            margin-top: 60px;
+            text-align: center;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(52, 152, 219, 0.2);
+            color: white;
+            transition: var(--transition);
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+        
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            padding-top: 20px;
+            color: #95a5a6;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+            
+            .articles-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+        
+        /* 实用类 */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
 <body>
-<h1>你好世界!</h1>
-<p>这是一个6行内的HTML示例</p></body>
+    <!-- 头部导航 -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-blog"></i>
+                <h1>星辰博客</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">首页</a></li>
+                    <li><a href="#">分类</a></li>
+                    <li><a href="#">归档</a></li>
+                    <li><a href="#">关于</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container">
+        <!-- 欢迎区域 -->
+        <section class="hero">
+            <h2>分享思想，启迪智慧</h2>
+            <p>记录技术探索、生活感悟与创意灵感，打造属于我的知识宇宙</p>
+            <button id="newArticleBtn" class="btn">
+                <i class="fas fa-plus-circle"></i> 新建文章
+            </button>
+        </section>
+
+        <!-- 分类导航 -->
+        <div class="categories">
+            <button class="category-btn all active" data-category="all">全部文章</button>
+            <button class="category-btn tech" data-category="tech">技术</button>
+            <button class="category-btn life" data-category="life">生活</button>
+            <button class="category-btn travel" data-category="travel">旅行</button>
+        </div>
+
+        <!-- 文章管理 -->
+        <section id="articles">
+            <h2 class="section-title">文章列表</h2>
+            <div class="articles-container" id="articlesContainer">
+                <!-- 文章卡片将通过JS动态生成 -->
+            </div>
+        </section>
+
+        <!-- 文章表单 -->
+        <section id="articleFormSection" class="hidden">
+            <h2 class="section-title" id="formTitle">新建文章</h2>
+            <div class="form-container">
+                <form id="articleForm">
+                    <div class="form-group">
+                        <label for="articleTitle">文章标题</label>
+                        <input type="text" id="articleTitle" required placeholder="输入文章标题...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="articleCategory">文章分类</label>
+                        <select id="articleCategory" required>
+                            <option value="">选择分类</option>
+                            <option value="tech">技术</option>
+                            <option value="life">生活</option>
+                            <option value="travel">旅行</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="articleContent">文章内容</label>
+                        <textarea id="articleContent" required placeholder="输入文章内容..."></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn">保存文章</button>
+                        <button type="button" id="cancelBtn" class="btn btn-secondary">取消</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <p>记录技术探索、生活感悟与创意灵感，打造属于我的知识宇宙</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 星辰博客. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 文章数据存储
+        let articles = JSON.parse(localStorage.getItem('articles')) || [];
+        let currentArticleId = null;
+        let currentCategory = 'all';
+        
+        // DOM元素
+        const articlesContainer = document.getElementById('articlesContainer');
+        const articleFormSection = document.getElementById('articleFormSection');
+        const articleForm = document.getElementById('articleForm');
+        const newArticleBtn = document.getElementById('newArticleBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const formTitle = document.getElementById('formTitle');
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        
+        // 初始化
+        function init() {
+            if (articles.length === 0) {
+                // 添加示例数据
+                articles = [
+                    {
+                        id: 1,
+                        title: '深入理解JavaScript闭包',
+                        content: '闭包是JavaScript中一个非常重要的概念，它允许函数访问并记住其词法作用域，即使函数在其词法作用域之外执行。闭包在许多高级JavaScript模式中都有应用，包括模块模式、柯里化和函数工厂等。',
+                        category: 'tech',
+                        date: new Date('2023-06-15')
+                    },
+                    {
+                        id: 2,
+                        title: '我的日本京都之旅',
+                        content: '京都作为日本的古都，拥有丰富的历史文化遗产。漫步在祇园的石板路上，参观金阁寺和清水寺，品尝正宗的怀石料理，这些体验让我深深感受到日本传统文化的魅力。',
+                        category: 'travel',
+                        date: new Date('2023-07-20')
+                    },
+                    {
+                        id: 3,
+                        title: '健康生活的五个习惯',
+                        content: '保持健康的生活方式对每个人都很重要。每天保持充足睡眠、均衡饮食、适度运动、保持积极心态和定期体检，这五个习惯可以帮助我们拥有更健康、更充实的生活。',
+                        category: 'life',
+                        date: new Date('2023-07-10')
+                    }
+                ];
+                localStorage.setItem('articles', JSON.stringify(articles));
+            }
+            
+            renderArticles();
+            setupEventListeners();
+        }
+        
+        // 渲染文章列表
+        function renderArticles() {
+            // 过滤当前分类的文章
+            const filteredArticles = currentCategory === 'all' 
+                ? articles 
+                : articles.filter(article => article.category === currentCategory);
+            
+            if (filteredArticles.length === 0) {
+                articlesContainer.innerHTML = `
+                    <div class="no-articles" style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                        <i class="fas fa-file-alt" style="font-size: 5rem; color: #3498db; margin-bottom: 20px;"></i>
+                        <h3>暂无文章</h3>
+                        <p>当前分类没有文章，点击"新建文章"按钮开始创作</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            articlesContainer.innerHTML = filteredArticles.map(article => `
+                <div class="article-card" data-id="${article.id}">
+                    <div class="article-header">
+                        <span class="article-category category-${article.category}">
+                            ${getCategoryName(article.category)}
+                        </span>
+                        <span class="article-date">
+                            <i class="far fa-calendar"></i> ${formatDate(article.date)}
+                        </span>
+                    </div>
+                    <div class="article-content">
+                        <h3>${article.title}</h3>
+                        <p>${article.content.substring(0, 150)}...</p>
+                        <div class="article-actions">
+                            <button class="btn" onclick="editArticle(${article.id})">
+                                <i class="fas fa-edit"></i> 编辑
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteArticle(${article.id})">
+                                <i class="fas fa-trash"></i> 删除
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // 设置事件监听
+        function setupEventListeners() {
+            // 新建文章按钮
+            newArticleBtn.addEventListener('click', () => {
+                articleForm.reset();
+                currentArticleId = null;
+                formTitle.textContent = '新建文章';
+                articleFormSection.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            
+            // 取消按钮
+            cancelBtn.addEventListener('click', () => {
+                articleFormSection.classList.add('hidden');
+            });
+            
+            // 表单提交
+            articleForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveArticle();
+            });
+            
+            // 分类按钮
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // 更新活动按钮
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    // 更新当前分类
+                    currentCategory = btn.dataset.category;
+                    
+                    // 重新渲染文章
+                    renderArticles();
+                });
+            });
+        }
+        
+        // 保存文章
+        function saveArticle() {
+            const title = document.getElementById('articleTitle').value;
+            const category = document.getElementById('articleCategory').value;
+            const content = document.getElementById('articleContent').value;
+            
+            if (currentArticleId === null) {
+                // 新建文章
+                const newArticle = {
+                    id: Date.now(),
+                    title,
+                    content,
+                    category,
+                    date: new Date()
+                };
+                articles.unshift(newArticle);
+            } else {
+                // 更新文章
+                const articleIndex = articles.findIndex(a => a.id === currentArticleId);
+                if (articleIndex !== -1) {
+                    articles[articleIndex].title = title;
+                    articles[articleIndex].content = content;
+                    articles[articleIndex].category = category;
+                }
+            }
+            
+            // 保存到localStorage
+            localStorage.setItem('articles', JSON.stringify(articles));
+            
+            // 重置表单并隐藏
+            articleForm.reset();
+            articleFormSection.classList.add('hidden');
+            
+            // 重新渲染文章列表
+            renderArticles();
+            
+            // 提示用户
+            alert('文章已保存！');
+        }
+        
+        // 编辑文章
+        window.editArticle = function(id) {
+            const article = articles.find(a => a.id === id);
+            if (article) {
+                document.getElementById('articleTitle').value = article.title;
+                document.getElementById('articleCategory').value = article.category;
+                document.getElementById('articleContent').value = article.content;
+                currentArticleId = id;
+                formTitle.textContent = '编辑文章';
+                articleFormSection.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+        
+        // 删除文章
+        window.deleteArticle = function(id) {
+            if (confirm('确定要删除这篇文章吗？此操作不可撤销。')) {
+                articles = articles.filter(a => a.id !== id);
+                localStorage.setItem('articles', JSON.stringify(articles));
+                renderArticles();
+                alert('文章已删除！');
+            }
+        };
+        
+        // 辅助函数
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+        }
+        
+        function getCategoryName(category) {
+            switch(category) {
+                case 'tech': return '技术';
+                case 'life': return '生活';
+                case 'travel': return '旅行';
+                default: return '未分类';
+            }
+        }
+        
+        // 初始化应用
+        init();
+    </script>
+</body>
 </html>
