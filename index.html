@@ -467,6 +467,74 @@
         .btn-danger:hover {
             background: #d32f2f;
         }
+
+        /* 数据管理面板 */
+        .data-panel {
+            background: rgba(0, 0, 0, 0.7);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .data-panel.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .data-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            padding: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .data-content h2 {
+            margin-bottom: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .data-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .data-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f5f7fa;
+            border: 1px solid #e0e0e0;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .data-btn:hover {
+            background: #eef2f7;
+            border-color: var(--accent);
+        }
+        
+        .data-btn i {
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
         
         /* 响应式设计 */
         @media (max-width: 1024px) {
@@ -538,8 +606,8 @@
         
         <div class="sidebar-section">
             <div class="section-title">
-                <span>存储状态</span>
-                <i class="fas fa-hdd"></i>
+                <span>数据管理</span>
+                <i class="fas fa-database" id="dataManagementBtn"></i>
             </div>
             <div class="items-list">
                 <div style="padding: 10px 15px; color: rgba(255,255,255,0.9); font-size: 0.95rem;">
@@ -634,6 +702,30 @@
         </div>
     </div>
 
+    <!-- 数据管理面板 -->
+    <div class="data-panel" id="dataPanel">
+        <div class="data-content">
+            <h2><i class="fas fa-database"></i> 数据管理</h2>
+            <div class="data-actions">
+                <button class="data-btn" id="exportDataBtn">
+                    <i class="fas fa-file-export"></i> 导出博客数据
+                </button>
+                <button class="data-btn" id="importDataBtn">
+                    <i class="fas fa-file-import"></i> 导入博客数据
+                </button>
+                <button class="data-btn" id="downloadHtmlBtn">
+                    <i class="fas fa-download"></i> 下载HTML文件
+                </button>
+                <button class="data-btn" id="clearDataBtn">
+                    <i class="fas fa-trash-alt"></i> 清除所有数据
+                </button>
+                <button class="data-btn" id="closeDataPanelBtn">
+                    <i class="fas fa-times"></i> 关闭面板
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // 博客数据结构
         let blogData = {
@@ -647,8 +739,10 @@
         const DOM = {
             createPostBtn: document.getElementById('createPostBtn'),
             createCategoryBtn: document.getElementById('createCategoryBtn'),
+            dataManagementBtn: document.getElementById('dataManagementBtn'),
             postModal: document.getElementById('postModal'),
             categoryModal: document.getElementById('categoryModal'),
+            dataPanel: document.getElementById('dataPanel'),
             postsContainer: document.getElementById('postsContainer'),
             postList: document.getElementById('postList'),
             categoryList: document.getElementById('categoryList'),
@@ -666,7 +760,12 @@
             deletePostBtn: document.getElementById('deletePostBtn'),
             deleteCategoryBtn: document.getElementById('deleteCategoryBtn'),
             cancelPostBtn: document.getElementById('cancelPostBtn'),
-            cancelCategoryBtn: document.getElementById('cancelCategoryBtn')
+            cancelCategoryBtn: document.getElementById('cancelCategoryBtn'),
+            exportDataBtn: document.getElementById('exportDataBtn'),
+            importDataBtn: document.getElementById('importDataBtn'),
+            downloadHtmlBtn: document.getElementById('downloadHtmlBtn'),
+            clearDataBtn: document.getElementById('clearDataBtn'),
+            closeDataPanelBtn: document.getElementById('closeDataPanelBtn')
         };
         
         // 初始化博客
@@ -716,7 +815,7 @@
                 { 
                     id: generateId(), 
                     title: 'Markdown使用指南', 
-                    content: '## Markdown 是什么？\n\nMarkdown是一种轻量级标记语言，允许人们使用易读易写的纯文本格式编写文档。\n\n### 常用语法\n\n1. 标题：`# 一级标题` `## 二级标题`\n2. 列表：`- 无序列表` `1. 有序列表`\n3. 链接：`[链接文本](URL)`\n4. 代码块：\\`\\`\\`javascript\n   console.log("代码");\n   \\`\\`\\`\n\n> 掌握Markdown，让写作更高效！',
+                    content: '## Markdown 是什么？\n\nMarkdown是一种轻量级标记语言，允许人们使用易读易写的纯文本格式编写文档。\n\n### 常用语法\n\n1. 标题：`# 一级标题` `## 二级标题`\n2. 列表：`- 无序列表` `1. 有序列表`\n3. 链接：``\n4. 代码块：\\`\\`\\`javascript\n   console.log("代码");\n   \\`\\`\\`\n\n> 掌握Markdown，让写作更高效！',
                     category: blogData.categories[2].id,
                     createdAt: new Date().toISOString()
                 }
@@ -874,6 +973,62 @@
                 DOM.categoryModal.classList.add('active');
             });
             
+            // 数据管理按钮
+            DOM.dataManagementBtn.addEventListener('click', () => {
+                DOM.dataPanel.classList.add('active');
+            });
+            
+            // 关闭数据面板
+            DOM.closeDataPanelBtn.addEventListener('click', () => {
+                DOM.dataPanel.classList.remove('active');
+            });
+            
+            // 导出数据
+            DOM.exportDataBtn.addEventListener('click', exportData);
+            
+            // 导入数据
+            DOM.importDataBtn.addEventListener('click', () => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                input.onchange = e => {
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        try {
+                            const data = JSON.parse(event.target.result);
+                            if (data.categories && data.posts) {
+                                blogData = data;
+                                saveData();
+                                renderCategories();
+                                renderPosts();
+                                alert('数据导入成功！');
+                            } else {
+                                alert('导入失败：无效的数据格式');
+                            }
+                        } catch (error) {
+                            alert('导入失败：' + error.message);
+                        }
+                    };
+                    reader.readAsText(file);
+                };
+                input.click();
+            });
+            
+            // 下载HTML文件
+            DOM.downloadHtmlBtn.addEventListener('click', downloadHtml);
+            
+            // 清除所有数据
+            DOM.clearDataBtn.addEventListener('click', () => {
+                if (confirm('确定要清除所有数据吗？此操作不可恢复！')) {
+                    localStorage.removeItem('blogData');
+                    initializeSampleData();
+                    renderCategories();
+                    renderPosts();
+                    alert('数据已重置为初始状态');
+                }
+            });
+            
             // 保存文章
             DOM.savePostBtn.addEventListener('click', savePost);
             
@@ -932,7 +1087,44 @@
                     DOM.postModal.classList.remove('active');
                     DOM.categoryModal.classList.remove('active');
                 }
+                if (event.target.classList.contains('data-panel')) {
+                    DOM.dataPanel.classList.remove('active');
+                }
             });
+        }
+        
+        // 导出数据
+        function exportData() {
+            const dataStr = JSON.stringify(blogData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `blog-data-${new Date().toISOString().slice(0, 10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('数据已导出，请保存文件用于备份或迁移');
+        }
+        
+        // 下载HTML文件
+        function downloadHtml() {
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'panghehe-blog.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('HTML文件已下载，可用于部署到GitHub Pages');
         }
         
         // 编辑文章
