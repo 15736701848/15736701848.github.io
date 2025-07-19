@@ -3,50 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>庞和合的博客 | 简约知识分享平台</title>
+    <title>庞和合的博客 | 现代知识分享平台</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Noto Sans SC', sans-serif;
         }
         
         :root {
-            --primary: #3498db;
-            --secondary: #2c3e50;
-            --accent: #e74c3c;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --gray: #95a5a6;
-            --tech: #3498db;
-            --life: #2ecc71;
-            --travel: #f39c12;
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #f72585;
+            --dark: #0d1b2a;
+            --light: #f8f9fa;
+            --gray: #8d99ae;
+            --tech: #4361ee;
+            --life: #4cc9f0;
+            --travel: #f72585;
+            --art: #7209b7;
             --transition: all 0.3s ease;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --card-radius: 16px;
         }
         
         body {
-            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            background: linear-gradient(135deg, #0d1b2a, #1b263b);
             color: var(--light);
             min-height: 100vh;
             line-height: 1.6;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
         
         /* 头部样式 */
         header {
-            background: rgba(44, 62, 80, 0.9);
+            background: rgba(13, 27, 42, 0.95);
+            backdrop-filter: blur(10px);
             padding: 20px 0;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
+            border-bottom: 1px solid rgba(77, 101, 128, 0.3);
         }
         
         .header-content {
@@ -64,13 +70,20 @@
         
         .logo i {
             font-size: 2.5rem;
-            color: var(--primary);
+            background: linear-gradient(45deg, var(--primary), var(--life));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
         
         .logo h1 {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 700;
-            color: white;
+            background: linear-gradient(to right, var(--primary), var(--life));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-family: 'Playfair Display', serif;
         }
         
         nav ul {
@@ -82,48 +95,141 @@
         nav a {
             color: var(--light);
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 500;
             font-size: 1.1rem;
             padding: 8px 15px;
-            border-radius: 5px;
+            border-radius: 30px;
             transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         nav a:hover {
-            background: rgba(52, 152, 219, 0.2);
+            background: rgba(67, 97, 238, 0.2);
+        }
+        
+        nav a.active {
+            background: rgba(67, 97, 238, 0.3);
         }
         
         /* 主内容区 */
         main {
             padding: 40px 0;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
         }
         
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+        
+        .sidebar {
+            background: rgba(13, 27, 42, 0.7);
+            border-radius: var(--card-radius);
+            padding: 30px;
+            height: fit-content;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(77, 101, 128, 0.3);
+        }
+        
+        /* 搜索框 */
+        .search-box {
+            background: rgba(19, 38, 57, 0.7);
+            border-radius: var(--card-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(77, 101, 128, 0.3);
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 50px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+        
+        .search-btn {
+            padding: 14px 25px;
+            border-radius: 50px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .search-btn:hover {
+            background: #3a56d4;
+        }
+        
+        /* 欢迎区域 */
         .hero {
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.2), rgba(76, 201, 240, 0.2));
+            backdrop-filter: blur(10px);
+            border-radius: var(--card-radius);
+            padding: 60px 40px;
             text-align: center;
-            padding: 60px 20px;
-            margin-bottom: 50px;
-            border-radius: 15px;
-            background: rgba(44, 62, 80, 0.7);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(77, 101, 128, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            z-index: -1;
         }
         
         .hero h2 {
-            font-size: 3rem;
+            font-size: 3.2rem;
             margin-bottom: 20px;
             color: white;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            font-family: 'Playfair Display', serif;
         }
         
         .hero p {
             font-size: 1.4rem;
             max-width: 800px;
             margin: 0 auto 30px;
-            color: #ecf0f1;
+            color: #e0e1ff;
+            font-weight: 300;
         }
         
         .btn {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             background: var(--primary);
             color: white;
-            padding: 12px 30px;
+            padding: 14px 32px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
@@ -131,11 +237,16 @@
             transition: var(--transition);
             border: none;
             cursor: pointer;
+            box-shadow: 0 4px 20px rgba(67, 97, 238, 0.4);
         }
         
         .btn:hover {
-            transform: translateY(-3px);
-            background: #2980b9;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.6);
+        }
+        
+        .btn i {
+            font-size: 1.2rem;
         }
         
         .btn-secondary {
@@ -145,79 +256,154 @@
         }
         
         .btn-secondary:hover {
-            background: rgba(52, 152, 219, 0.1);
+            background: rgba(67, 97, 238, 0.1);
         }
         
-        .btn-danger {
+        .btn-accent {
             background: var(--accent);
+            box-shadow: 0 4px 20px rgba(247, 37, 133, 0.4);
         }
         
-        .btn-danger:hover {
-            background: #c0392b;
+        .btn-accent:hover {
+            box-shadow: 0 8px 25px rgba(247, 37, 133, 0.6);
         }
         
-        /* 分类导航 */
+        /* 分类管理 */
+        .categories-section {
+            background: rgba(13, 27, 42, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: var(--card-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(77, 101, 128, 0.3);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--life));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
         .categories {
             display: flex;
-            justify-content: center;
             flex-wrap: wrap;
             gap: 15px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
         
-        .category-btn {
-            padding: 10px 25px;
+        .category {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
             border-radius: 50px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(67, 97, 238, 0.15);
             color: white;
-            border: none;
+            font-weight: 500;
             cursor: pointer;
             transition: var(--transition);
-            font-weight: 600;
         }
         
-        .category-btn:hover, .category-btn.active {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        .category:hover {
+            background: rgba(67, 97, 238, 0.3);
         }
         
-        .category-btn.tech { background: var(--tech); }
-        .category-btn.life { background: var(--life); }
-        .category-btn.travel { background: var(--travel); }
-        .category-btn.all { background: var(--secondary); }
+        .category i {
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        
+        .category:hover i {
+            color: var(--accent);
+        }
+        
+        .category-form {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .category-input {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 50px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .category-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
         
         /* 文章管理 */
-        .section-title {
-            text-align: center;
-            margin-bottom: 40px;
-            font-size: 2.5rem;
+        .articles-section {
+            background: rgba(13, 27, 42, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: var(--card-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(77, 101, 128, 0.3);
         }
         
         .articles-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 30px;
-            margin-bottom: 60px;
+            margin-top: 20px;
         }
         
         .article-card {
-            background: rgba(44, 62, 80, 0.85);
-            border-radius: 12px;
+            background: rgba(19, 38, 57, 0.7);
+            border-radius: var(--card-radius);
             overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: var(--shadow);
             transition: var(--transition);
+            border: 1px solid rgba(77, 101, 128, 0.3);
+            display: flex;
+            flex-direction: column;
         }
         
         .article-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+        }
+        
+        .article-img {
+            height: 180px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            opacity: 0.9;
+        }
+        
+        .article-content {
+            padding: 25px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
         
         .article-header {
-            padding: 15px 25px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 15px;
         }
         
         .article-category {
@@ -225,25 +411,20 @@
             border-radius: 20px;
             font-size: 0.9rem;
             font-weight: 600;
+            background: rgba(67, 97, 238, 0.2);
+            color: #a3b3ff;
         }
-        
-        .category-tech { background: rgba(52, 152, 219, 0.2); color: var(--tech); }
-        .category-life { background: rgba(46, 204, 113, 0.2); color: var(--life); }
-        .category-travel { background: rgba(243, 156, 18, 0.2); color: var(--travel); }
         
         .article-date {
             color: var(--gray);
             font-size: 0.9rem;
         }
         
-        .article-content {
-            padding: 25px;
-        }
-        
         .article-content h3 {
             font-size: 1.5rem;
             margin-bottom: 15px;
             color: white;
+            flex: 1;
         }
         
         .article-content p {
@@ -251,80 +432,163 @@
             margin-bottom: 20px;
             height: 80px;
             overflow: hidden;
+            line-height: 1.7;
         }
         
         .article-actions {
             display: flex;
             gap: 10px;
+            margin-top: auto;
         }
         
-        /* 表单样式 */
-        .form-container {
-            background: rgba(44, 62, 80, 0.9);
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px;
-            border-radius: 15px;
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: var(--primary);
-        }
-        
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 15px;
-            border: none;
+        .action-btn {
+            flex: 1;
+            padding: 10px;
             border-radius: 8px;
-            background: rgba(236, 240, 241, 0.1);
+            background: rgba(67, 97, 238, 0.15);
             color: white;
-            font-size: 1rem;
-        }
-        
-        .form-group textarea {
-            min-height: 200px;
-            resize: vertical;
-        }
-        
-        .form-actions {
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
             display: flex;
+            align-items: center;
             justify-content: center;
-            gap: 20px;
-            margin-top: 30px;
+            gap: 8px;
+        }
+        
+        .action-btn:hover {
+            background: rgba(67, 97, 238, 0.3);
+        }
+        
+        .action-btn.delete {
+            background: rgba(247, 37, 133, 0.15);
+        }
+        
+        .action-btn.delete:hover {
+            background: rgba(247, 37, 133, 0.3);
+        }
+        
+        /* 侧边栏组件 */
+        .widget {
+            background: rgba(19, 38, 57, 0.7);
+            border-radius: var(--card-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(77, 101, 128, 0.3);
+        }
+        
+        .widget-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .widget-title i {
+            color: var(--life);
+        }
+        
+        .about-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--life));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .about-content p {
+            color: #bdc3c7;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            background: rgba(67, 97, 238, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
         }
         
         /* 页脚 */
         footer {
-            background: rgba(44, 62, 80, 0.9);
-            padding: 40px 0 20px;
+            background: rgba(13, 27, 42, 0.95);
+            padding: 50px 0 20px;
             margin-top: 60px;
-            text-align: center;
+            border-top: 1px solid rgba(77, 101, 128, 0.3);
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .footer-section p {
+            color: #bdc3c7;
+            margin-bottom: 20px;
+            line-height: 1.7;
         }
         
         .social-links {
             display: flex;
             gap: 15px;
-            justify-content: center;
-            margin: 20px 0;
         }
         
         .social-links a {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
-            background: rgba(52, 152, 219, 0.2);
+            background: rgba(67, 97, 238, 0.2);
             color: white;
             transition: var(--transition);
             text-decoration: none;
@@ -333,37 +597,235 @@
         
         .social-links a:hover {
             background: var(--primary);
-            transform: translateY(-3px);
+            transform: translateY(-5px);
         }
         
         .copyright {
-            padding-top: 20px;
-            color: #95a5a6;
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
         }
         
         /* 响应式设计 */
+        @media (max-width: 1024px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: -1;
+            }
+        }
+        
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
                 gap: 20px;
             }
             
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
             .hero h2 {
-                font-size: 2.2rem;
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
             }
             
             .articles-container {
                 grid-template-columns: 1fr;
             }
             
-            .form-actions {
-                flex-direction: column;
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
             }
+            
+            .btn-secondary {
+                margin-left: 0;
+            }
+        }
+        
+        /* 模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: var(--dark);
+            width: 90%;
+            max-width: 900px;
+            border-radius: var(--card-radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(77, 101, 128, 0.5);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.8rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .close-modal:hover {
+            color: var(--accent);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-title {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            color: white;
+            text-align: center;
+        }
+        
+        .editor-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            height: 500px;
+        }
+        
+        .editor-column {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .editor-label {
+            font-size: 1.2rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .editor-tools {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .editor-tool {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .editor-tool:hover {
+            background: rgba(67, 97, 238, 0.3);
+        }
+        
+        .editor {
+            flex: 1;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(77, 101, 128, 0.5);
+            background: rgba(19, 38, 57, 0.5);
+            color: white;
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: none;
+        }
+        
+        .editor:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .preview {
+            flex: 1;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(77, 101, 128, 0.5);
+            background: rgba(19, 38, 57, 0.5);
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+        
+        .preview h1, .preview h2, .preview h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .preview p {
+            margin-bottom: 15px;
+        }
+        
+        .preview img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        
+        .preview code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
         }
         
         /* 实用类 */
         .hidden {
             display: none;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+        
+        .mt-30 {
+            margin-top: 30px;
         }
     </style>
 </head>
@@ -377,304 +839,462 @@
             </div>
             <nav>
                 <ul>
-                    <li><a href="#" class="active">首页</a></li>
-                    <li><a href="#">分类</a></li>
-                    <li><a href="#">归档</a></li>
-                    <li><a href="#">关于</a></li>
+                    <li><a href="#" class="active"><i class="fas fa-home"></i> 首页</a></li>
+                    <li><a href="#"><i class="fas fa-folder"></i> 分类</a></li>
+                    <li><a href="#"><i class="fas fa-archive"></i> 归档</a></li>
+                    <li><a href="#"><i class="fas fa-user"></i> 关于</a></li>
+                    <li><a href="#"><i class="fas fa-envelope"></i> 联系</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
     <!-- 主内容区 -->
-    <main class="container">
-        <!-- 欢迎区域 -->
-        <section class="hero">
-            <h2>分享思想，启迪智慧</h2>
-            <p>记录技术探索、生活感悟与创意灵感，打造属于我的知识宇宙</p>
-            <button id="newArticleBtn" class="btn">
-                <i class="fas fa-plus-circle"></i> 新建文章
-            </button>
-        </section>
+    <div class="container">
+        <main>
+            <div class="content-area">
+                <!-- 搜索框 -->
+                <div class="search-box">
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="搜索文章...">
+                        <button class="search-btn"><i class="fas fa-search"></i> 搜索</button>
+                    </div>
+                </div>
+                
+                <!-- 欢迎区域 -->
+                <section class="hero">
+                    <h2>探索知识与创意的无限可能</h2>
+                    <p>记录技术探索、生活感悟与创意灵感，打造属于我的知识宇宙</p>
+                    <div class="mt-30">
+                        <button id="newArticleBtn" class="btn">
+                            <i class="fas fa-plus-circle"></i> 新建文章
+                        </button>
+                        <button id="manageCategoriesBtn" class="btn btn-accent">
+                            <i class="fas fa-tags"></i> 管理分类
+                        </button>
+                    </div>
+                </section>
 
-        <!-- 分类导航 -->
-        <div class="categories">
-            <button class="category-btn all active" data-category="all">全部文章</button>
-            <button class="category-btn tech" data-category="tech">围棋</button>
-            <button class="category-btn life" data-category="life">编程</button>
-            <button class="category-btn travel" data-category="travel">其他</button>
-        </div>
-
-        <!-- 文章管理 -->
-        <section id="articles">
-            <h2 class="section-title">文章列表</h2>
-            <div class="articles-container" id="articlesContainer">
-                <!-- 文章卡片将通过JS动态生成 -->
+                <!-- 文章管理 -->
+                <section class="articles-section">
+                    <div class="section-header">
+                        <h2 class="section-title">最新文章</h2>
+                        <div>
+                            <button class="action-btn">
+                                <i class="fas fa-sort-amount-down"></i> 排序
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="articles-container" id="articlesContainer">
+                        <!-- 文章卡片将通过JS动态生成 -->
+                    </div>
+                </section>
             </div>
-        </section>
-
-        <!-- 文章表单 -->
-        <section id="articleFormSection" class="hidden">
-            <h2 class="section-title" id="formTitle">新建文章</h2>
-            <div class="form-container">
-                <form id="articleForm">
-                    <div class="form-group">
-                        <label for="articleTitle">文章标题</label>
-                        <input type="text" id="articleTitle" required placeholder="输入文章标题...">
+            
+            <!-- 侧边栏 -->
+            <aside class="sidebar">
+                <div class="widget">
+                    <h3 class="widget-title"><i class="fas fa-user"></i> 关于我</h3>
+                    <div class="about-content">
+                        <div class="avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <p>技术爱好者 & 内容创作者，热爱分享知识与经验，探索科技与生活的无限可能。</p>
+                        <button class="btn btn-secondary" style="width: 100%;">
+                            <i class="fas fa-envelope"></i> 联系我
+                        </button>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="articleCategory">文章分类</label>
-                        <select id="articleCategory" required>
-                            <option value="">选择分类</option>
-                            <option value="tech">围棋</option>
-                            <option value="life">编程</option>
-                            <option value="travel">其他</option>
-                        </select>
+                </div>
+                
+                <div class="widget">
+                    <h3 class="widget-title"><i class="fas fa-chart-bar"></i> 博客统计</h3>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-value">28</div>
+                            <div class="stat-label">文章</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">6</div>
+                            <div class="stat-label">分类</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">2.8K</div>
+                            <div class="stat-label">访问</div>
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="articleContent">文章内容</label>
-                        <textarea id="articleContent" required placeholder="输入文章内容..."></textarea>
+                </div>
+                
+                <div class="widget">
+                    <h3 class="widget-title"><i class="fas fa-tags"></i> 热门分类</h3>
+                    <div class="categories">
+                        <div class="category">
+                            <span>前端开发</span>
+                            <span class="count">12</span>
+                        </div>
+                        <div class="category">
+                            <span>人工智能</span>
+                            <span class="count">8</span>
+                        </div>
+                        <div class="category">
+                            <span>旅行摄影</span>
+                            <span class="count">6</span>
+                        </div>
+                        <div class="category">
+                            <span>生活随笔</span>
+                            <span class="count">10</span>
+                        </div>
+                        <div class="category">
+                            <span>后端技术</span>
+                            <span class="count">9</span>
+                        </div>
                     </div>
-                    
-                    <div class="form-actions">
-                        <button type="submit" class="btn">保存文章</button>
-                        <button type="button" id="cancelBtn" class="btn btn-secondary">取消</button>
-                    </div>
-                </form>
-            </div>
-        </section>
-    </main>
+                </div>
+            </aside>
+        </main>
+    </div>
 
     <!-- 页脚 -->
     <footer>
         <div class="container">
-            <p>记录技术探索、生活感悟与创意灵感，打造属于我的知识宇宙</p>
-            <div class="social-links">
-                <a href="#"><i class="fab fa-github"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-linkedin"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>庞和合的博客</h3>
+                    <p>记录技术探索、生活感悟与创意灵感，打造属于我的知识宇宙。分享思想，启迪智慧。</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>博客分类</h3>
+                    <ul>
+                        <li><a href="#">前端开发</a></li>
+                        <li><a href="#">后端技术</a></li>
+                        <li><a href="#">人工智能</a></li>
+                        <li><a href="#">旅行摄影</a></li>
+                        <li><a href="#">生活随笔</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>联系我</h3>
+                    <p><i class="fas fa-envelope"></i> contact@panghehe.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 北京市海淀区中关村科技园</p>
+                    <p><i class="fas fa-link"></i> www.panghehe.com</p>
+                </div>
             </div>
             <div class="copyright">
-                <p>&copy; 2023 星辰博客. 保留所有权利.</p>
+                <p>&copy; 2023 庞和合的博客. 保留所有权利.</p>
             </div>
         </div>
     </footer>
 
+    <!-- Markdown编辑模态框 -->
+    <div class="modal" id="editorModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeEditor">&times;</span>
+            <h2 class="modal-title">Markdown 编辑器</h2>
+            
+            <div class="editor-container">
+                <div class="editor-column">
+                    <div class="editor-header">
+                        <div class="editor-label">编辑区</div>
+                        <div class="editor-tools">
+                            <button class="editor-tool" title="上传图片"><i class="fas fa-image"></i></button>
+                            <button class="editor-tool" title="添加链接"><i class="fas fa-link"></i></button>
+                            <button class="editor-tool" title="添加代码"><i class="fas fa-code"></i></button>
+                        </div>
+                    </div>
+                    <textarea class="editor" id="markdownEditor"># 欢迎使用Markdown编辑器
+
+## 这是一个副标题
+
+你可以在这里编写你的博客内容，支持Markdown语法：
+
+- 列表项1
+- 列表项2
+- 列表项3
+
+**粗体文本** 和 *斜体文本*
+
+> 引用内容
+
+`代码片段`
+
+![图片描述](https://via.placeholder.com/400x200/4361ee/ffffff?text=示例图片)</textarea>
+                </div>
+                
+                <div class="editor-column">
+                    <div class="editor-header">
+                        <div class="editor-label">预览区</div>
+                    </div>
+                    <div class="preview" id="markdownPreview">
+                        <!-- Markdown预览将在这里显示 -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancelEdit">取消</button>
+                <button class="btn" id="saveArticle">保存文章</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 分类管理模态框 -->
+    <div class="modal" id="categoriesModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeCategories">&times;</span>
+            <h2 class="modal-title">管理分类</h2>
+            
+            <div class="categories-section">
+                <div class="section-header">
+                    <h2 class="section-title">现有分类</h2>
+                </div>
+                
+                <div class="categories" id="categoriesList">
+                    <!-- 分类将通过JS动态生成 -->
+                </div>
+                
+                <div class="category-form">
+                    <input type="text" class="category-input" id="newCategory" placeholder="输入新分类名称">
+                    <button class="btn" id="addCategory">添加分类</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // 文章数据存储
-        let articles = JSON.parse(localStorage.getItem('articles')) || [];
-        let currentArticleId = null;
-        let currentCategory = 'all';
+        // 文章数据
+        const articles = [
+            {
+                id: 1,
+                title: '深入理解JavaScript闭包',
+                content: '闭包是JavaScript中一个非常重要的概念，它允许函数访问并记住其词法作用域，即使函数在其词法作用域之外执行。闭包在许多高级JavaScript模式中都有应用，包括模块模式、柯里化和函数工厂等。',
+                category: '前端开发',
+                date: '2023-06-15',
+                image: 'code'
+            },
+            {
+                id: 2,
+                title: '探索深度学习在图像识别中的应用',
+                content: '深度学习技术在图像识别领域取得了巨大突破。本文将探讨卷积神经网络(CNN)的基本原理，以及如何使用TensorFlow实现一个简单的图像分类器。我们将通过实际案例展示如何训练模型识别手写数字。',
+                category: '人工智能',
+                date: '2023-07-20',
+                image: 'ai'
+            },
+            {
+                id: 3,
+                title: '日本京都旅行摄影指南',
+                content: '京都作为日本的古都，拥有丰富的历史文化遗产。漫步在祇园的石板路上，参观金阁寺和清水寺，品尝正宗的怀石料理，这些体验让我深深感受到日本传统文化的魅力。本文将分享我在京都的摄影技巧和最佳拍摄地点。',
+                category: '旅行摄影',
+                date: '2023-07-10',
+                image: 'travel'
+            },
+            {
+                id: 4,
+                title: '如何保持高效的工作与生活平衡',
+                content: '在现代快节奏的生活中，保持工作与生活的平衡变得越来越重要。本文将分享五种有效的方法：时间管理技巧、设定边界、定期休息、培养爱好和学会说不。这些策略帮助我在繁忙的工作中保持身心健康和创造力。',
+                category: '生活随笔',
+                date: '2023-06-28',
+                image: 'life'
+            }
+        ];
+        
+        // 分类数据
+        let categories = ['前端开发', '后端技术', '人工智能', '旅行摄影', '生活随笔'];
         
         // DOM元素
         const articlesContainer = document.getElementById('articlesContainer');
-        const articleFormSection = document.getElementById('articleFormSection');
-        const articleForm = document.getElementById('articleForm');
-        const newArticleBtn = document.getElementById('newArticleBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
-        const formTitle = document.getElementById('formTitle');
-        const categoryBtns = document.querySelectorAll('.category-btn');
-        
-        // 初始化
-        function init() {
-            if (articles.length === 0) {
-                // 添加示例数据
-                articles = [
-                    {
-                        id: 1,
-                        title: '深入理解JavaScript闭包',
-                        content: '闭包是JavaScript中一个非常重要的概念，它允许函数访问并记住其词法作用域，即使函数在其词法作用域之外执行。闭包在许多高级JavaScript模式中都有应用，包括模块模式、柯里化和函数工厂等。',
-                        category: 'tech',
-                        date: new Date('2023-06-15')
-                    },
-                    {
-                        id: 2,
-                        title: '我的日本京都之旅',
-                        content: '京都作为日本的古都，拥有丰富的历史文化遗产。漫步在祇园的石板路上，参观金阁寺和清水寺，品尝正宗的怀石料理，这些体验让我深深感受到日本传统文化的魅力。',
-                        category: 'travel',
-                        date: new Date('2023-07-20')
-                    },
-                    {
-                        id: 3,
-                        title: '健康生活的五个习惯',
-                        content: '保持健康的生活方式对每个人都很重要。每天保持充足睡眠、均衡饮食、适度运动、保持积极心态和定期体检，这五个习惯可以帮助我们拥有更健康、更充实的生活。',
-                        category: 'life',
-                        date: new Date('2023-07-10')
-                    }
-                ];
-                localStorage.setItem('articles', JSON.stringify(articles));
-            }
-            
-            renderArticles();
-            setupEventListeners();
-        }
+        const editorModal = document.getElementById('editorModal');
+        const categoriesModal = document.getElementById('categoriesModal');
+        const closeEditor = document.getElementById('closeEditor');
+        const closeCategories = document.getElementById('closeCategories');
+        const cancelEdit = document.getElementById('cancelEdit');
+        const markdownEditor = document.getElementById('markdownEditor');
+        const markdownPreview = document.getElementById('markdownPreview');
+        const newCategoryInput = document.getElementById('newCategory');
+        const addCategoryBtn = document.getElementById('addCategory');
+        const categoriesList = document.getElementById('categoriesList');
         
         // 渲染文章列表
         function renderArticles() {
-            // 过滤当前分类的文章
-            const filteredArticles = currentCategory === 'all' 
-                ? articles 
-                : articles.filter(article => article.category === currentCategory);
-            
-            if (filteredArticles.length === 0) {
-                articlesContainer.innerHTML = `
-                    <div class="no-articles" style="grid-column: 1/-1; text-align: center; padding: 40px;">
-                        <i class="fas fa-file-alt" style="font-size: 5rem; color: #3498db; margin-bottom: 20px;"></i>
-                        <h3>暂无文章</h3>
-                        <p>当前分类没有文章，点击"新建文章"按钮开始创作</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            articlesContainer.innerHTML = filteredArticles.map(article => `
-                <div class="article-card" data-id="${article.id}">
-                    <div class="article-header">
-                        <span class="article-category category-${article.category}">
-                            ${getCategoryName(article.category)}
-                        </span>
-                        <span class="article-date">
-                            <i class="far fa-calendar"></i> ${formatDate(article.date)}
-                        </span>
+            articlesContainer.innerHTML = articles.map(article => `
+                <div class="article-card">
+                    <div class="article-img" style="background: linear-gradient(45deg, ${getColorByCategory(article.category)}, #2c3e50);">
+                        <i class="fas fa-${getIconByImage(article.image)}"></i>
                     </div>
                     <div class="article-content">
+                        <div class="article-header">
+                            <span class="article-category">${article.category}</span>
+                            <span class="article-date">${article.date}</span>
+                        </div>
                         <h3>${article.title}</h3>
-                        <p>${article.content.substring(0, 150)}...</p>
+                        <p>${article.content}</p>
                         <div class="article-actions">
-                            <button class="btn" onclick="editArticle(${article.id})">
+                            <button class="action-btn edit-btn" data-id="${article.id}">
                                 <i class="fas fa-edit"></i> 编辑
                             </button>
-                            <button class="btn btn-danger" onclick="deleteArticle(${article.id})">
+                            <button class="action-btn delete delete-btn" data-id="${article.id}">
                                 <i class="fas fa-trash"></i> 删除
                             </button>
                         </div>
                     </div>
                 </div>
             `).join('');
-        }
-        
-        // 设置事件监听
-        function setupEventListeners() {
-            // 新建文章按钮
-            newArticleBtn.addEventListener('click', () => {
-                articleForm.reset();
-                currentArticleId = null;
-                formTitle.textContent = '新建文章';
-                articleFormSection.classList.remove('hidden');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
             
-            // 取消按钮
-            cancelBtn.addEventListener('click', () => {
-                articleFormSection.classList.add('hidden');
-            });
-            
-            // 表单提交
-            articleForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                saveArticle();
-            });
-            
-            // 分类按钮
-            categoryBtns.forEach(btn => {
+            // 添加事件监听
+            document.querySelectorAll('.edit-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    // 更新活动按钮
-                    categoryBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    
-                    // 更新当前分类
-                    currentCategory = btn.dataset.category;
-                    
-                    // 重新渲染文章
-                    renderArticles();
+                    openEditor();
+                });
+            });
+            
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.getAttribute('data-id');
+                    deleteArticle(id);
                 });
             });
         }
         
-        // 保存文章
-        function saveArticle() {
-            const title = document.getElementById('articleTitle').value;
-            const category = document.getElementById('articleCategory').value;
-            const content = document.getElementById('articleContent').value;
+        // 渲染分类列表
+        function renderCategories() {
+            categoriesList.innerHTML = categories.map(category => `
+                <div class="category">
+                    <span>${category}</span>
+                    <i class="fas fa-times delete-category" data-category="${category}"></i>
+                </div>
+            `).join('');
             
-            if (currentArticleId === null) {
-                // 新建文章
-                const newArticle = {
-                    id: Date.now(),
-                    title,
-                    content,
-                    category,
-                    date: new Date()
-                };
-                articles.unshift(newArticle);
-            } else {
-                // 更新文章
-                const articleIndex = articles.findIndex(a => a.id === currentArticleId);
-                if (articleIndex !== -1) {
-                    articles[articleIndex].title = title;
-                    articles[articleIndex].content = content;
-                    articles[articleIndex].category = category;
-                }
-            }
-            
-            // 保存到localStorage
-            localStorage.setItem('articles', JSON.stringify(articles));
-            
-            // 重置表单并隐藏
-            articleForm.reset();
-            articleFormSection.classList.add('hidden');
-            
-            // 重新渲染文章列表
-            renderArticles();
-            
-            // 提示用户
-            alert('文章已保存！');
+            // 添加删除分类事件
+            document.querySelectorAll('.delete-category').forEach(icon => {
+                icon.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const category = icon.getAttribute('data-category');
+                    deleteCategory(category);
+                });
+            });
         }
         
-        // 编辑文章
-        window.editArticle = function(id) {
-            const article = articles.find(a => a.id === id);
-            if (article) {
-                document.getElementById('articleTitle').value = article.title;
-                document.getElementById('articleCategory').value = article.category;
-                document.getElementById('articleContent').value = article.content;
-                currentArticleId = id;
-                formTitle.textContent = '编辑文章';
-                articleFormSection.classList.remove('hidden');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+        // 根据分类获取颜色
+        function getColorByCategory(category) {
+            const colors = {
+                '前端开发': '#4361ee',
+                '后端技术': '#7209b7',
+                '人工智能': '#4cc9f0',
+                '旅行摄影': '#f72585',
+                '生活随笔': '#2ecc71'
+            };
+            return colors[category] || '#4361ee';
+        }
+        
+        // 根据图片类型获取图标
+        function getIconByImage(image) {
+            const icons = {
+                'code': 'code',
+                'ai': 'robot',
+                'travel': 'camera',
+                'life': 'heart'
+            };
+            return icons[image] || 'file-alt';
+        }
+        
+        // 打开编辑器
+        function openEditor() {
+            editorModal.style.display = 'flex';
+            updatePreview();
+        }
+        
+        // 打开分类管理
+        function openCategoriesManager() {
+            renderCategories();
+            categoriesModal.style.display = 'flex';
+        }
+        
+        // 关闭模态框
+        function closeModals() {
+            editorModal.style.display = 'none';
+            categoriesModal.style.display = 'none';
+        }
+        
+        // 更新Markdown预览
+        function updatePreview() {
+            const markdown = markdownEditor.value;
+            // 简单的Markdown解析
+            let html = markdown
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // 粗体
+                .replace(/\*(.*?)\*/g, '<em>$1</em>') // 斜体
+                .replace(/^# (.*$)/gm, '<h1>$1</h1>') // H1
+                .replace(/^## (.*$)/gm, '<h2>$1</h2>') // H2
+                .replace(/^### (.*$)/gm, '<h3>$1</h3>') // H3
+                .replace(/^- (.*$)/gm, '<li>$1</li>') // 列表项
+                .replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>') // 列表
+                .replace(/`(.*?)`/g, '<code>$1</code>') // 行内代码
+                .replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1">') // 图片
+                .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>') // 链接
+                .replace(/^> (.*$)/gm, '<blockquote>$1</blockquote>') // 引用
+                .replace(/\n/g, '<br>'); // 换行
+            
+            markdownPreview.innerHTML = html;
+        }
+        
+        // 添加新分类
+        function addCategory() {
+            const newCategory = newCategoryInput.value.trim();
+            if (newCategory && !categories.includes(newCategory)) {
+                categories.push(newCategory);
+                renderCategories();
+                newCategoryInput.value = '';
             }
-        };
+        }
+        
+        // 删除分类
+        function deleteCategory(category) {
+            categories = categories.filter(c => c !== category);
+            renderCategories();
+        }
         
         // 删除文章
-        window.deleteArticle = function(id) {
+        function deleteArticle(id) {
             if (confirm('确定要删除这篇文章吗？此操作不可撤销。')) {
-                articles = articles.filter(a => a.id !== id);
-                localStorage.setItem('articles', JSON.stringify(articles));
-                renderArticles();
-                alert('文章已删除！');
-            }
-        };
-        
-        // 辅助函数
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-        }
-        
-        function getCategoryName(category) {
-            switch(category) {
-                case 'tech': return '技术';
-                case 'life': return '生活';
-                case 'travel': return '旅行';
-                default: return '未分类';
+                alert(`文章ID ${id} 已删除`);
+                // 实际应用中这里会从数组中删除文章并重新渲染
             }
         }
         
-        // 初始化应用
-        init();
+        // 保存文章
+        function saveArticle() {
+            alert('文章已保存！');
+            closeModals();
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            renderArticles();
+            
+            // 事件监听
+            document.getElementById('newArticleBtn').addEventListener('click', openEditor);
+            document.getElementById('manageCategoriesBtn').addEventListener('click', openCategoriesManager);
+            closeEditor.addEventListener('click', closeModals);
+            closeCategories.addEventListener('click', closeModals);
+            cancelEdit.addEventListener('click', closeModals);
+            markdownEditor.addEventListener('input', updatePreview);
+            addCategoryBtn.addEventListener('click', addCategory);
+            document.getElementById('saveArticle').addEventListener('click', saveArticle);
+            
+            // 初始预览
+            updatePreview();
+            
+            // 按ESC关闭模态框
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModals();
+                }
+            });
+        });
     </script>
 </body>
 </html>
