@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>庞和合的博客</title>
+    <title>极简Gist博客</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.1/github-markdown.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         :root {
-            --primary-color: #007bff;
-            --secondary-color: #6c757d;
-            --bg-color: #f8f9fa;
-            --text-color: #212529;
-            --border-color: #dee2e6;
+            --primary-color: #0366d6;
+            --secondary-color: #586069;
+            --bg-color: #f6f8fa;
+            --text-color: #24292e;
+            --border-color: #e1e4e8;
+            --success-color: #28a745;
+            --danger-color: #cb2431;
         }
         
         * {
@@ -24,7 +26,7 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--bg-color);
@@ -37,6 +39,26 @@
             display: grid;
             grid-template-columns: 200px 1fr;
             gap: 20px;
+            min-height: 90vh;
+        }
+        
+        /* 标题样式 */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .app-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         /* 认证区块 */
@@ -45,7 +67,7 @@
             background: white;
             padding: 15px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             margin-bottom: 20px;
             display: flex;
             flex-wrap: wrap;
@@ -56,13 +78,25 @@
             display: flex;
             gap: 5px;
             align-items: center;
+            flex-grow: 1;
         }
         
         input, button, textarea, select {
             padding: 8px 12px;
             border: 1px solid var(--border-color);
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 14px;
+            font-family: inherit;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.15);
+        }
+        
+        input {
+            min-width: 0;
         }
         
         button {
@@ -70,11 +104,20 @@
             color: white;
             border: none;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.05s;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
         }
         
         button:hover {
-            background: #0056b3;
+            background: #035fc7;
+        }
+        
+        button:active {
+            transform: translateY(1px);
         }
         
         button.secondary {
@@ -82,15 +125,28 @@
         }
         
         button.secondary:hover {
-            background: #5a6268;
+            background: #4a5563;
+        }
+        
+        button.success {
+            background: var(--success-color);
+        }
+        
+        button.success:hover {
+            background: #218838;
         }
         
         button.danger {
-            background: #dc3545;
+            background: var(--danger-color);
         }
         
         button.danger:hover {
-            background: #bd2130;
+            background: #b21f2d;
+        }
+        
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 13px;
         }
         
         /* 分类导航 */
@@ -98,8 +154,21 @@
             background: white;
             border-radius: 8px;
             padding: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            max-height: 80vh;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            height: calc(100vh - 200px);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .category-list {
+            flex-grow: 1;
             overflow-y: auto;
         }
         
@@ -118,10 +187,16 @@
             flex-grow: 1;
             margin-right: 10px;
             cursor: pointer;
+            padding: 4px 0;
+            border-radius: 4px;
+            transition: all 0.2s;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
-        .category-name:hover {
+        .category-name:hover, .category-name.active {
             color: var(--primary-color);
+            background-color: #f0f6ff;
         }
         
         .category-controls {
@@ -131,8 +206,8 @@
         
         /* 内容区域 */
         .content {
-            display: grid;
-            grid-template-rows: auto 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 20px;
         }
         
@@ -143,15 +218,27 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 10px;
-            padding: 10px 15px;
+            padding: 12px 15px;
             background: white;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         
         .search-bar {
             flex-grow: 1;
             max-width: 300px;
+            display: flex;
+        }
+        
+        .search-bar input {
+            flex-grow: 1;
+        }
+        
+        .stats {
+            font-size: 13px;
+            color: var(--secondary-color);
+            display: flex;
+            gap: 10px;
         }
         
         /* 文章区域 */
@@ -159,6 +246,7 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            height: 100%;
         }
         
         .article-list {
@@ -166,15 +254,25 @@
             padding: 15px;
             background: white;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             overflow-y: auto;
-            max-height: 45vh;
+            max-height: 50vh;
+        }
+        
+        .article-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
         }
         
         .article-item {
             padding: 10px;
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
+            transition: all 0.15s;
         }
         
         .article-item:last-child {
@@ -182,18 +280,32 @@
         }
         
         .article-item:hover {
-            background-color: rgba(0,0,0,0.02);
+            background-color: #fafbfc;
+            border-radius: 6px;
         }
         
         .article-item h4 {
             margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
         }
         
         .article-meta {
             display: flex;
-            font-size: 12px;
+            font-size: 13px;
             color: var(--secondary-color);
             gap: 15px;
+            margin-top: 4px;
+        }
+        
+        .article-content-preview {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
         
         /* 编辑器 */
@@ -202,11 +314,14 @@
             padding: 15px;
             background: white;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            height: 100%;
+            flex-grow: 1;
         }
         
         .editor.active {
-            display: block;
+            display: flex;
+            flex-direction: column;
         }
         
         .editor-header {
@@ -214,26 +329,57 @@
             justify-content: space-between;
             margin-bottom: 15px;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .editor-title {
+            display: flex;
+            gap: 10px;
+            flex-grow: 1;
+            max-width: 500px;
+        }
+        
+        .editor-title input {
+            flex-grow: 1;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .editor-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
         }
         
         .editor-body {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
-            height: 50vh;
+            height: 100%;
+            flex-grow: 1;
         }
         
         .editor-section {
             display: flex;
             flex-direction: column;
+            height: 100%;
+        }
+        
+        .editor-section label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-color);
         }
         
         textarea {
             flex-grow: 1;
             padding: 12px;
-            font-family: monospace;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
             resize: none;
-            min-height: 200px;
+            line-height: 1.5;
+            font-size: 15px;
         }
         
         .preview {
@@ -241,56 +387,61 @@
             padding: 12px;
             overflow-y: auto;
             border: 1px solid var(--border-color);
-            border-radius: 4px;
+            border-radius: 6px;
+            font-size: 15px;
         }
         
-        /* 模态框 */
-        .modal {
-            display: none;
+        /* 加载状态 */
+        .loading {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 100;
         }
         
-        .modal.active {
-            display: flex;
+        .spinner {
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
         }
         
-        .modal-content {
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* 状态消息 */
+        .status-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 16px;
+            border-radius: 6px;
             background: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 500px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateX(200%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
         }
         
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+        .status-message.show {
+            transform: translateX(0);
         }
         
-        .modal-footer {
-            margin-top: 15px;
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
+        .status-message.success {
+            border-left: 4px solid var(--success-color);
         }
         
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
+        .status-message.error {
+            border-left: 4px solid var(--danger-color);
         }
         
         /* 响应式 */
@@ -299,37 +450,56 @@
                 grid-template-columns: 1fr;
             }
             
-            .auth-section {
-                grid-column: span 1;
+            .categories {
+                height: auto;
+                max-height: 300px;
             }
             
             .editor-body {
                 grid-template-columns: 1fr;
-                height: auto;
+                grid-auto-rows: minmax(300px, 1fr);
             }
         }
     </style>
 </head>
 <body>
+    <div class="app-header">
+        <h1 class="app-title">
+            <i class="fab fa-github"></i>
+            极简Gist博客
+        </h1>
+        <div class="stats">
+            <span id="gistStatus">未连接</span>
+            <span id="syncDate">-</span>
+        </div>
+    </div>
+    
     <!-- 身份验证 -->
     <div class="auth-section">
         <div class="input-group">
             <i class="fas fa-key"></i>
-            <input type="password" id="token" placeholder="GitHub Token" style="width: 300px;">
+            <input type="password" id="token" placeholder="GitHub Personal Access Token" style="flex-grow: 1;">
         </div>
-        <button id="saveTokenBtn">保存Token</button>
+        <div>
+            <button id="saveTokenBtn">
+                <i class="fas fa-save"></i> 保存Token
+            </button>
+            <button id="helpBtn" class="secondary">
+                <i class="fas fa-question-circle"></i> 帮助
+            </button>
+        </div>
     </div>
 
     <div class="container">
         <!-- 分类导航 -->
         <aside class="categories">
-            <div class="toolbar">
-                <h3>分类</h3>
-                <button id="addCategoryBtn" title="添加分类">
-                    <i class="fas fa-plus"></i>
+            <div class="category-header">
+                <h3>分类管理</h3>
+                <button id="addCategoryBtn" class="success btn-sm">
+                    <i class="fas fa-plus"></i> 添加
                 </button>
             </div>
-            <div id="categoryList"></div>
+            <div class="category-list" id="categoryList"></div>
         </aside>
 
         <!-- 主内容区域 -->
@@ -337,34 +507,58 @@
             <!-- 工具栏 -->
             <div class="toolbar">
                 <div class="search-bar">
-                    <input type="text" id="searchInput" placeholder="搜索文章...">
+                    <input type="text" id="searchInput" placeholder="搜索文章标题或内容...">
+                    <button class="secondary" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
                 </div>
-                <button id="newArticleBtn">新建文章</button>
+                <button id="newArticleBtn" class="success">
+                    <i class="fas fa-plus"></i> 新建文章
+                </button>
             </div>
             
             <!-- 文章列表 -->
             <div class="articles">
-                <div class="article-list" id="articleList"></div>
+                <div class="article-list" id="articleList">
+                    <div class="article-list-header">
+                        <h3 id="categoryTitle">所有文章</h3>
+                        <span id="articleCount">0篇</span>
+                    </div>
+                    <div style="padding: 20px; text-align: center; color: var(--secondary-color);">
+                        <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 10px;"></i>
+                        <p>无文章或未选择分类</p>
+                    </div>
+                </div>
                 
                 <!-- 编辑器 -->
                 <div class="editor" id="editor">
                     <div class="editor-header">
-                        <h3 id="articleTitle"></h3>
-                        <div>
+                        <div class="editor-title">
+                            <input type="text" id="articleTitle" placeholder="文章标题">
                             <select id="categorySelect"></select>
-                            <button id="saveArticleBtn">保存文章</button>
-                            <button id="closeEditorBtn" class="secondary">关闭</button>
+                        </div>
+                        <div class="editor-controls">
+                            <button id="saveArticleBtn" class="success">
+                                <i class="fas fa-save"></i> 保存
+                            </button>
+                            <button id="closeEditorBtn" class="secondary">
+                                <i class="fas fa-times"></i> 关闭
+                            </button>
                         </div>
                     </div>
                     
                     <div class="editor-body">
                         <div class="editor-section">
-                            <label for="articleContent">编辑</label>
+                            <label for="articleContent">
+                                <i class="fas fa-edit"></i> Markdown编辑
+                            </label>
                             <textarea id="articleContent" placeholder="输入Markdown内容..."></textarea>
                         </div>
                         
                         <div class="editor-section">
-                            <label>预览</label>
+                            <label>
+                                <i class="fas fa-eye"></i> 实时预览
+                            </label>
                             <div class="preview markdown-body" id="preview"></div>
                         </div>
                     </div>
@@ -373,198 +567,425 @@
         </main>
     </div>
     
-    <!-- 模态框 -->
-    <div class="modal" id="categoryModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>管理分类</h3>
-                <button class="secondary" id="closeCategoryModalBtn">&times;</button>
-            </div>
-            
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="categoryName">分类名称</label>
-                    <input type="text" id="categoryName" placeholder="输入新分类名称">
-                </div>
-                
-                <div class="form-group">
-                    <button id="saveCategoryBtn">保存</button>
-                </div>
-            </div>
-        </div>
+    <!-- 状态消息 -->
+    <div class="status-message" id="statusMessage">
+        <i class="fas fa-check-circle"></i>
+        <span id="messageText"></span>
+    </div>
+    
+    <!-- 加载指示器 -->
+    <div class="loading" id="loading" style="display: none;">
+        <div class="spinner"></div>
     </div>
 
     <script>
-        // 核心状态管理
+        // GitHub Gist API配置
+        const GIST_API = 'https://api.github.com/gists';
+        const DEFAULT_GIST_DESCRIPTION = 'GistBlog';
+        const DATA_FILE = 'gist-blog-data.json';
+        
+        // 状态管理
         const state = {
-            categories: ['默认', '技术', '生活', '随笔'],
-            articles: [],
             token: localStorage.getItem('gist-token') || '',
+            gistId: localStorage.getItem('gist-id') || '',
+            categories: [],
+            articles: [],
             selectedCategory: null,
             currentArticle: null,
-            editingArticle: false
+            editing: false,
+            loading: false,
+            lastSynced: null
         };
-
+        
         // DOM元素缓存
         const elements = {
             tokenInput: document.getElementById('token'),
             saveTokenBtn: document.getElementById('saveTokenBtn'),
+            helpBtn: document.getElementById('helpBtn'),
             categoryList: document.getElementById('categoryList'),
             addCategoryBtn: document.getElementById('addCategoryBtn'),
-            categoryModal: document.getElementById('categoryModal'),
-            closeCategoryModalBtn: document.getElementById('closeCategoryModalBtn'),
-            categoryName: document.getElementById('categoryName'),
-            saveCategoryBtn: document.getElementById('saveCategoryBtn'),
+            categoryTitle: document.getElementById('categoryTitle'),
             articleList: document.getElementById('articleList'),
+            articleCount: document.getElementById('articleCount'),
             newArticleBtn: document.getElementById('newArticleBtn'),
             searchInput: document.getElementById('searchInput'),
+            searchBtn: document.getElementById('searchBtn'),
             editor: document.getElementById('editor'),
             articleTitle: document.getElementById('articleTitle'),
             articleContent: document.getElementById('articleContent'),
             categorySelect: document.getElementById('categorySelect'),
             preview: document.getElementById('preview'),
             saveArticleBtn: document.getElementById('saveArticleBtn'),
-            closeEditorBtn: document.getElementById('closeEditorBtn')
+            closeEditorBtn: document.getElementById('closeEditorBtn'),
+            statusMessage: document.getElementById('statusMessage'),
+            messageText: document.getElementById('messageText'),
+            loading: document.getElementById('loading'),
+            gistStatus: document.getElementById('gistStatus'),
+            syncDate: document.getElementById('syncDate')
         };
-
-        // 初始化函数
+        
+        // Axios实例（API请求用）
+        const api = axios.create({
+            baseURL: 'https://api.github.com',
+            headers: {
+                'Accept': 'application/vnd.github.v3+json',
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+        
+        // Marked初始化
+        marked.setOptions({
+            gfm: true,
+            breaks: true
+        });
+        
+        // 初始化应用
         function init() {
             setupEventListeners();
-            renderCategories();
-            loadDemoData();
             updateTokenInput();
-            renderCategorySelect();
+            updateSyncStatus();
+            
+            // 尝试加载Gist数据
+            if (state.token && state.gistId) {
+                loadGistData();
+            }
             
             // 初始化预览功能
             elements.articleContent.addEventListener('input', renderPreview);
+            
+            // 显示帮助提示
+            showMessage('输入GitHub Token开始使用系统', 'success');
         }
-
+        
         // 设置事件监听器
         function setupEventListeners() {
             // Token管理
             elements.saveTokenBtn.addEventListener('click', saveToken);
+            elements.helpBtn.addEventListener('click', () => {
+                window.open('https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens', '_blank');
+            });
             
             // 分类管理
-            elements.addCategoryBtn.addEventListener('click', showCategoryModal);
-            elements.closeCategoryModalBtn.addEventListener('click', hideCategoryModal);
-            elements.saveCategoryBtn.addEventListener('click', saveCategory);
+            elements.addCategoryBtn.addEventListener('click', addCategory);
             
             // 文章管理
-            elements.newArticleBtn.addEventListener('click', () => createNewArticle());
-            elements.searchInput.addEventListener('input', () => renderArticles());
+            elements.newArticleBtn.addEventListener('click', createNewArticle);
+            elements.searchInput.addEventListener('input', renderArticles);
+            elements.searchBtn.addEventListener('click', renderArticles);
             elements.saveArticleBtn.addEventListener('click', saveArticle);
             elements.closeEditorBtn.addEventListener('click', closeEditor);
         }
-
-        // 保存Token到本地存储
-        function saveToken() {
-            const token = elements.tokenInput.value;
-            if (token) {
-                localStorage.setItem('gist-token', token);
+        
+        // 保存Token
+        async function saveToken() {
+            const token = elements.tokenInput.value.trim();
+            if (!token) return showMessage('请先输入GitHub Token', 'error');
+            
+            try {
                 state.token = token;
-                alert('Token已保存！');
+                localStorage.setItem('gist-token', token);
+                
+                // 配置axios headers
+                api.defaults.headers.common['Authorization'] = `token ${token}`;
+                
+                // 如果已有gistId，尝试加载数据
+                if (state.gistId) {
+                    await loadGistData();
+                    showMessage('Token已保存，数据加载成功', 'success');
+                } else {
+                    // 创建新的Gist
+                    await createGist();
+                    showMessage('已成功创建新的Gist存储', 'success');
+                }
+                
+                updateSyncStatus();
+            } catch (error) {
+                console.error('保存Token出错:', error);
+                showMessage('Token保存失败：' + error.message, 'error');
             }
         }
-
+        
+        // 创建新Gist
+        async function createGist() {
+            setLoading(true);
+            
+            // 初始数据结构
+            const initialData = {
+                categories: ['默认', '技术', '生活'],
+                articles: [
+                    {
+                        id: Date.now(),
+                        title: '欢迎使用Gist博客系统',
+                        content: '# 欢迎使用\n\n这是基于GitHub Gist构建的个人博客系统\n\n主要功能：\n\n- 使用GitHub Gist存储数据\n- Markdown编辑与预览\n- 文章分类管理\n- 跨设备同步',
+                        category: '默认',
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    }
+                ]
+            };
+            
+            try {
+                const response = await api.post(GIST_API, {
+                    description: DEFAULT_GIST_DESCRIPTION,
+                    public: false,
+                    files: {
+                        [DATA_FILE]: {
+                            content: JSON.stringify(initialData, null, 2)
+                        }
+                    }
+                });
+                
+                state.gistId = response.data.id;
+                state.categories = initialData.categories;
+                state.articles = initialData.articles;
+                state.selectedCategory = '默认';
+                
+                localStorage.setItem('gist-id', state.gistId);
+                
+                renderCategories();
+                renderArticles();
+                renderCategorySelect();
+            } catch (error) {
+                console.error('创建Gist失败:', error);
+                showMessage('创建Gist失败：' + error.response?.data?.message || error.message, 'error');
+                throw error;
+            } finally {
+                setLoading(false);
+            }
+        }
+        
+        // 从Gist加载数据
+        async function loadGistData() {
+            if (!state.gistId || !state.token) return;
+            
+            setLoading(true);
+            
+            try {
+                const response = await api.get(`${GIST_API}/${state.gistId}`);
+                const file = response.data.files[DATA_FILE];
+                
+                if (file && file.content) {
+                    const data = JSON.parse(file.content);
+                    
+                    state.categories = data.categories || [];
+                    state.articles = data.articles || [];
+                    state.selectedCategory = state.categories[0] || null;
+                    state.lastSynced = new Date();
+                    
+                    renderCategories();
+                    renderArticles();
+                    renderCategorySelect();
+                    updateSyncStatus();
+                    
+                    showMessage('数据加载成功', 'success');
+                } else {
+                    showMessage('Gist中未找到数据文件', 'error');
+                }
+            } catch (error) {
+                console.error('加载Gist数据出错:', error);
+                showMessage('数据加载失败：' + error.response?.data?.message || error.message, 'error');
+                state.gistStatus.textContent = '连接失败';
+            } finally {
+                setLoading(false);
+            }
+        }
+        
+        // 保存数据到Gist
+        async function saveGistData() {
+            if (!state.gistId || !state.token) return;
+            
+            setLoading(true);
+            
+            const dataToSave = {
+                categories: state.categories,
+                articles: state.articles
+            };
+            
+            try {
+                // 获取当前文件SHA
+                const gistResponse = await api.get(`${GIST_API}/${state.gistId}`);
+                const sha = gistResponse.data.files[DATA_FILE]?.sha || null;
+                
+                // 更新Gist
+                await api.patch(`${GIST_API}/${state.gistId}`, {
+                    description: DEFAULT_GIST_DESCRIPTION,
+                    files: {
+                        [DATA_FILE]: {
+                            content: JSON.stringify(dataToSave, null, 2),
+                            sha: sha
+                        }
+                    }
+                });
+                
+                state.lastSynced = new Date();
+                updateSyncStatus();
+                
+                return true;
+            } catch (error) {
+                console.error('保存Gist数据出错:', error);
+                showMessage('数据保存失败：' + error.response?.data?.message || error.message, 'error');
+                return false;
+            } finally {
+                setLoading(false);
+            }
+        }
+        
+        // 更新同步状态显示
+        function updateSyncStatus() {
+            if (state.gistId) {
+                elements.gistStatus.textContent = '已连接';
+                elements.gistStatus.style.color = 'var(--success-color)';
+            } else {
+                elements.gistStatus.textContent = '未连接';
+                elements.gistStatus.style.color = 'var(--secondary-color)';
+            }
+            
+            if (state.lastSynced) {
+                const dateStr = state.lastSynced.toLocaleString();
+                elements.syncDate.textContent = `同步于 ${dateStr}`;
+            } else {
+                elements.syncDate.textContent = '从未同步';
+            }
+        }
+        
         // 更新Token输入框
         function updateTokenInput() {
             if (state.token) {
                 elements.tokenInput.value = '******************';
             }
         }
-
+        
         // 渲染分类
         function renderCategories() {
-            elements.categoryList.innerHTML = '';
+            if (!state.categories || state.categories.length === 0) {
+                elements.categoryList.innerHTML = '<p>无分类，添加一个分类开始</p>';
+                return;
+            }
             
+            let html = '';
             state.categories.forEach(category => {
-                const categoryElement = document.createElement('div');
-                categoryElement.className = 'category-item';
-                categoryElement.innerHTML = `
-                    <span class="category-name">${category}</span>
+                const isActive = state.selectedCategory === category;
+                
+                html += `
+                <div class="category-item">
+                    <div class="category-name ${isActive ? 'active' : ''}" data-category="${category}">
+                        <i class="fas fa-folder${isActive ? '-open' : ''}"></i>
+                        ${category}
+                    </div>
                     <div class="category-controls">
-                        <button class="secondary" data-action="edit" data-category="${category}">
+                        <button class="secondary btn-sm" data-action="edit" data-category="${category}">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="danger" data-action="delete" data-category="${category}">
+                        <button class="danger btn-sm" data-action="delete" data-category="${category}">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
+                </div>
                 `;
-                
-                elements.categoryList.appendChild(categoryElement);
-                
-                // 添加点击事件选择分类
-                categoryElement.querySelector('.category-name').addEventListener('click', () => {
+            });
+            
+            elements.categoryList.innerHTML = html;
+            
+            // 添加分类选择事件
+            elements.categoryList.querySelectorAll('.category-name').forEach(el => {
+                el.addEventListener('click', () => {
+                    const category = el.dataset.category;
                     selectCategory(category);
                 });
+            });
+            
+            // 添加分类控制事件
+            elements.categoryList.querySelectorAll('.category-controls button').forEach(btn => {
+                const action = btn.dataset.action;
+                const category = btn.dataset.category;
                 
-                // 添加编辑/删除事件
-                categoryElement.querySelectorAll('button').forEach(button => {
-                    const action = button.dataset.action;
-                    const cat = button.dataset.category;
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     
-                    button.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        
-                        if (action === 'edit') {
-                            editCategory(cat);
-                        } else if (action === 'delete') {
-                            deleteCategory(cat);
-                        }
-                    });
+                    if (action === 'edit') {
+                        editCategory(category);
+                    } else if (action === 'delete') {
+                        deleteCategory(category);
+                    }
                 });
             });
         }
-
+        
         // 选择分类
         function selectCategory(category) {
             state.selectedCategory = category;
+            elements.categoryTitle.textContent = category;
             renderArticles();
         }
-
-        // 显示分类模态框
-        function showCategoryModal() {
-            elements.categoryModal.classList.add('active');
-            elements.categoryName.value = '';
-            elements.categoryName.focus();
+        
+        // 添加分类
+        function addCategory() {
+            const newCategory = prompt('输入新分类名称:');
+            if (newCategory) {
+                state.categories.push(newCategory);
+                renderCategories();
+                saveGistData().then(() => {
+                    showMessage(`分类 "${newCategory}" 已添加`, 'success');
+                });
+            }
         }
-
-        // 隐藏分类模态框
-        function hideCategoryModal() {
-            elements.categoryModal.classList.remove('active');
-        }
-
+        
         // 编辑分类
-        function editCategory(category) {
-            elements.categoryModal.classList.add('active');
-            elements.categoryName.value = category;
-            elements.categoryName.focus();
+        function editCategory(oldName) {
+            const newName = prompt('输入新名称:', oldName);
+            if (newName && newName !== oldName) {
+                // 更新分类名称
+                const index = state.categories.indexOf(oldName);
+                state.categories[index] = newName;
+                
+                // 更新该分类下的文章
+                state.articles.forEach(article => {
+                    if (article.category === oldName) {
+                        article.category = newName;
+                    }
+                });
+                
+                // 更新当前选择
+                if (state.selectedCategory === oldName) {
+                    state.selectedCategory = newName;
+                }
+                
+                renderCategories();
+                renderCategorySelect();
+                renderArticles();
+                
+                saveGistData().then(() => {
+                    showMessage(`分类已更新为 "${newName}"`, 'success');
+                });
+            }
         }
-
+        
         // 删除分类
         function deleteCategory(category) {
-            if (confirm(`确定要删除分类 "${category}" 吗？`)) {
-                state.categories = state.categories.filter(cat => cat !== category);
-                renderCategories();
-                renderCategorySelect();
+            if (!confirm(`确定要删除分类 "${category}"? 该分类下所有文章也将被删除。`)) {
+                return;
             }
-        }
-
-        // 保存分类
-        function saveCategory() {
-            const newCategory = elements.categoryName.value.trim();
             
-            if (newCategory) {
-                if (!state.categories.includes(newCategory)) {
-                    state.categories.push(newCategory);
-                }
-                renderCategories();
-                renderCategorySelect();
-                hideCategoryModal();
+            // 删除分类
+            state.categories = state.categories.filter(c => c !== category);
+            
+            // 删除该分类下的所有文章
+            state.articles = state.articles.filter(a => a.category !== category);
+            
+            // 更新当前选择
+            if (state.selectedCategory === category) {
+                state.selectedCategory = state.categories[0] || null;
             }
+            
+            renderCategories();
+            renderArticles();
+            renderCategorySelect();
+            
+            saveGistData().then(() => {
+                showMessage(`分类 "${category}" 已删除`, 'success');
+            });
         }
-
+        
         // 渲染分类选择下拉菜单
         function renderCategorySelect() {
             elements.categorySelect.innerHTML = '';
@@ -576,163 +997,199 @@
                 elements.categorySelect.appendChild(option);
             });
         }
-
+        
         // 渲染文章列表
         function renderArticles() {
-            elements.articleList.innerHTML = '';
-            
             if (!state.selectedCategory) {
-                elements.articleList.innerHTML = '<p>请选择一个分类</p>';
+                elements.articleList.innerHTML = '<p>请从左侧选择一个分类</p>';
+                elements.articleCount.textContent = '0篇';
                 return;
             }
             
             const searchTerm = elements.searchInput.value.toLowerCase();
-            const filteredArticles = state.articles
+            const categoryArticles = state.articles
                 .filter(article => article.category === state.selectedCategory)
                 .filter(article => 
                     article.title.toLowerCase().includes(searchTerm) || 
                     article.content.toLowerCase().includes(searchTerm)
-                );
+                )
+                .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
             
-            if (filteredArticles.length === 0) {
-                elements.articleList.innerHTML = '<p>该分类下没有文章</p>';
+            // 更新文章计数
+            elements.articleCount.textContent = `${categoryArticles.length}篇文章`;
+            
+            if (categoryArticles.length === 0) {
+                elements.articleList.innerHTML = `
+                    <div class="article-list-header">
+                        <h3>${state.selectedCategory}</h3>
+                        <span>${categoryArticles.length}篇文章</span>
+                    </div>
+                    <div style="padding: 20px; text-align: center; color: var(--secondary-color);">
+                        <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 10px;"></i>
+                        <p>未找到相关文章</p>
+                    </div>
+                `;
                 return;
             }
             
-            filteredArticles.forEach(article => {
-                const articleElement = document.createElement('div');
-                articleElement.className = 'article-item';
-                articleElement.innerHTML = `
-                    <h4>${article.title}</h4>
+            let html = `
+                <div class="article-list-header">
+                    <h3>${state.selectedCategory}</h3>
+                    <span>${categoryArticles.length}篇文章</span>
+                </div>
+            `;
+            
+            categoryArticles.forEach(article => {
+                const date = formatDate(article.updatedAt);
+                const previewText = article.content.substring(0, 100).replace(/[#*_\-`\[\]]/g, '');
+                
+                html += `
+                <div class="article-item" data-id="${article.id}">
+                    <h4>
+                        <span>${article.title}</span>
+                        <span style="font-size: 12px; font-weight: normal; color: ${article.id === state.currentArticle?.id ? 'var(--primary-color)' : 'var(--secondary-color)'}">
+                            ${article.id === state.currentArticle?.id ? '当前编辑中' : ''}
+                        </span>
+                    </h4>
                     <div class="article-meta">
-                        <span>${formatDate(article.createdAt)}</span>
-                        <span>${article.category}</span>
+                        <span><i class="far fa-calendar-alt"></i> ${date}</span>
+                        <span><i class="fas fa-tag"></i> ${article.category}</span>
                     </div>
+                    <div class="article-content-preview">${previewText}</div>
+                </div>
                 `;
-                
-                articleElement.addEventListener('click', () => {
-                    showArticle(article);
+            });
+            
+            elements.articleList.innerHTML = html;
+            
+            // 添加点击事件选择文章
+            elements.articleList.querySelectorAll('.article-item').forEach(el => {
+                el.addEventListener('click', () => {
+                    const articleId = el.dataset.id;
+                    const article = state.articles.find(a => a.id == articleId);
+                    if (article) showArticle(article);
                 });
-                
-                elements.articleList.appendChild(articleElement);
             });
         }
-
+        
         // 创建新文章
         function createNewArticle() {
+            if (!state.selectedCategory) {
+                showMessage('请先选择一个分类', 'error');
+                return;
+            }
+            
             state.currentArticle = {
                 id: Date.now(),
                 title: '新文章',
-                content: '# 新文章\n\n开始写作吧...',
-                category: state.selectedCategory || '默认',
-                createdAt: Date.now(),
-                updatedAt: Date.now()
+                content: '# 新文章\n\n在这里开始你的写作...',
+                category: state.selectedCategory,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
             };
             
             showEditor(true);
         }
-
+        
         // 显示文章详情
         function showArticle(article) {
             state.currentArticle = article;
-            state.editingArticle = false;
-            showEditor(false);
+            state.editing = false;
+            showEditor();
         }
-
+        
         // 显示/隐藏编辑器
-        function showEditor(editing = true) {
-            state.editingArticle = editing;
+        function showEditor(editing = false) {
+            state.editing = editing;
             elements.editor.classList.add('active');
-            elements.articleTitle.textContent = state.currentArticle.title;
-            elements.articleContent.value = state.currentArticle.content;
-            elements.categorySelect.value = state.currentArticle.category;
-            renderPreview();
+            
+            if (state.currentArticle) {
+                elements.articleTitle.value = state.currentArticle.title;
+                elements.articleContent.value = state.currentArticle.content;
+                elements.categorySelect.value = state.currentArticle.category;
+                renderPreview();
+                
+                // 如果是新文章，标题输入框获得焦点
+                if (editing) elements.articleTitle.focus();
+            }
         }
-
+        
+        // 关闭编辑器
         function closeEditor() {
             elements.editor.classList.remove('active');
             state.currentArticle = null;
+            renderArticles();
         }
-
+        
         // 渲染Markdown预览
         function renderPreview() {
+            if (!elements.articleContent.value) {
+                elements.preview.innerHTML = '<p class="markdown-body" style="color: var(--secondary-color);">输入Markdown内容...</p>';
+                return;
+            }
+            
             elements.preview.innerHTML = marked.parse(elements.articleContent.value);
         }
-
+        
         // 保存文章
-        function saveArticle() {
+        async function saveArticle() {
             if (!state.currentArticle) return;
             
             // 更新文章数据
-            state.currentArticle.title = '文章-' + (state.articles.length + 1);
+            state.currentArticle.title = elements.articleTitle.value || '无标题';
             state.currentArticle.content = elements.articleContent.value;
             state.currentArticle.category = elements.categorySelect.value;
-            state.currentArticle.updatedAt = Date.now();
+            state.currentArticle.updatedAt = new Date().toISOString();
             
-            if (!state.currentArticle.id) {
+            if (state.editing) {
                 // 新文章
-                state.currentArticle.id = Date.now();
-                state.currentArticle.createdAt = Date.now();
                 state.articles.push(state.currentArticle);
+                showMessage('文章已创建', 'success');
             } else {
                 // 更新现有文章
                 const index = state.articles.findIndex(a => a.id === state.currentArticle.id);
                 state.articles[index] = {...state.currentArticle};
+                showMessage('文章已更新', 'success');
             }
             
-            closeEditor();
-            renderArticles();
-        }
-
-        // 格式化日期
-        function formatDate(timestamp) {
-            const date = new Date(timestamp);
-            return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-        }
-
-        function pad(num) {
-            return num.toString().padStart(2, '0');
-        }
-
-        // 加载示例数据
-        function loadDemoData() {
-            // 添加一些演示文章
-            state.articles = [
-                {
-                    id: 1,
-                    title: '欢迎使用极简Gist博客',
-                    content: '# 欢迎使用极简Gist博客\n\n这是一个使用GitHub Gist作为后端的极简个人博客系统。\n\n主要功能包括:\n\n- 通过Token管理跨设备数据同步\n- Markdown文章编辑与预览\n- 文章分类管理\n- 搜索功能',
-                    category: '默认',
-                    createdAt: Date.now() - 100000000,
-                    updatedAt: Date.now() - 100000000
-                },
-                {
-                    id: 2,
-                    title: 'Markdown使用指南',
-                    content: '## Markdown使用指南\n\nMarkdown是一种轻量级标记语言，能够快速转换为HTML格式。\n\n### 基本语法\n\n1. 标题使用 `#`\n2. 列表使用 `-` 或 `*`\n3. 链接使用 `[文本](网址)`\n4. 代码使用 ``` 包裹\n\n### 更多用法\n\n参考官方文档获取完整语法说明',
-                    category: '技术',
-                    createdAt: Date.now() - 80000000,
-                    updatedAt: Date.now() - 80000000
-                },
-                {
-                    id: 3,
-                    title: '我的第一篇日记',
-                    content: '## 2023年9月1日 晴天\n\n今天是我使用Gist博客的第一天。\n\n这个简洁的系统完全满足了我的需求：\n\n- 不需要复杂部署\n- 数据存储在Gist中\n- 支持分类管理\n- 编辑模式有预览\n\n真是完美的解决方案！',
-                    category: '生活',
-                    createdAt: Date.now() - 60000000,
-                    updatedAt: Date.now() - 60000000
-                }
-            ];
+            // 保存到Gist
+            const success = await saveGistData();
             
-            // 初始选择第一个分类
-            if (state.categories.length > 0) {
-                state.selectedCategory = state.categories[0];
+            if (success) {
+                state.editing = false;
                 renderArticles();
             }
         }
-
+        
+        // 格式化日期
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+        }
+        
+        function pad(num) {
+            return num.toString().padStart(2, '0');
+        }
+        
+        // 显示状态消息
+        function showMessage(message, type = 'success') {
+            elements.messageText.textContent = message;
+            elements.statusMessage.className = `status-message ${type}`;
+            elements.statusMessage.classList.add('show');
+            
+            setTimeout(() => {
+                elements.statusMessage.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 设置加载状态
+        function setLoading(loading) {
+            state.loading = loading;
+            elements.loading.style.display = loading ? 'flex' : 'none';
+        }
+        
         // 初始化应用
-        init();
+        window.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
