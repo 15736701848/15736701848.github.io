@@ -3,533 +3,736 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>庞和合的博客</title>
+    <title>极简Gist博客</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.1/github-markdown.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: system-ui, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; line-height: 1.6; background-color: #f8f9fa; }
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eaeaea; }
-        .logo { font-size: 1.8rem; font-weight: bold; color: #1a73e8; }
-        .btn { padding: 8px 16px; background: #1a73e8; color: white; border: none; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
-        .btn:hover { background: #1765cc; }
-        .btn-outline { background: none; border: 1px solid #1a73e8; color: #1a73e8; }
-        .btn-outline:hover { background: #e8f0fe; }
-        .btn-danger { background: #d93025; }
-        .btn-danger:hover { background: #c5221f; }
-        .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); padding: 20px; margin-bottom: 20px; }
-        .card h3 { margin-bottom: 10px; color: #202124; }
-        .card p { color: #5f6368; margin-bottom: 15px; }
-        .category { display: inline-block; padding: 4px 12px; background: #e8f0fe; color: #1a73e8; border-radius: 16px; font-size: 0.9rem; margin-bottom: 10px; }
-        .actions { display: flex; gap: 10px; margin-top: 15px; }
-        .editor { display: none; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; color: #202124; }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 1rem; }
-        .form-group textarea { min-height: 300px; font-family: monospace; }
-        .preview { background: #f8f9fa; padding: 15px; border-radius: 4px; margin-top: 10px; }
-        .gist-config { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 30px; }
-        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #202124; color: white; padding: 12px 24px; border-radius: 4px; opacity: 0; transition: opacity 0.3s; }
-        .loader { text-align: center; padding: 30px; }
-        .loader::after { content: ""; display: inline-block; width: 24px; height: 24px; border: 3px solid rgba(26,115,232,0.2); border-radius: 50%; border-top: 3px solid #1a73e8; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .search-container { display: flex; gap: 10px; margin-bottom: 20px; }
-        .search-container input { flex: 1; }
-        .editor-container { display: flex; gap: 20px; }
-        .editor-column { flex: 1; }
-        .article-content { padding: 20px; }
-        .article-content h1, .article-content h2, .article-content h3 { margin: 1.2em 0 0.6em; }
-        .article-content p { margin-bottom: 1.2em; line-height: 1.8; }
-        .article-content pre { background: #f6f8fa; padding: 16px; border-radius: 6px; overflow: auto; }
-        .article-content code { font-family: monospace; }
-        .article-content blockquote { border-left: 4px solid #dfe2e5; padding-left: 16px; color: #5f6368; }
-        .article-content img { max-width: 100%; border-radius: 4px; }
-        .config-success { background: #e6f4ea; color: #137333; padding: 10px; border-radius: 4px; margin-top: 10px; }
-        .file-upload { margin-top: 10px; }
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --border-color: #dee2e6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 20px;
+        }
+        
+        /* 认证区块 */
+        .auth-section {
+            grid-column: span 2;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        
+        input, button, textarea, select {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        button.secondary {
+            background: var(--secondary-color);
+        }
+        
+        button.secondary:hover {
+            background: #5a6268;
+        }
+        
+        button.danger {
+            background: #dc3545;
+        }
+        
+        button.danger:hover {
+            background: #bd2130;
+        }
+        
+        /* 分类导航 */
+        .categories {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .category-item:last-child {
+            border-bottom: none;
+        }
+        
+        .category-name {
+            flex-grow: 1;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        
+        .category-name:hover {
+            color: var(--primary-color);
+        }
+        
+        .category-controls {
+            display: flex;
+            gap: 5px;
+        }
+        
+        /* 内容区域 */
+        .content {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+        }
+        
+        /* 工具栏 */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .search-bar {
+            flex-grow: 1;
+            max-width: 300px;
+        }
+        
+        /* 文章区域 */
+        .articles {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .article-list {
+            flex-grow: 1;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            overflow-y: auto;
+            max-height: 45vh;
+        }
+        
+        .article-item {
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+        
+        .article-item:last-child {
+            border-bottom: none;
+        }
+        
+        .article-item:hover {
+            background-color: rgba(0,0,0,0.02);
+        }
+        
+        .article-item h4 {
+            margin-bottom: 5px;
+        }
+        
+        .article-meta {
+            display: flex;
+            font-size: 12px;
+            color: var(--secondary-color);
+            gap: 15px;
+        }
+        
+        /* 编辑器 */
+        .editor {
+            display: none;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .editor.active {
+            display: block;
+        }
+        
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .editor-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 50vh;
+        }
+        
+        .editor-section {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        textarea {
+            flex-grow: 1;
+            padding: 12px;
+            font-family: monospace;
+            resize: none;
+            min-height: 200px;
+        }
+        
+        .preview {
+            flex-grow: 1;
+            padding: 12px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        
+        /* 模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .modal-footer {
+            margin-top: 15px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .auth-section {
+                grid-column: span 1;
+            }
+            
+            .editor-body {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+        }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">庞和合的博客</div>
-        <div>
-            <button class="btn" id="new-article">写文章</button>
+    <!-- 身份验证 -->
+    <div class="auth-section">
+        <div class="input-group">
+            <i class="fas fa-key"></i>
+            <input type="password" id="token" placeholder="GitHub Token" style="width: 300px;">
         </div>
-    </header>
-
-    <!-- 文章列表区 -->
-    <div id="articles">
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="搜索文章..." class="form-group">
-            <button class="btn" id="search-btn">搜索</button>
-        </div>
-        <div id="articles-list">
-            <div class="loader"></div>
-        </div>
+        <button id="saveTokenBtn">保存Token</button>
     </div>
 
-    <!-- 编辑器区 -->
-    <div id="editor" class="editor">
-        <div class="form-group">
-            <label for="title">标题</label>
-            <input type="text" id="title">
-        </div>
-        <div class="form-group">
-            <label for="category">分类</label>
-            <select id="category"></select>
-        </div>
-        <div class="editor-container">
-            <div class="editor-column">
-                <div class="form-group">
-                    <label for="content">内容 (Markdown)</label>
-                    <textarea id="content"></textarea>
+    <div class="container">
+        <!-- 分类导航 -->
+        <aside class="categories">
+            <div class="toolbar">
+                <h3>分类</h3>
+                <button id="addCategoryBtn" title="添加分类">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <div id="categoryList"></div>
+        </aside>
+
+        <!-- 主内容区域 -->
+        <main class="content">
+            <!-- 工具栏 -->
+            <div class="toolbar">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="搜索文章...">
+                </div>
+                <button id="newArticleBtn">新建文章</button>
+            </div>
+            
+            <!-- 文章列表 -->
+            <div class="articles">
+                <div class="article-list" id="articleList"></div>
+                
+                <!-- 编辑器 -->
+                <div class="editor" id="editor">
+                    <div class="editor-header">
+                        <h3 id="articleTitle"></h3>
+                        <div>
+                            <select id="categorySelect"></select>
+                            <button id="saveArticleBtn">保存文章</button>
+                            <button id="closeEditorBtn" class="secondary">关闭</button>
+                        </div>
+                    </div>
+                    
+                    <div class="editor-body">
+                        <div class="editor-section">
+                            <label for="articleContent">编辑</label>
+                            <textarea id="articleContent" placeholder="输入Markdown内容..."></textarea>
+                        </div>
+                        
+                        <div class="editor-section">
+                            <label>预览</label>
+                            <div class="preview markdown-body" id="preview"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="editor-column">
+        </main>
+    </div>
+    
+    <!-- 模态框 -->
+    <div class="modal" id="categoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>管理分类</h3>
+                <button class="secondary" id="closeCategoryModalBtn">&times;</button>
+            </div>
+            
+            <div class="modal-body">
                 <div class="form-group">
-                    <label>预览</label>
-                    <div id="preview" class="preview"></div>
+                    <label for="categoryName">分类名称</label>
+                    <input type="text" id="categoryName" placeholder="输入新分类名称">
+                </div>
+                
+                <div class="form-group">
+                    <button id="saveCategoryBtn">保存</button>
                 </div>
             </div>
         </div>
-        <div style="display: flex; gap: 10px; margin-top: 15px;">
-            <button class="btn" id="save">保存文章</button>
-            <button class="btn btn-outline" id="cancel">取消</button>
-        </div>
     </div>
-
-    <!-- 文章阅读区 -->
-    <div id="article-view" class="editor" style="display: none;">
-        <h2 id="article-title"></h2>
-        <div class="category" id="article-category"></div>
-        <div id="article-content" class="article-content"></div>
-        <div style="display: flex; gap: 10px; margin-top: 20px;">
-            <button class="btn" id="edit-article">编辑</button>
-            <button class="btn btn-outline" id="back-to-list">返回列表</button>
-        </div>
-    </div>
-
-    <!-- Gist配置区 -->
-    <div class="gist-config">
-        <h3>GitHub Gist配置</h3>
-        <div class="form-group">
-            <label for="gist-id">Gist ID</label>
-            <input type="text" id="gist-id" placeholder="输入您的Gist ID">
-        </div>
-        <div class="form-group">
-            <label for="token">Personal Access Token</label>
-            <input type="password" id="token" placeholder="输入GitHub Token">
-        </div>
-        <div class="file-upload">
-            <label>或上传配置文件：</label>
-            <input type="file" id="config-file" accept=".txt">
-            <small>文件内容格式：token + Gist ID（无空格）</small>
-        </div>
-        <div style="display: flex; gap: 10px; margin-top: 10px;">
-            <button class="btn" id="save-config">保存配置</button>
-            <button class="btn" id="load">加载数据</button>
-        </div>
-    </div>
-
-    <div class="toast" id="toast"></div>
 
     <script>
-        // 博客数据结构
-        let blogData = {
+        // 核心状态管理
+        const state = {
+            categories: ['默认', '技术', '生活', '随笔'],
             articles: [],
-            categories: ['技术', '生活', '随笔']
+            token: localStorage.getItem('gist-token') || '',
+            selectedCategory: null,
+            currentArticle: null,
+            editingArticle: false
         };
 
-        // 当前编辑/阅读的文章
-        let currentArticle = null;
-        let gistId = localStorage.getItem('gist_id') || '';
-        let token = localStorage.getItem('github_token') || '';
-
-        // DOM元素
+        // DOM元素缓存
         const elements = {
-            articles: document.getElementById('articles'),
-            articlesList: document.getElementById('articles-list'),
+            tokenInput: document.getElementById('token'),
+            saveTokenBtn: document.getElementById('saveTokenBtn'),
+            categoryList: document.getElementById('categoryList'),
+            addCategoryBtn: document.getElementById('addCategoryBtn'),
+            categoryModal: document.getElementById('categoryModal'),
+            closeCategoryModalBtn: document.getElementById('closeCategoryModalBtn'),
+            categoryName: document.getElementById('categoryName'),
+            saveCategoryBtn: document.getElementById('saveCategoryBtn'),
+            articleList: document.getElementById('articleList'),
+            newArticleBtn: document.getElementById('newArticleBtn'),
+            searchInput: document.getElementById('searchInput'),
             editor: document.getElementById('editor'),
-            articleView: document.getElementById('article-view'),
-            title: document.getElementById('title'),
-            category: document.getElementById('category'),
-            content: document.getElementById('content'),
+            articleTitle: document.getElementById('articleTitle'),
+            articleContent: document.getElementById('articleContent'),
+            categorySelect: document.getElementById('categorySelect'),
             preview: document.getElementById('preview'),
-            articleTitle: document.getElementById('article-title'),
-            articleCategory: document.getElementById('article-category'),
-            articleContent: document.getElementById('article-content'),
-            gistId: document.getElementById('gist-id'),
-            token: document.getElementById('token'),
-            toast: document.getElementById('toast'),
-            searchInput: document.getElementById('search-input'),
-            searchBtn: document.getElementById('search-btn'),
-            configFile: document.getElementById('config-file')
+            saveArticleBtn: document.getElementById('saveArticleBtn'),
+            closeEditorBtn: document.getElementById('closeEditorBtn')
         };
 
-        // 初始化
+        // 初始化函数
         function init() {
-            // 事件监听
-            document.getElementById('new-article').addEventListener('click', newArticle);
-            document.getElementById('save').addEventListener('click', saveArticle);
-            document.getElementById('cancel').addEventListener('click', cancelEdit);
-            document.getElementById('save-config').addEventListener('click', saveConfig);
-            document.getElementById('load').addEventListener('click', loadFromGist);
-            document.getElementById('edit-article').addEventListener('click', editCurrentArticle);
-            document.getElementById('back-to-list').addEventListener('click', showArticleList);
-            elements.searchBtn.addEventListener('click', searchArticles);
-            elements.searchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') searchArticles();
-            });
-            elements.configFile.addEventListener('change', handleConfigFile);
+            setupEventListeners();
+            renderCategories();
+            loadDemoData();
+            updateTokenInput();
+            renderCategorySelect();
             
-            // 内容输入监听
-            elements.content.addEventListener('input', updatePreview);
+            // 初始化预览功能
+            elements.articleContent.addEventListener('input', renderPreview);
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // Token管理
+            elements.saveTokenBtn.addEventListener('click', saveToken);
             
-            // 自动加载数据（如果已配置）
-            if (gistId && token) {
-                loadFromGist();
+            // 分类管理
+            elements.addCategoryBtn.addEventListener('click', showCategoryModal);
+            elements.closeCategoryModalBtn.addEventListener('click', hideCategoryModal);
+            elements.saveCategoryBtn.addEventListener('click', saveCategory);
+            
+            // 文章管理
+            elements.newArticleBtn.addEventListener('click', () => createNewArticle());
+            elements.searchInput.addEventListener('input', () => renderArticles());
+            elements.saveArticleBtn.addEventListener('click', saveArticle);
+            elements.closeEditorBtn.addEventListener('click', closeEditor);
+        }
+
+        // 保存Token到本地存储
+        function saveToken() {
+            const token = elements.tokenInput.value;
+            if (token) {
+                localStorage.setItem('gist-token', token);
+                state.token = token;
+                alert('Token已保存！');
             }
         }
 
-        // 处理配置文件上传
-        function handleConfigFile(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+        // 更新Token输入框
+        function updateTokenInput() {
+            if (state.token) {
+                elements.tokenInput.value = '******************';
+            }
+        }
+
+        // 渲染分类
+        function renderCategories() {
+            elements.categoryList.innerHTML = '';
             
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const content = e.target.result;
-                // 假设文件内容格式：token + Gist ID（无空格）
-                if (content.length >= 76) {
-                    token = content.substring(0, 40);
-                    gistId = content.substring(40);
+            state.categories.forEach(category => {
+                const categoryElement = document.createElement('div');
+                categoryElement.className = 'category-item';
+                categoryElement.innerHTML = `
+                    <span class="category-name">${category}</span>
+                    <div class="category-controls">
+                        <button class="secondary" data-action="edit" data-category="${category}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="danger" data-action="delete" data-category="${category}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                elements.categoryList.appendChild(categoryElement);
+                
+                // 添加点击事件选择分类
+                categoryElement.querySelector('.category-name').addEventListener('click', () => {
+                    selectCategory(category);
+                });
+                
+                // 添加编辑/删除事件
+                categoryElement.querySelectorAll('button').forEach(button => {
+                    const action = button.dataset.action;
+                    const cat = button.dataset.category;
                     
-                    elements.token.value = token;
-                    elements.gistId.value = gistId;
-                    
-                    showToast('配置已从文件加载');
-                } else {
-                    showToast('文件格式不正确');
+                    button.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        
+                        if (action === 'edit') {
+                            editCategory(cat);
+                        } else if (action === 'delete') {
+                            deleteCategory(cat);
+                        }
+                    });
+                });
+            });
+        }
+
+        // 选择分类
+        function selectCategory(category) {
+            state.selectedCategory = category;
+            renderArticles();
+        }
+
+        // 显示分类模态框
+        function showCategoryModal() {
+            elements.categoryModal.classList.add('active');
+            elements.categoryName.value = '';
+            elements.categoryName.focus();
+        }
+
+        // 隐藏分类模态框
+        function hideCategoryModal() {
+            elements.categoryModal.classList.remove('active');
+        }
+
+        // 编辑分类
+        function editCategory(category) {
+            elements.categoryModal.classList.add('active');
+            elements.categoryName.value = category;
+            elements.categoryName.focus();
+        }
+
+        // 删除分类
+        function deleteCategory(category) {
+            if (confirm(`确定要删除分类 "${category}" 吗？`)) {
+                state.categories = state.categories.filter(cat => cat !== category);
+                renderCategories();
+                renderCategorySelect();
+            }
+        }
+
+        // 保存分类
+        function saveCategory() {
+            const newCategory = elements.categoryName.value.trim();
+            
+            if (newCategory) {
+                if (!state.categories.includes(newCategory)) {
+                    state.categories.push(newCategory);
                 }
-            };
-            reader.readAsText(file);
+                renderCategories();
+                renderCategorySelect();
+                hideCategoryModal();
+            }
+        }
+
+        // 渲染分类选择下拉菜单
+        function renderCategorySelect() {
+            elements.categorySelect.innerHTML = '';
+            
+            state.categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                elements.categorySelect.appendChild(option);
+            });
         }
 
         // 渲染文章列表
-        function renderArticles(articles = blogData.articles) {
-            if (articles.length === 0) {
-                elements.articlesList.innerHTML = '<div class="card">暂无文章</div>';
+        function renderArticles() {
+            elements.articleList.innerHTML = '';
+            
+            if (!state.selectedCategory) {
+                elements.articleList.innerHTML = '<p>请选择一个分类</p>';
                 return;
             }
             
-            let html = '';
-            articles.forEach(article => {
-                html += `
-                    <div class="card" data-id="${article.id}">
-                        <h3>${article.title}</h3>
-                        <span class="category">${article.category}</span>
-                        <p>${article.content.substring(0, 100)}...</p>
-                        <div class="actions">
-                            <button class="btn read-btn">阅读</button>
-                            <button class="btn edit-btn">编辑</button>
-                            <button class="btn btn-danger delete-btn">删除</button>
-                        </div>
+            const searchTerm = elements.searchInput.value.toLowerCase();
+            const filteredArticles = state.articles
+                .filter(article => article.category === state.selectedCategory)
+                .filter(article => 
+                    article.title.toLowerCase().includes(searchTerm) || 
+                    article.content.toLowerCase().includes(searchTerm)
+                );
+            
+            if (filteredArticles.length === 0) {
+                elements.articleList.innerHTML = '<p>该分类下没有文章</p>';
+                return;
+            }
+            
+            filteredArticles.forEach(article => {
+                const articleElement = document.createElement('div');
+                articleElement.className = 'article-item';
+                articleElement.innerHTML = `
+                    <h4>${article.title}</h4>
+                    <div class="article-meta">
+                        <span>${formatDate(article.createdAt)}</span>
+                        <span>${article.category}</span>
                     </div>
                 `;
-            });
-            
-            elements.articlesList.innerHTML = html;
-            
-            // 添加事件监听
-            document.querySelectorAll('.read-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const articleId = this.closest('.card').dataset.id;
-                    readArticle(articleId);
+                
+                articleElement.addEventListener('click', () => {
+                    showArticle(article);
                 });
-            });
-            
-            document.querySelectorAll('.edit-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const articleId = this.closest('.card').dataset.id;
-                    editArticle(articleId);
-                });
-            });
-            
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const articleId = this.closest('.card').dataset.id;
-                    deleteArticle(articleId);
-                });
-            });
-        }
-
-        // 渲染分类下拉框
-        function renderCategories() {
-            elements.category.innerHTML = '';
-            blogData.categories.forEach(cat => {
-                const option = document.createElement('option');
-                option.value = cat;
-                option.textContent = cat;
-                elements.category.appendChild(option);
+                
+                elements.articleList.appendChild(articleElement);
             });
         }
 
         // 创建新文章
-        function newArticle() {
-            currentArticle = null;
-            elements.title.value = '';
-            elements.content.value = '';
-            renderCategories();
-            showEditor();
-            elements.title.focus();
+        function createNewArticle() {
+            state.currentArticle = {
+                id: Date.now(),
+                title: '新文章',
+                content: '# 新文章\n\n开始写作吧...',
+                category: state.selectedCategory || '默认',
+                createdAt: Date.now(),
+                updatedAt: Date.now()
+            };
+            
+            showEditor(true);
         }
 
-        // 编辑文章
-        function editArticle(id) {
-            currentArticle = blogData.articles.find(a => a.id === id);
-            if (currentArticle) {
-                elements.title.value = currentArticle.title;
-                elements.content.value = currentArticle.content;
-                renderCategories();
-                elements.category.value = currentArticle.category;
-                showEditor();
-                updatePreview();
-            }
+        // 显示文章详情
+        function showArticle(article) {
+            state.currentArticle = article;
+            state.editingArticle = false;
+            showEditor(false);
         }
 
-        // 阅读文章
-        function readArticle(id) {
-            currentArticle = blogData.articles.find(a => a.id === id);
-            if (currentArticle) {
-                elements.articleTitle.textContent = currentArticle.title;
-                elements.articleCategory.textContent = currentArticle.category;
-                
-                // 使用Marked渲染Markdown内容
-                if (typeof marked !== 'undefined') {
-                    elements.articleContent.innerHTML = marked.parse(currentArticle.content);
-                } else {
-                    // 如果Marked未加载，显示原始内容
-                    elements.articleContent.textContent = currentArticle.content;
-                }
-                
-                showArticleView();
-            }
+        // 显示/隐藏编辑器
+        function showEditor(editing = true) {
+            state.editingArticle = editing;
+            elements.editor.classList.add('active');
+            elements.articleTitle.textContent = state.currentArticle.title;
+            elements.articleContent.value = state.currentArticle.content;
+            elements.categorySelect.value = state.currentArticle.category;
+            renderPreview();
         }
 
-        // 编辑当前阅读的文章
-        function editCurrentArticle() {
-            if (currentArticle) {
-                editArticle(currentArticle.id);
-            }
+        function closeEditor() {
+            elements.editor.classList.remove('active');
+            state.currentArticle = null;
+        }
+
+        // 渲染Markdown预览
+        function renderPreview() {
+            elements.preview.innerHTML = marked.parse(elements.articleContent.value);
         }
 
         // 保存文章
         function saveArticle() {
-            const title = elements.title.value.trim();
-            const content = elements.content.value.trim();
-            const category = elements.category.value;
+            if (!state.currentArticle) return;
             
-            if (!title || !content) {
-                showToast('标题和内容不能为空');
-                return;
-            }
+            // 更新文章数据
+            state.currentArticle.title = '文章-' + (state.articles.length + 1);
+            state.currentArticle.content = elements.articleContent.value;
+            state.currentArticle.category = elements.categorySelect.value;
+            state.currentArticle.updatedAt = Date.now();
             
-            const now = new Date().toISOString();
-            
-            if (currentArticle) {
-                // 更新现有文章
-                currentArticle.title = title;
-                currentArticle.content = content;
-                currentArticle.category = category;
-                currentArticle.updatedAt = now;
-                showToast('文章已更新');
+            if (!state.currentArticle.id) {
+                // 新文章
+                state.currentArticle.id = Date.now();
+                state.currentArticle.createdAt = Date.now();
+                state.articles.push(state.currentArticle);
             } else {
-                // 创建新文章
-                blogData.articles.push({
-                    id: 'article_' + Date.now(),
-                    title,
-                    content,
-                    category,
-                    createdAt: now,
-                    updatedAt: now
-                });
-                showToast('文章已创建');
+                // 更新现有文章
+                const index = state.articles.findIndex(a => a.id === state.currentArticle.id);
+                state.articles[index] = {...state.currentArticle};
             }
             
-            // 保存到Gist
-            saveToGist();
-            
-            // 返回列表视图
-            showArticleList();
-        }
-
-        // 删除文章
-        function deleteArticle(id) {
-            if (confirm('确定要删除这篇文章吗？')) {
-                blogData.articles = blogData.articles.filter(a => a.id !== id);
-                saveToGist();
-                renderArticles();
-                showToast('文章已删除');
-            }
-        }
-
-        // 取消编辑
-        function cancelEdit() {
-            showArticleList();
-        }
-
-        // 更新Markdown预览
-        function updatePreview() {
-            // 按需加载Marked.js
-            if (typeof marked === 'undefined') {
-                loadMarked();
-                return;
-            }
-            elements.preview.innerHTML = marked.parse(elements.content.value || '输入内容将在这里预览');
-        }
-
-        // 加载Marked.js
-        function loadMarked() {
-            const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
-            script.onload = updatePreview;
-            document.head.appendChild(script);
-        }
-
-        // 保存配置
-        function saveConfig() {
-            gistId = elements.gistId.value.trim();
-            token = elements.token.value.trim();
-            
-            if (!gistId || !token) {
-                showToast('请填写Gist ID和Token');
-                return;
-            }
-            
-            localStorage.setItem('gist_id', gistId);
-            localStorage.setItem('github_token', token);
-            showToast('配置已保存');
-        }
-
-        // 从Gist加载数据
-        function loadFromGist() {
-            if (!gistId || !token) {
-                showToast('请先配置Gist ID和Token');
-                return;
-            }
-            
-            elements.articlesList.innerHTML = '<div class="loader"></div>';
-            
-            fetch(`https://api.github.com/gists/${gistId}`, {
-                headers: {
-                    'Authorization': `token ${token}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                const content = data.files['blog.json']?.content;
-                if (content) {
-                    blogData = JSON.parse(content);
-                    renderArticles();
-                    showToast('博客数据加载成功');
-                } else {
-                    showToast('未找到博客数据');
-                    renderArticles();
-                }
-            })
-            .catch(error => {
-                console.error('加载失败:', error);
-                showToast('加载失败: ' + error.message);
-                renderArticles();
-            });
-        }
-
-        // 保存数据到Gist
-        function saveToGist() {
-            if (!gistId || !token) {
-                showToast('请先配置Gist ID和Token');
-                return;
-            }
-            
-            const content = JSON.stringify(blogData, null, 2);
-            const files = {
-                'blog.json': {
-                    content: content
-                }
-            };
-            
-            fetch(`https://api.github.com/gists/${gistId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Authorization': `token ${token}`,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/vnd.github.v3+json'
-                },
-                body: JSON.stringify({
-                    files: files,
-                    description: '庞和合的博客数据'
-                })
-            })
-            .then(response => {
-                if (response.ok) {
-                    showToast('数据已同步到Gist');
-                } else {
-                    throw new Error('同步失败');
-                }
-            })
-            .catch(error => {
-                console.error('同步失败:', error);
-                showToast('同步失败: ' + error.message);
-            });
-        }
-
-        // 搜索文章
-        function searchArticles() {
-            const searchText = elements.searchInput.value.toLowerCase();
-            if (!searchText) {
-                renderArticles();
-                return;
-            }
-            
-            const results = blogData.articles.filter(article => {
-                return article.title.toLowerCase().includes(searchText) || 
-                       article.content.toLowerCase().includes(searchText);
-            });
-            
-            renderArticles(results);
-        }
-
-        // 显示文章列表
-        function showArticleList() {
-            elements.articles.style.display = 'block';
-            elements.editor.style.display = 'none';
-            elements.articleView.style.display = 'none';
+            closeEditor();
             renderArticles();
         }
 
-        // 显示编辑器
-        function showEditor() {
-            elements.articles.style.display = 'none';
-            elements.editor.style.display = 'block';
-            elements.articleView.style.display = 'none';
+        // 格式化日期
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
         }
 
-        // 显示文章阅读视图
-        function showArticleView() {
-            elements.articles.style.display = 'none';
-            elements.editor.style.display = 'none';
-            elements.articleView.style.display = 'block';
+        function pad(num) {
+            return num.toString().padStart(2, '0');
         }
 
-        // 显示消息提示
-        function showToast(message) {
-            elements.toast.textContent = message;
-            elements.toast.style.opacity = '1';
-            setTimeout(() => {
-                elements.toast.style.opacity = '0';
-            }, 3000);
+        // 加载示例数据
+        function loadDemoData() {
+            // 添加一些演示文章
+            state.articles = [
+                {
+                    id: 1,
+                    title: '欢迎使用极简Gist博客',
+                    content: '# 欢迎使用极简Gist博客\n\n这是一个使用GitHub Gist作为后端的极简个人博客系统。\n\n主要功能包括:\n\n- 通过Token管理跨设备数据同步\n- Markdown文章编辑与预览\n- 文章分类管理\n- 搜索功能',
+                    category: '默认',
+                    createdAt: Date.now() - 100000000,
+                    updatedAt: Date.now() - 100000000
+                },
+                {
+                    id: 2,
+                    title: 'Markdown使用指南',
+                    content: '## Markdown使用指南\n\nMarkdown是一种轻量级标记语言，能够快速转换为HTML格式。\n\n### 基本语法\n\n1. 标题使用 `#`\n2. 列表使用 `-` 或 `*`\n3. 链接使用 `[文本](网址)`\n4. 代码使用 ``` 包裹\n\n### 更多用法\n\n参考官方文档获取完整语法说明',
+                    category: '技术',
+                    createdAt: Date.now() - 80000000,
+                    updatedAt: Date.now() - 80000000
+                },
+                {
+                    id: 3,
+                    title: '我的第一篇日记',
+                    content: '## 2023年9月1日 晴天\n\n今天是我使用Gist博客的第一天。\n\n这个简洁的系统完全满足了我的需求：\n\n- 不需要复杂部署\n- 数据存储在Gist中\n- 支持分类管理\n- 编辑模式有预览\n\n真是完美的解决方案！',
+                    category: '生活',
+                    createdAt: Date.now() - 60000000,
+                    updatedAt: Date.now() - 60000000
+                }
+            ];
+            
+            // 初始选择第一个分类
+            if (state.categories.length > 0) {
+                state.selectedCategory = state.categories[0];
+                renderArticles();
+            }
         }
 
-        // 页面加载完成后初始化
-        document.addEventListener('DOMContentLoaded', init);
+        // 初始化应用
+        init();
     </script>
 </body>
 </html>
