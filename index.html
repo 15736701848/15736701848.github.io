@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>庞和合的博客</title>
+    <title>极简Gist博客</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.1/github-markdown.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -42,7 +42,6 @@
             min-height: 90vh;
         }
         
-        /* 标题样式 */
         .app-header {
             display: flex;
             justify-content: space-between;
@@ -61,7 +60,6 @@
             gap: 10px;
         }
         
-        /* 认证区块 */
         .auth-section {
             grid-column: span 2;
             background: white;
@@ -149,7 +147,6 @@
             font-size: 13px;
         }
         
-        /* 分类导航 */
         .categories {
             background: white;
             border-radius: 8px;
@@ -204,14 +201,12 @@
             gap: 5px;
         }
         
-        /* 内容区域 */
         .content {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
         
-        /* 工具栏 */
         .toolbar {
             display: flex;
             justify-content: space-between;
@@ -241,7 +236,6 @@
             gap: 10px;
         }
         
-        /* 文章区域 */
         .articles {
             display: flex;
             flex-direction: column;
@@ -308,7 +302,6 @@
             overflow: hidden;
         }
         
-        /* 编辑器 */
         .editor {
             display: none;
             padding: 15px;
@@ -391,7 +384,6 @@
             font-size: 15px;
         }
         
-        /* 加载状态 */
         .loading {
             position: fixed;
             top: 0;
@@ -418,7 +410,6 @@
             to { transform: rotate(360deg); }
         }
         
-        /* 状态消息 */
         .status-message {
             position: fixed;
             top: 20px;
@@ -444,7 +435,13 @@
             border-left: 4px solid var(--danger-color);
         }
         
-        /* 响应式 */
+        .persistence-controls {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            font-size: 13px;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 grid-template-columns: 1fr;
@@ -466,7 +463,7 @@
     <div class="app-header">
         <h1 class="app-title">
             <i class="fab fa-github"></i>
-            庞和合的博客
+            极简Gist博客
         </h1>
         <div class="stats">
             <span id="gistStatus">未连接</span>
@@ -487,6 +484,10 @@
             <button id="helpBtn" class="secondary">
                 <i class="fas fa-question-circle"></i> 帮助
             </button>
+        </div>
+        <div class="persistence-controls">
+            <input type="checkbox" id="autoReload" checked>
+            <label for="autoReload">刷新页面后自动恢复数据</label>
         </div>
     </div>
 
@@ -621,7 +622,8 @@
             messageText: document.getElementById('messageText'),
             loading: document.getElementById('loading'),
             gistStatus: document.getElementById('gistStatus'),
-            syncDate: document.getElementById('syncDate')
+            syncDate: document.getElementById('syncDate'),
+            autoReload: document.getElementById('autoReload')
         };
         
         // Axios实例（API请求用）
@@ -644,17 +646,56 @@
             setupEventListeners();
             updateTokenInput();
             updateSyncStatus();
+            restoreLocalState();
             
-            // 尝试加载Gist数据
-            if (state.token && state.gistId) {
+            // 如果自动恢复数据选项开启并且有gistId
+            if (elements.autoReload.checked && state.token && state.gistId) {
+                // 配置axios headers
+                api.defaults.headers.common['Authorization'] = `token ${state.token}`;
                 loadGistData();
             }
             
             // 初始化预览功能
             elements.articleContent.addEventListener('input', renderPreview);
             
-            // 显示帮助提示
-            showMessage('输入GitHub Token开始使用系统', 'success');
+            // 显示初始状态
+            if (state.token && state.gistId) {
+                showMessage('已检测到保存的配置，点击"保存Token"加载数据', 'success');
+            } else {
+                showMessage('输入GitHub Token开始使用系统', 'success');
+            }
+        }
+        
+        // 恢复本地状态（在加载Gist数据前显示保存的数据）
+        function restoreLocalState() {
+            // 从localStorage加载分类
+            const savedCategories = localStorage.getItem('gist-blog-categories');
+            if (savedCategories) {
+                try {
+                    state.categories = JSON.parse(savedCategories);
+                    renderCategories();
+                } catch (e) {
+                    console.error('恢复分类状态失败', e);
+                }
+            }
+            
+            // 从localStorage加载文章
+            const savedArticles = localStorage.getItem('gist-blog-articles');
+            if (savedArticles) {
+                try {
+                    state.articles = JSON.parse(savedArticles);
+                    renderArticles();
+                } catch (e) {
+                    console.error('恢复文章状态失败', e);
+                }
+            }
+            
+            // 恢复选中分类
+            const selectedCategory = localStorage.getItem('gist-blog-selectedCategory');
+            if (selectedCategory && state.categories.includes(selectedCategory)) {
+                state.selectedCategory = selectedCategory;
+                elements.categoryTitle.textContent = selectedCategory;
+            }
         }
         
         // 设置事件监听器
@@ -674,6 +715,11 @@
             elements.searchBtn.addEventListener('click', renderArticles);
             elements.saveArticleBtn.addEventListener('click', saveArticle);
             elements.closeEditorBtn.addEventListener('click', closeEditor);
+            
+            // 自动恢复选项
+            elements.autoReload.addEventListener('change', function() {
+                localStorage.setItem('gist-blog-auto-reload', this.checked);
+            });
         }
         
         // 保存Token
@@ -709,10 +755,10 @@
         async function createGist() {
             setLoading(true);
             
-            // 初始数据结构
+            // 初始数据结构（包含当前状态）
             const initialData = {
-                categories: ['默认', '技术', '生活'],
-                articles: [
+                categories: state.categories.length > 0 ? state.categories : ['默认', '技术', '生活'],
+                articles: state.articles.length > 0 ? state.articles : [
                     {
                         id: Date.now(),
                         title: '欢迎使用Gist博客系统',
@@ -738,9 +784,11 @@
                 state.gistId = response.data.id;
                 state.categories = initialData.categories;
                 state.articles = initialData.articles;
-                state.selectedCategory = '默认';
+                state.selectedCategory = state.selectedCategory || '默认';
                 
+                // 保存到本地存储
                 localStorage.setItem('gist-id', state.gistId);
+                saveLocalState();
                 
                 renderCategories();
                 renderArticles();
@@ -772,6 +820,9 @@
                     state.selectedCategory = state.categories[0] || null;
                     state.lastSynced = new Date();
                     
+                    // 保存到本地存储
+                    saveLocalState();
+                    
                     renderCategories();
                     renderArticles();
                     renderCategorySelect();
@@ -784,15 +835,21 @@
             } catch (error) {
                 console.error('加载Gist数据出错:', error);
                 showMessage('数据加载失败：' + error.response?.data?.message || error.message, 'error');
-                state.gistStatus.textContent = '连接失败';
             } finally {
                 setLoading(false);
             }
         }
         
+        // 将状态保存到本地存储
+        function saveLocalState() {
+            localStorage.setItem('gist-blog-categories', JSON.stringify(state.categories));
+            localStorage.setItem('gist-blog-articles', JSON.stringify(state.articles));
+            localStorage.setItem('gist-blog-selectedCategory', state.selectedCategory || '');
+        }
+        
         // 保存数据到Gist
         async function saveGistData() {
-            if (!state.gistId || !state.token) return;
+            if (!state.gistId || !state.token) return false;
             
             setLoading(true);
             
@@ -819,6 +876,9 @@
                 
                 state.lastSynced = new Date();
                 updateSyncStatus();
+                
+                // 同时保存到本地存储
+                saveLocalState();
                 
                 return true;
             } catch (error) {
@@ -914,6 +974,7 @@
         // 选择分类
         function selectCategory(category) {
             state.selectedCategory = category;
+            localStorage.setItem('gist-blog-selectedCategory', category);
             elements.categoryTitle.textContent = category;
             renderArticles();
         }
@@ -923,6 +984,7 @@
             const newCategory = prompt('输入新分类名称:');
             if (newCategory) {
                 state.categories.push(newCategory);
+                saveLocalState();
                 renderCategories();
                 saveGistData().then(() => {
                     showMessage(`分类 "${newCategory}" 已添加`, 'success');
@@ -948,8 +1010,10 @@
                 // 更新当前选择
                 if (state.selectedCategory === oldName) {
                     state.selectedCategory = newName;
+                    localStorage.setItem('gist-blog-selectedCategory', newName);
                 }
                 
+                saveLocalState();
                 renderCategories();
                 renderCategorySelect();
                 renderArticles();
@@ -975,8 +1039,10 @@
             // 更新当前选择
             if (state.selectedCategory === category) {
                 state.selectedCategory = state.categories[0] || null;
+                localStorage.setItem('gist-blog-selectedCategory', state.selectedCategory || '');
             }
             
+            saveLocalState();
             renderCategories();
             renderArticles();
             renderCategorySelect();
@@ -1151,6 +1217,9 @@
                 state.articles[index] = {...state.currentArticle};
                 showMessage('文章已更新', 'success');
             }
+            
+            // 保存到本地存储
+            saveLocalState();
             
             // 保存到Gist
             const success = await saveGistData();
